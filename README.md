@@ -124,7 +124,7 @@ Notes:
 
 ## Known limitations / ideas for later
 
-- Currently 3 topics (Restaurant/Café, Supermarket, Bakery) — more can be
+- Currently 100 topics (Restaurant/Café, Supermarket, Bakery) — more can be
   added anytime via `js/data.js`.
 - No search or filtering across topics yet.
 - No progress tracking (e.g. marking words as learned).
