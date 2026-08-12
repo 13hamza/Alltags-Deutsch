@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Alltags-Deutsch — Learn German for Daily Life</title>
+<meta name="description" content="Learn everyday German vocabulary and dialogues, topic by topic, with click-to-hear pronunciation.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Karla:wght@400;500;700&family=Caveat:wght@600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="index.html">
+      <span class="flag-icon">&#x1f1e9;&#x1f1ea;</span>
+      Alltags-Deutsch <span>every day, auf Deutsch</span>
+    </a>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap hero-wrap">
+    <div class="hero-text">
+      <p class="hero-eyebrow">a little vocabulary stall</p>
+      <h1>German for the places you actually go</h1>
+      <p>Pick a topic below. Each one hangs its own signboard of everyday words and real dialogues click anything German to hear it spoken aloud.</p>
+    </div>
+
+    <div class="hero-art" aria-hidden="true">
+      <div class="hero-tag hero-tag--1">
+        <div class="hero-tag-string"></div>
+        <div class="hero-tag-card">
+          <span>Hallo!</span>
+        </div>
+      </div>
+      <div class="hero-tag hero-tag--2">
+        <div class="hero-tag-string"></div>
+        <div class="hero-tag-card hero-tag-card--mustard">
+          <span>Danke</span>
+        </div>
+      </div>
+      <div class="hero-tag hero-tag--3">
+        <div class="hero-tag-string"></div>
+        <div class="hero-tag-card hero-tag-card--brick">
+          <span>Prost!</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="signboard-section">
+  <div class="wrap">
+    <div id="topic-grid">
+      <!-- Topics are rendered here by app.js from data.js -->
+    </div>
+  </div>
+</section>
+
+<p class="footer-note wrap">mehr Themen kommen bald — more topics coming soon</p>
+
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
