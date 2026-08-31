@@ -18,6 +18,10 @@
       <span class="flag-icon">&#x1f1e9;&#x1f1ea;</span>
       Alltags-Deutsch <span>every day, auf Deutsch</span>
     </a>
+    <nav class="site-nav">
+      <a class="nav-link is-active" href="index.html">Topics</a>
+      <a class="nav-link" href="stories.html">Stories</a>
+    </nav>
   </div>
 </header>
 
@@ -52,6 +56,19 @@
   </div>
 </section>
 
+<section class="stories-teaser">
+  <div class="wrap">
+    <div class="stories-teaser-head">
+      <h2>New: short stories to read</h2>
+      <a class="nav-link" href="stories.html" style="color: var(--brick); border-color: var(--brick);">All stories →</a>
+    </div>
+    <p class="section-hint" style="margin-top: -14px;">Click any word in a story to see its translation and hear it pronounced.</p>
+    <div class="stories-teaser-grid" id="stories-teaser-grid">
+      <!-- Filled in by app.js from STORIES in stories-data.js -->
+    </div>
+  </div>
+</section>
+
 <section class="signboard-section">
   <div class="wrap">
     <div id="topic-grid">
@@ -63,6 +80,7 @@
 <p class="footer-note wrap">mehr Themen kommen bald — more topics coming soon</p>
 
 <script src="data.js"></script>
+<script src="stories-data.js"></script>
 <script src="app.js"></script>
 </body>
 </html>

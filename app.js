@@ -52,4 +52,31 @@ function renderTopicGrid() {
   renderTopicGroup(grid, "B", "LESS COMMON – Use Weekly/Monthly", weekly);
 }
 
-document.addEventListener("DOMContentLoaded", renderTopicGrid);
+function storyTeaserCard(story) {
+  const count = storyWordCount(story);
+  return `
+    <a class="story-card" data-level="${story.level}" href="story.html?id=${encodeURIComponent(story.id)}">
+      <div class="story-card-top">
+        <span class="story-card-icon" aria-hidden="true">${story.icon}</span>
+        <span class="level-pill" data-level="${story.level}">${story.level}</span>
+      </div>
+      <div>
+        <h3>${story.title.en}</h3>
+        <span class="story-card-de">${story.title.de}</span>
+      </div>
+      <p class="story-card-tagline">${story.taglineEn}</p>
+      <span class="story-card-meta">${count} words</span>
+    </a>
+  `;
+}
+
+function renderStoriesTeaser() {
+  const grid = document.getElementById("stories-teaser-grid");
+  if (!grid || typeof STORIES === "undefined") return;
+  grid.innerHTML = STORIES.slice(0, 3).map(storyTeaserCard).join("");
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  renderTopicGrid();
+  renderStoriesTeaser();
+});
