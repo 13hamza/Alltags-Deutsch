@@ -89,15 +89,32 @@ function renderStory(story) {
     activeWord = null;
   }
 
-  function showWord(span) {
+  async function showWord(span) {
     if (activeWord) activeWord.classList.remove("is-active");
     activeWord = span;
     span.classList.add("is-active");
 
     const original = span.textContent;
-    const gloss = lookupGloss(span.dataset.word);
+    const wordKey = span.dataset.word;
+    const gloss = lookupGloss(wordKey);
+
     popoverDe.textContent = original;
-    popoverEn.textContent = gloss;
+
+    if (gloss) {
+      popoverEn.textContent = gloss;
+    } else {
+      popoverEn.textContent = "Translating...";
+      try {
+        const fetchedGloss = await fetchFreeTranslation(wordKey);
+        if (activeWord === span) {
+          popoverEn.textContent = fetchedGloss || "Translation unavailable";
+        }
+      } catch (err) {
+        if (activeWord === span) {
+          popoverEn.textContent = "Translation unavailable";
+        }
+      }
+    }
 
     const containerRect = storyText.getBoundingClientRect();
     const spanRect = span.getBoundingClientRect();
