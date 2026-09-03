@@ -19,7 +19,7 @@ function renderNotFound() {
   document.getElementById("topic-root").innerHTML = `
     <div class="empty-state wrap">
       <h1>Topic not found</h1>
-      <p>That signboard must have blown away. <a class="back-link" href="index.html" style="color:var(--brick)">← Back to all topics</a></p>
+      <p>That signboard must have blown away. <a class="back-link" href="topics.html" style="color:var(--brick)">← Back to all topics</a></p>
     </div>
   `;
 }
@@ -65,7 +65,7 @@ function renderTopic(topic) {
       </div>
     </section>
 
-    <p class="footer-note wrap"><a class="back-link" href="index.html" style="color:var(--brick); border-color: var(--brick);">← Back to all topics</a></p>
+    <p class="footer-note wrap"><a class="back-link" href="topics.html" style="color:var(--brick); border-color: var(--brick);">← Back to all topics</a></p>
   `;
 
   // Topic h1 pronunciation

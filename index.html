@@ -19,8 +19,10 @@
       Alltags-Deutsch <span>every day, auf Deutsch</span>
     </a>
     <nav class="site-nav">
-      <a class="nav-link is-active" href="index.html">Topics</a>
+      <a class="nav-link is-active" href="index.html">Home</a>
+      <a class="nav-link" href="topics.html">Topics</a>
       <a class="nav-link" href="stories.html">Stories</a>
+      <a class="nav-link" href="words.html">Words</a>
     </nav>
   </div>
 </header>
@@ -30,7 +32,7 @@
     <div class="hero-text">
       <p class="hero-eyebrow">a little vocabulary stall</p>
       <h1>German for the places you actually go</h1>
-      <p>Pick a topic below. Each one hangs its own signboard of everyday words and real dialogues click anything German to hear it spoken aloud.</p>
+      <p>Everyday words, real dialogues, and short stories — click anything German to hear it spoken aloud.</p>
     </div>
 
     <div class="hero-art" aria-hidden="true">
@@ -59,7 +61,20 @@
 <section class="stories-teaser">
   <div class="wrap">
     <div class="stories-teaser-head">
-      <h2>New: short stories to read</h2>
+      <h2>Words</h2>
+      <a class="nav-link" href="words.html" style="color: var(--brick); border-color: var(--brick);">All words →</a>
+    </div>
+    <p class="section-hint" style="margin-top: -14px;">A few words to start with — click any to hear it spoken aloud.</p>
+    <div class="vocab-grid" id="words-teaser-grid">
+      <!-- Filled in by app.js from WORDS in words-data.js -->
+    </div>
+  </div>
+</section>
+
+<section class="stories-teaser">
+  <div class="wrap">
+    <div class="stories-teaser-head">
+      <h2>Stories</h2>
       <a class="nav-link" href="stories.html" style="color: var(--brick); border-color: var(--brick);">All stories →</a>
     </div>
     <p class="section-hint" style="margin-top: -14px;">Click any word in a story to see its translation and hear it pronounced.</p>
@@ -69,18 +84,24 @@
   </div>
 </section>
 
-<section class="signboard-section">
+<section class="stories-teaser">
   <div class="wrap">
-    <div id="topic-grid">
-      <!-- Topics are rendered here by app.js from data.js -->
+    <div class="stories-teaser-head">
+      <h2>Topics</h2>
+      <a class="nav-link" href="topics.html" style="color: var(--brick); border-color: var(--brick);">All topics →</a>
+    </div>
+    <p class="section-hint" style="margin-top: -14px;">Pick a topic to see its signboard of everyday words and dialogues.</p>
+    <div class="signboard-grid" id="topics-teaser-grid">
+      <!-- Filled in by app.js from TOPICS in data.js -->
     </div>
   </div>
 </section>
 
-<p class="footer-note wrap">mehr Themen kommen bald — more topics coming soon</p>
+<p class="footer-note wrap">mehr kommt bald — more coming soon</p>
 
 <script src="data.js"></script>
 <script src="stories-data.js"></script>
+<script src="words-data.js"></script>
 <script src="app.js"></script>
 </body>
 </html>

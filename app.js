@@ -1,8 +1,9 @@
 /* ============================================================
    Alltags-Deutsch — app.js (home page)
-   Renders one hanging "signboard" card per topic in TOPICS
-   (from data.js), grouped by topic.category into headed
-   sections, and links each one to topic.html?id=...
+   The homepage is a short landing page: a hero, then three
+   small teasers — 3 topics, 3 stories, 3 words — each linking
+   through to its own full page (topics.html / stories.html /
+   words.html). No full lists live here anymore.
    ============================================================ */
 
 function signboardCard(topic) {
@@ -21,35 +22,10 @@ function signboardCard(topic) {
   `;
 }
 
-function renderTopicGroup(container, letter, title, topics) {
-  const section = document.createElement("div");
-  section.className = "topic-group";
-
-  const heading = `
-    <div class="section-heading">
-      <span class="num">${letter}</span>
-      <h2>${title}</h2>
-    </div>
-  `;
-
-  const body = topics.length
-    ? `<div class="signboard-grid">${topics.map(signboardCard).join("")}</div>`
-    : `<p class="section-hint">Themen kommen bald — topics coming soon.</p>`;
-
-  section.innerHTML = heading + body;
-  container.appendChild(section);
-}
-
-function renderTopicGrid() {
-  const grid = document.getElementById("topic-grid");
-  if (!grid) return;
-
-  const daily = TOPICS.filter(t => t.category === "daily");
-  const weekly = TOPICS.filter(t => t.category === "weekly-monthly");
-
-  grid.innerHTML = "";
-  renderTopicGroup(grid, "A", "Daily Use", daily);
-  renderTopicGroup(grid, "B", "LESS COMMON – Use Weekly/Monthly", weekly);
+function renderTopicsTeaser() {
+  const grid = document.getElementById("topics-teaser-grid");
+  if (!grid || typeof TOPICS === "undefined") return;
+  grid.innerHTML = TOPICS.slice(0, 3).map(signboardCard).join("");
 }
 
 function storyTeaserCard(story) {
@@ -76,7 +52,39 @@ function renderStoriesTeaser() {
   grid.innerHTML = STORIES.slice(0, 3).map(storyTeaserCard).join("");
 }
 
+function teaserSpeakerIconSVG() {
+  return `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+    <path d="M4 9v6h4l5 5V4L8 9H4z" fill="currentColor"/>
+    <path d="M16.5 8.5a5 5 0 0 1 0 7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" fill="none"/>
+    <path d="M19 6a9 9 0 0 1 0 12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" fill="none" opacity="0.6"/>
+  </svg>`;
+}
+
+function wordTeaserTicket(word) {
+  const safeDe = String(word.de).replace(/"/g, "&quot;");
+  return `
+    <button class="ticket" type="button" data-de="${safeDe}" aria-label="Pronounce ${safeDe}">
+      <span class="ticket-text">
+        <span class="ticket-de">${word.de}</span>
+        <span class="ticket-en">${word.en}</span>
+      </span>
+      <span class="speaker-btn" aria-hidden="true">${teaserSpeakerIconSVG()}</span>
+    </button>
+  `;
+}
+
+function renderWordsTeaser() {
+  const grid = document.getElementById("words-teaser-grid");
+  if (!grid || typeof getFeaturedWords === "undefined") return;
+  const words = getFeaturedWords();
+  grid.innerHTML = words.map(wordTeaserTicket).join("");
+  grid.querySelectorAll(".ticket").forEach(el => {
+    el.addEventListener("click", () => speakGerman(el.dataset.de));
+  });
+}
+
 document.addEventListener("DOMContentLoaded", () => {
-  renderTopicGrid();
+  renderWordsTeaser();
   renderStoriesTeaser();
+  renderTopicsTeaser();
 });

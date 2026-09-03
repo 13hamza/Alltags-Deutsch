@@ -136,7 +136,7 @@ a:focus-visible,
 .hero {
   background: var(--pine);
   color: var(--chalk);
-  padding: 64px 0 96px;
+  padding: 44px 0 56px;
   position: relative;
 }
 
@@ -160,15 +160,15 @@ a:focus-visible,
 
 .hero h1 {
   font-family: var(--font-display);
-  font-size: clamp(2.4rem, 5vw, 3.6rem);
+  font-size: clamp(2rem, 4.2vw, 2.9rem);
   font-weight: 600;
-  margin: 0 0 18px;
-  max-width: 14ch;
+  margin: 0 0 14px;
+  max-width: 15ch;
 }
 
 .hero p {
-  font-size: 1.1rem;
-  max-width: 52ch;
+  font-size: 1.02rem;
+  max-width: 50ch;
   color: #DCE6DE;
 }
 
@@ -703,7 +703,13 @@ a:focus-visible,
 /* ---------- Homepage teaser section ---------- */
 
 .stories-teaser {
-  padding: 20px 0 64px;
+  padding: 20px 0 48px;
+}
+
+.stories-teaser + .stories-teaser {
+  padding-top: 0;
+  border-top: 1px solid #E4DCC6;
+  margin-top: 4px;
 }
 
 .stories-teaser-head {
@@ -779,6 +785,30 @@ a:focus-visible,
   color: var(--pine-deep);
   border-color: var(--mustard);
 }
+
+.word-search-wrap { margin: 22px 0 0; }
+
+.word-search {
+  width: 100%;
+  max-width: 420px;
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  padding: 12px 16px;
+  border-radius: 999px;
+  background: rgba(246, 241, 226, 0.12);
+  color: var(--chalk);
+  border: 1px solid rgba(246, 241, 226, 0.25);
+}
+
+.word-search::placeholder { color: #B9C6BC; }
+
+.word-search:focus-visible {
+  outline: none;
+  border-color: var(--mustard);
+  background: rgba(246, 241, 226, 0.2);
+}
+
+.word-group + .word-group { margin-top: 40px; padding-top: 36px; }
 
 .stories-list-section { padding: 48px 0 90px; }
 
