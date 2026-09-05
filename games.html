@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Games · Alltags-Deutsch</title>
+<meta name="description" content="Practice the Alltags-Deutsch vocabulary with three games: Multiple Choice, Type It and Match It.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Karla:wght@400;500;700&family=Caveat:wght@600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="index.html">
+      <span class="flag-icon">&#x1f1e9;&#x1f1ea;</span>
+      Alltags-Deutsch <span>every day, auf Deutsch</span>
+    </a>
+    <nav class="site-nav">
+      <a class="nav-link" href="index.html">Home</a>
+      <a class="nav-link" href="topics.html">Topics</a>
+      <a class="nav-link" href="stories.html">Stories</a>
+      <a class="nav-link" href="words.html">Words</a>
+      <a class="nav-link is-active" href="games.html">Games</a>
+    </nav>
+  </div>
+</header>
+
+<div id="fx-layer"></div>
+
+<!-- ══════════════ SETUP SCREEN ══════════════ -->
+<section class="games-section" id="setup-screen">
+  <div class="wrap games-wrap">
+
+    <div class="games-hero">
+      <span class="hero-flag">&#x1f1e9;&#x1f1ea;</span>
+      <h1>Play &amp; practice</h1>
+      <p id="games-hero-sub">Loading vocabulary…</p>
+    </div>
+
+    <!-- GAME MODE -->
+    <div class="game-setup-card">
+      <div class="setup-label">Game mode</div>
+      <div class="mode-cards">
+        <div class="mode-card selected" data-gamemode="mc">
+          <span class="mc-icon">&#x1f0cf;</span>
+          <div class="mc-name">Multiple Choice</div>
+          <div class="mc-desc">Pick the right answer from 4 options</div>
+        </div>
+        <div class="mode-card" data-gamemode="type">
+          <span class="mc-icon">&#x2328;&#xfe0f;</span>
+          <div class="mc-name">Type It</div>
+          <div class="mc-desc">Spell the translation yourself</div>
+        </div>
+        <div class="mode-card" data-gamemode="match">
+          <span class="mc-icon">&#x1f517;</span>
+          <div class="mc-name">Match It</div>
+          <div class="mc-desc">Pair German with English words</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DIRECTION -->
+    <div class="game-setup-card" id="dir-section">
+      <div class="setup-label">Direction</div>
+      <div class="dir-toggle">
+        <button type="button" class="dir-btn selected" data-val="de-en">&#x1f1e9;&#x1f1ea; &rarr; &#x1f1ec;&#x1f1e7; &nbsp;German &rarr; English</button>
+        <button type="button" class="dir-btn" data-val="en-de">&#x1f1ec;&#x1f1e7; &rarr; &#x1f1e9;&#x1f1ea; &nbsp;English &rarr; German</button>
+      </div>
+    </div>
+
+    <!-- LEARNING SPEED -->
+    <div class="game-setup-card">
+      <div class="setup-label">Learning speed</div>
+      <div class="rate-toggle">
+        <div class="rate-btn" data-val="0.6">
+          <div class="rt-name">&#x1f422; Relaxed</div>
+          <div class="rt-desc">Repeats words gently</div>
+        </div>
+        <div class="rate-btn selected" data-val="1">
+          <div class="rt-name">&#x1f6b6; Normal</div>
+          <div class="rt-desc">Balanced pace</div>
+        </div>
+        <div class="rate-btn" data-val="1.7">
+          <div class="rt-name">&#x1f430; Intense</div>
+          <div class="rt-desc">Drops mastered words fast</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LEVEL -->
+    <div class="game-setup-card">
+      <div class="setup-label">Level</div>
+      <div class="level-tabs" id="game-level-tabs"></div>
+    </div>
+
+    <!-- LETTER FILTER -->
+    <div class="game-setup-card">
+      <div class="setup-label">Word group (by starting letter)</div>
+      <div class="cat-toolbar">
+        <span class="cat-count" id="cat-count">All words</span>
+        <button type="button" class="cat-clear" id="cat-clear">Reset</button>
+      </div>
+      <div class="cat-scroll">
+        <div class="cat-wrap" id="cat-wrap"></div>
+      </div>
+    </div>
+
+    <button type="button" class="start-btn" id="start-btn">&#x25b6; Start Game</button>
+
+    <div class="game-scoreboard">
+      <div class="sb-header">
+        <h3>&#x1f3c5; Top Scores</h3>
+        <div>
+          <button type="button" class="reset-btn" id="reset-learning-btn">Reset Learning</button>
+          <button type="button" class="reset-btn" id="reset-btn">Clear Scores</button>
+        </div>
+      </div>
+      <div class="sb-list" id="sb-list"></div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══════════════ GAME SCREEN ══════════════ -->
+<section class="games-section" id="game-screen">
+  <div class="wrap games-wrap">
+
+    <div class="game-topbar">
+      <button type="button" class="back-btn" id="back-btn">&larr; Menu</button>
+      <div class="lives-wrap" id="lives-wrap">
+        <span class="heart" id="h1">&#x2764;&#xfe0f;</span>
+        <span class="heart" id="h2">&#x2764;&#xfe0f;</span>
+        <span class="heart" id="h3">&#x2764;&#xfe0f;</span>
+      </div>
+      <div class="diff-badge" id="diff-badge">
+        <span class="diff-star">&#x26a1;</span>
+        <span class="diff-label">LV<span id="diff-level">1</span></span>
+        <span class="diff-dots" id="diff-dots"></span>
+      </div>
+      <div class="score-badge">&#x2b50; <span id="score-val">0</span></div>
+    </div>
+
+    <div class="streak-bar">
+      <div class="streak-pill" id="streak-pill">&#x1f525; <span id="streak-num">0</span> streak</div>
+    </div>
+
+    <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+    <div class="session-tag" id="session-tag"></div>
+
+    <!-- QUIZ SECTION (MC + Type) -->
+    <div id="quiz-section">
+      <div class="q-card" id="q-card">
+        <div class="q-direction" id="q-dir"></div>
+        <div class="q-word" id="q-word">&mdash;</div>
+        <div class="speak-hint" id="speak-hint">&#x1f50a; tap to hear pronunciation</div>
+        <div class="q-cat-tag" id="q-cat-tag"></div>
+      </div>
+
+      <!-- MULTIPLE CHOICE -->
+      <div id="mc-section">
+        <div class="options-grid" id="opts-grid">
+          <button type="button" class="opt-btn" data-idx="0"><span class="key-hint">A</span></button>
+          <button type="button" class="opt-btn" data-idx="1"><span class="key-hint">B</span></button>
+          <button type="button" class="opt-btn" data-idx="2"><span class="key-hint">C</span></button>
+          <button type="button" class="opt-btn" data-idx="3"><span class="key-hint">D</span></button>
+        </div>
+      </div>
+
+      <!-- TYPING -->
+      <div id="type-section" style="display:none">
+        <div class="special-chars" id="special-chars">
+          <button type="button" class="char-btn" data-char="&auml;">&auml;</button>
+          <button type="button" class="char-btn" data-char="&ouml;">&ouml;</button>
+          <button type="button" class="char-btn" data-char="&uuml;">&uuml;</button>
+          <button type="button" class="char-btn" data-char="&Auml;">&Auml;</button>
+          <button type="button" class="char-btn" data-char="&Ouml;">&Ouml;</button>
+          <button type="button" class="char-btn" data-char="&Uuml;">&Uuml;</button>
+          <button type="button" class="char-btn" data-char="&szlig;">&szlig;</button>
+        </div>
+        <div class="type-wrap">
+          <div class="type-input-row">
+            <input class="type-input" id="type-input" type="text" placeholder="Type your answer…"
+              autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
+            <button type="button" class="submit-btn" id="submit-btn">Check</button>
+          </div>
+          <div class="spell-feedback" id="spell-feedback"></div>
+        </div>
+      </div>
+
+      <div class="status-row">
+        <div class="status-msg" id="status-msg">Choose your answer</div>
+      </div>
+
+      <div class="game-controls">
+        <button type="button" class="next-btn" id="next-btn" disabled>Next &rarr;</button>
+        <button type="button" class="skip-btn" id="skip-btn">Skip</button>
+      </div>
+    </div>
+
+    <!-- MATCH SECTION -->
+    <div id="match-section">
+      <div class="match-header">
+        <div class="match-timer" id="match-timer">0:00</div>
+        <p id="match-status-text">Tap a German word, then its English match</p>
+      </div>
+      <div class="match-score-row">
+        <span>&#x2705; Matched: <strong id="match-matched">0</strong>/6</span>
+        <span>&#x274c; Mistakes: <strong id="match-mistakes">0</strong></span>
+      </div>
+      <div class="match-grid" id="match-grid"></div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══════════════ GAME OVER ══════════════ -->
+<div id="gameover-overlay">
+  <div class="gameover-card">
+    <div class="go-icon" id="go-icon">&#x1f494;</div>
+    <h2 id="go-title">Game Over</h2>
+    <p id="go-sub">You ran out of lives</p>
+    <div class="go-score" id="go-score">0<small>points</small></div>
+    <div id="wrong-words-container" style="display:none;">
+      <div class="wrong-words-list" id="wrong-words-list">
+        <h4>&#x1f4dd; Words to review:</h4>
+        <div id="wrong-words-items"></div>
+      </div>
+    </div>
+    <div class="go-btns">
+      <button type="button" class="go-retry" id="go-retry">Play again</button>
+      <button type="button" class="go-menu" id="go-menu">Back to menu</button>
+    </div>
+  </div>
+</div>
+
+<script src="data.js"></script>
+<script src="words-data.js"></script>
+<script src="games.js"></script>
+</body>
+</html>

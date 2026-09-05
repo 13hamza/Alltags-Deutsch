@@ -15,6 +15,7 @@ No build step, no backend, no dependencies — just open `index.html` in your br
 - **Words page (`words.html`)** — Comprehensive vocabulary directory grouped alphabetically (A–Z) with CEFR level filters (A1–B2) and live search.
 - **Stories & Story reader (`stories.html` & `story.html`)** — Graded German short stories with an interactive word lookup glossary. Click any word in a story to see its translation and hear it pronounced.
 - **Topics & Topic page (`topics.html` & `topic.html`)** — Topic-by-topic breakdowns featuring vocabulary tickets and interactive real-life dialogues line-by-line with a full dialogue playback feature.
+- **Games page (`games.html` & `games.js`)** — Interactive vocabulary practice games including Multiple Choice, Type It (with German special character input), and Match It pairing cards, powered by an adaptive learning system with difficulty scaling, lives, streaks, local scoreboards, and wrong-word review.
 - **Zero build system** — Pure HTML5, CSS3, and modern vanilla JavaScript.
 
 ---
@@ -29,6 +30,7 @@ Alltags-Deutsch v1/
 ├── stories.html      # Short stories directory page (A1–B1)
 ├── story.html        # Story reader page shell (reads ?id=... with glossary lookup)
 ├── words.html        # Vocabulary page (A–Z grouped, level filter, search)
+├── games.html        # Interactive vocabulary practice games page
 ├── style.css         # Unified stylesheet (CSS custom properties, market-stall theme)
 ├── data.js           # Topic content (vocab + dialogues) + Web Speech API engine
 ├── stories-data.js   # Short story texts & word glossary dictionary
@@ -39,6 +41,7 @@ Alltags-Deutsch v1/
 ├── stories.js        # Renders stories list grid on stories.html
 ├── story.js          # Renders story reader & interactive glossary on story.html
 ├── words.js          # Renders vocabulary cards, search, & filters on words.html
+├── games.js          # Games logic, quiz modes, and adaptive weight system
 └── README.md
 ```
 
