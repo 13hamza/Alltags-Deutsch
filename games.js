@@ -1158,6 +1158,21 @@ document.addEventListener("DOMContentLoaded", () => {
   renderLetterPills();
   updateHeroSub();
   renderScoreboard();
+  applyModeFromQuery();
 });
+
+/** If the page was opened as games.html?mode=mc|type|match (e.g. from the
+ *  homepage teaser), pre-select that mode card so Start Game is one tap away. */
+function applyModeFromQuery() {
+  const params = new URLSearchParams(window.location.search);
+  const mode = params.get("mode");
+  if (!mode) return;
+  const card = document.querySelector(`.mode-card[data-gamemode="${mode}"]`);
+  if (!card) return;
+  document.querySelectorAll(".mode-card").forEach(x => x.classList.remove("selected"));
+  card.classList.add("selected");
+  setupGameMode = mode;
+  dirSection.style.display = setupGameMode === "match" ? "none" : "";
+}
 
 })();

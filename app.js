@@ -1,10 +1,33 @@
 /* ============================================================
    Alltags-Deutsch — app.js (home page)
-   The homepage is a short landing page: a hero, then three
-   small teasers — 3 topics, 3 stories, 3 words — each linking
-   through to its own full page (topics.html / stories.html /
-   words.html). No full lists live here anymore.
+   The homepage is a short landing page: a hero, then four small
+   teasers — words, stories, topics, games — each linking through
+   to its own full page (words.html / stories.html / topics.html /
+   games.html). No full lists live here anymore.
    ============================================================ */
+
+const GAME_MODES = [
+  { id: "mc", icon: "🃏", title: "Multiple Choice", tagline: "Pick the right answer from 4 options." },
+  { id: "type", icon: "⌨️", title: "Type It", tagline: "Spell the translation yourself." },
+  { id: "match", icon: "🔗", title: "Match It", tagline: "Pair German with English words." }
+];
+
+function gameTeaserCard(mode) {
+  return `
+    <a class="game-teaser-card" href="games.html?mode=${encodeURIComponent(mode.id)}">
+      <span class="game-teaser-icon" aria-hidden="true">${mode.icon}</span>
+      <h3>${mode.title}</h3>
+      <p class="story-card-tagline">${mode.tagline}</p>
+      <span class="game-teaser-cta">Play →</span>
+    </a>
+  `;
+}
+
+function renderGamesTeaser() {
+  const grid = document.getElementById("games-teaser-grid");
+  if (!grid) return;
+  grid.innerHTML = GAME_MODES.map(gameTeaserCard).join("");
+}
 
 function signboardCard(topic) {
   return `
@@ -87,4 +110,5 @@ document.addEventListener("DOMContentLoaded", () => {
   renderWordsTeaser();
   renderStoriesTeaser();
   renderTopicsTeaser();
+  renderGamesTeaser();
 });

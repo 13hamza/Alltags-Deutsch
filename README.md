@@ -8,10 +8,11 @@ No build step, no backend, no dependencies — just open `index.html` in your br
 
 ## Features
 
-- **Home page (`index.html`)** — Quick teasers presented in three sequential sections:
+- **Home page (`index.html`)** — Quick teasers presented in four sequential sections:
   1. **Words** — A sampling of essential vocabulary tickets with click-to-hear pronunciation.
   2. **Stories** — Featured graded-reader stories with level badges (A1–B1).
   3. **Topics** — Hanging market-stall signboard cards for real-world scenarios.
+  4. **Games** — Quick launch cards for interactive game modes (Multiple Choice, Type It, Match It).
 - **Words page (`words.html`)** — Comprehensive vocabulary directory grouped alphabetically (A–Z) with CEFR level filters (A1–B2) and live search.
 - **Stories & Story reader (`stories.html` & `story.html`)** — Graded German short stories with an interactive word lookup glossary. Click any word in a story to see its translation and hear it pronounced.
 - **Topics & Topic page (`topics.html` & `topic.html`)** — Topic-by-topic breakdowns featuring vocabulary tickets and interactive real-life dialogues line-by-line with a full dialogue playback feature.
@@ -24,7 +25,7 @@ No build step, no backend, no dependencies — just open `index.html` in your br
 
 ```
 Alltags-Deutsch v1/
-├── index.html        # Home landing page (Words -> Stories -> Topics teasers)
+├── index.html        # Home landing page (Words, Stories, Topics, & Games teasers)
 ├── topics.html       # All topics overview page
 ├── topic.html        # Topic page shell (reads ?id=...)
 ├── stories.html      # Short stories directory page (A1–B1)
@@ -35,7 +36,7 @@ Alltags-Deutsch v1/
 ├── data.js           # Topic content (vocab + dialogues) + Web Speech API engine
 ├── stories-data.js   # Short story texts & word glossary dictionary
 ├── words-data.js     # Vocabulary dataset (Goethe-Institut Wortliste)
-├── app.js            # Home page logic (renders Words, Stories, & Topics teasers)
+├── app.js            # Home page logic (renders Words, Stories, Topics, & Games teasers)
 ├── topics.js         # Renders topic grid on topics.html
 ├── topic.js          # Renders topic details & dialogues on topic.html
 ├── stories.js        # Renders stories list grid on stories.html
@@ -74,6 +75,11 @@ To publish online, upload the project directory as-is to any static hosting serv
 
 3. **Vocabulary List (`words-data.js`)**
    - Contains `WORDS` array with `{ level, letter, de, en }` entries (e.g. A1 Goethe-Institut Start Deutsch 1 Wortliste).
+
+4. **Vocabulary Practice Games (`games.js` & `games.html`)**
+   - Automatically builds question pools from `words-data.js` and topic vocabulary from `data.js`.
+   - Offers Multiple Choice, Type It (with German character quick buttons `ä`, `ö`, `ü`, `ß`), and Match It card pairing.
+   - Features adaptive weights (prioritizing missed words), high scores stored in `localStorage`, and post-game wrong-word review modals.
 
 ---
 

@@ -791,6 +791,43 @@ body.word-popup-lock { overflow: hidden; }
   letter-spacing: 0.01em;
 }
 
+.game-teaser-card {
+  background: #FFFDF7;
+  border-radius: var(--radius);
+  box-shadow: 0 8px 20px rgba(20, 39, 32, 0.08);
+  padding: 26px 22px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  text-decoration: none;
+  color: var(--ink);
+  border-top: 4px solid var(--brick);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.game-teaser-card:hover,
+.game-teaser-card:focus-visible {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 28px rgba(20, 39, 32, 0.14);
+}
+
+.game-teaser-icon { font-size: 1.8rem; }
+
+.game-teaser-card h3 {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  margin: 2px 0 0;
+}
+
+.game-teaser-card .story-card-tagline { flex: 1; }
+
+.game-teaser-cta {
+  font-size: 0.78rem;
+  color: var(--brick);
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+
 /* ---------- Homepage teaser section ---------- */
 
 .stories-teaser {
