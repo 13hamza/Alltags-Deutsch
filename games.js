@@ -80,34 +80,9 @@ class LearningSystem {
   getWrongWords() { return this.wrongWords; }
   clearWrongWords() { this.wrongWords = []; }
 
-  getNextWord(pool, excludeWord) {
-    const unseen = [];
-    const seenWords = [];
-
-    for (const w of pool) {
-      const key = this.getKey(w.de, w.en);
-      const rec = this.wordRecords[key];
-      if (!rec || !rec.seen) {
-        unseen.push(w);
-      } else if (excludeWord && w.de === excludeWord.de && w.en === excludeWord.en) {
-        continue;
-      } else {
-        seenWords.push([w, rec]);
-      }
-    }
-
-    if (unseen.length > 0) return unseen[Math.floor(Math.random() * unseen.length)];
-
-    if (seenWords.length === 0) {
-      for (const w of pool) {
-        if (w.de !== excludeWord?.de || w.en !== excludeWord?.en) return w;
-      }
-      return null;
-    }
-
-    seenWords.sort((a, b) => a[1].weight - b[1].weight);
-    const topN = Math.min(3, seenWords.length);
-    return seenWords[Math.floor(Math.random() * topN)][0];
+  getNextWordWeight(de, en) {
+    const rec = this.wordRecords[this.getKey(de, en)];
+    return rec ? rec.weight : 1.0;
   }
 
   getStats(pool) {
@@ -161,6 +136,7 @@ let setupLevel = "A1";
 const MAX_LETTERS = 6;
 
 let pool = [], lives = 3, score = 0, streak = 0, questionCount = 0;
+let sessionQueue = [], sessionIndex = 0;
 let answered = false, gameOver = false;
 let currentQ = null;
 let correctIdx = -1;
@@ -527,6 +503,8 @@ function startGame() {
   }
 
   lives = 3; score = 0; streak = 0; questionCount = 0; gameOver = false;
+  sessionQueue = buildSessionQueue(pool);
+  sessionIndex = 0;
   scoreVal.textContent = "0";
   progressFill.style.width = "0%";
   setupScreen.style.display = "none";
@@ -558,7 +536,7 @@ function startGame() {
     specialChars.style.display = (setupGameMode === "type" && setupDir === "en-de") ? "flex" : "none";
     updateLives();
     renderScoreboard();
-    sessionTag.textContent = `${pool.length} words · ${letterLabel(setupLetters)} · 📚 ${progress}% covered (${stats.seen}/${stats.total})`;
+    sessionTag.textContent = `${pool.length} words · ${letterLabel(setupLetters)} · 📚 lifetime ${progress}% (${stats.seen}/${stats.total})`;
     nextQuestion();
   }
 }
@@ -580,6 +558,18 @@ function buildPool(level, letters) {
   return words.filter(w => letters.includes(w.letter));
 }
 
+/** Build this session's question order: every word in the pool exactly
+ *  once (so nothing repeats within a session), weighted-shuffled so
+ *  words you've historically gotten wrong tend to surface earlier —
+ *  that's the "difficulty" learning system actually doing something
+ *  visible, instead of only nudging a score multiplier. */
+function buildSessionQueue(wordPool) {
+  return wordPool
+    .map(w => ({ w, score: Math.random() * learning.getNextWordWeight(w.de, w.en) }))
+    .sort((a, b) => b.score - a.score)
+    .map(x => x.w);
+}
+
 /* ────────────────────────────────────────
    COMPLETION / NEXT QUESTION
    ──────────────────────────────────────── */
@@ -594,18 +584,17 @@ function showCompletion() {
   playWinSound();
 
   const wrongWords = learning.getWrongWords();
-  const stats = learning.getStats(pool);
 
   goIcon.textContent = "🏆";
-  goTitle.textContent = "🎉 Complete!";
-  goSub.textContent = `All ${stats.total} words covered! 🎊`;
+  goTitle.textContent = "🎉 Round complete!";
+  goSub.textContent = `You went through all ${sessionQueue.length} word${sessionQueue.length !== 1 ? "s" : ""} in this round — nothing repeated. 🎊`;
   goScore.innerHTML = `${score}<small>points</small>`;
   renderWrongWords(wrongWords, true);
   goOverlay.style.display = "flex";
 }
 
 function nextQuestion() {
-  if (learning.isComplete(pool) && !gameOver) { showCompletion(); return; }
+  if (sessionIndex >= sessionQueue.length && !gameOver) { showCompletion(); return; }
 
   answered = false;
   spellFeedback.innerHTML = "";
@@ -616,12 +605,8 @@ function nextQuestion() {
   nextBtn.disabled = true;
   submitBtn.disabled = false;
 
-  const exclude = currentQ ? { de: currentQ.de, en: currentQ.en } : null;
-  let selection = learning.getNextWord(pool, exclude);
-  if (!selection) {
-    if (learning.isComplete(pool)) { showCompletion(); return; }
-    selection = pool[Math.floor(Math.random() * pool.length)];
-  }
+  const selection = sessionQueue[sessionIndex];
+  sessionIndex++;
   learning.initWord(selection.de, selection.en);
 
   currentQ = {
@@ -640,11 +625,9 @@ function nextQuestion() {
   qWord.textContent = currentQ.prompt;
   qCatTag.textContent = "Letter " + currentQ.letter;
 
-  const stats = learning.getStats(pool);
-  const progress = stats.total > 0 ? Math.round((stats.seen / stats.total) * 100) : 0;
   const wrongCount = learning.getWrongWords().length;
-  sessionTag.textContent = `${pool.length} words · ${letterLabel(setupLetters)} · Q${questionCount + 1} · 📚 ${progress}% covered (${stats.seen}/${stats.total}) ${wrongCount > 0 ? "· ❌ " + wrongCount + " wrong" : ""}`;
-  progressFill.style.width = Math.min((questionCount / 30) * 100, 95) + "%";
+  sessionTag.textContent = `${pool.length} words · ${letterLabel(setupLetters)} · Q${sessionIndex}/${sessionQueue.length} ${wrongCount > 0 ? "· ❌ " + wrongCount + " wrong" : ""}`;
+  progressFill.style.width = Math.round((sessionIndex / sessionQueue.length) * 100) + "%";
 
   const lang = setupDir === "de-en" ? "de-DE" : "en-GB";
   speakWord(currentQ.prompt, lang);
@@ -947,21 +930,17 @@ function handleMatchClick(el) {
       score += timeBonus;
       scoreVal.textContent = score;
 
-      if (learning.isComplete(pool)) {
-        showCompletion();
-      } else {
-        const stats = learning.getStats(pool);
-        const progress = stats.total > 0 ? Math.round((stats.seen / stats.total) * 100) : 0;
-        setTimeout(() => {
-          insertScore(score);
-          goIcon.textContent = "🎉";
-          goTitle.textContent = "Matched!";
-          goSub.textContent = `All ${MATCH_PAIR_COUNT} pairs in ${matchTimer.textContent}${timeBonus > 0 ? ` · +${timeBonus} speed bonus` : ""} · 📚 ${progress}% covered`;
-          goScore.innerHTML = `${score}<small>points</small>`;
-          renderWrongWords(learning.getWrongWords(), true);
-          goOverlay.style.display = "flex";
-        }, 400);
-      }
+      const stats = learning.getStats(pool);
+      const progress = stats.total > 0 ? Math.round((stats.seen / stats.total) * 100) : 0;
+      setTimeout(() => {
+        insertScore(score);
+        goIcon.textContent = "🎉";
+        goTitle.textContent = "Matched!";
+        goSub.textContent = `All ${MATCH_PAIR_COUNT} pairs in ${matchTimer.textContent}${timeBonus > 0 ? ` · +${timeBonus} speed bonus` : ""} · 📚 lifetime ${progress}% (${stats.seen}/${stats.total})`;
+        goScore.innerHTML = `${score}<small>points</small>`;
+        renderWrongWords(learning.getWrongWords(), true);
+        goOverlay.style.display = "flex";
+      }, 400);
     }
   } else {
     const pair = matchPairs[parseInt(el.dataset.pairid, 10)];
