@@ -18,7 +18,7 @@ function speakerIconSVG() {
   </svg>`;
 }
 
-let activeWordLevel = "A1";
+let activeWordLevel = "ALL";
 let wordQuery = "";
 
 function renderWordLevelTabs() {
@@ -135,7 +135,7 @@ function renderWordsForLevel() {
     root.innerHTML = `
       <div class="stories-coming-soon">
         <span class="hand">Kommt bald!</span>
-        <p>${activeWordLevel} words are on their way. Try the A1 list in the meantime.</p>
+        <p>${activeWordLevel} words are on their way. Try the <strong>All</strong> or <strong>A1</strong> tab in the meantime.</p>
       </div>
     `;
     return;

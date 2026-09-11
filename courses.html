@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Topics · Alltags-Deutsch</title>
-<meta name="description" content="Every everyday-German topic, with vocabulary and dialogues, click-to-hear pronunciation.">
+<title>Courses · Alltags-Deutsch</title>
+<meta name="description" content="German grammar courses from A1 to B2 — every topic explained in English, with examples you can click to hear spoken aloud.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Karla:wght@400;500;700&family=Caveat:wght@600&display=swap" rel="stylesheet">
@@ -21,10 +21,10 @@
     </a>
     <nav class="site-nav">
       <a class="nav-link" href="index.html">Home</a>
-      <a class="nav-link is-active" href="topics.html">Topics</a>
+      <a class="nav-link" href="topics.html">Topics</a>
       <a class="nav-link" href="stories.html">Stories</a>
       <a class="nav-link" href="words.html">Words</a>
-      <a class="nav-link" href="courses.html">Courses</a>
+      <a class="nav-link is-active" href="courses.html">Courses</a>
       <a class="nav-link" href="games.html">Games</a>
     </nav>
   </div>
@@ -32,22 +32,22 @@
 
 <section class="stories-hero">
   <div class="wrap">
-    <h1>German for the places you actually go</h1>
-    <p>Pick a topic below. Each one hangs its own signboard of everyday words and real dialogues — click anything German to hear it spoken aloud.</p>
+    <h1>German grammar, one level at a time</h1>
+    <p>Structured A1–B2 grammar courses — every topic explained in plain English, with examples you can click to hear spoken aloud.</p>
   </div>
 </section>
 
-<section class="signboard-section">
+<section class="stories-list-section">
   <div class="wrap">
-    <div id="topic-grid">
-      <!-- Topics are rendered here by topics.js from data.js -->
+    <div class="course-grid" id="course-grid">
+      <!-- Filled in by courses.js from COURSES in courses-data.js -->
     </div>
   </div>
 </section>
 
-<p class="footer-note wrap">mehr Themen kommen bald — more topics coming soon</p>
+<p class="footer-note wrap">mehr Kurse kommen bald — more courses coming soon</p>
 
-<script src="data.js"></script>
-<script src="topics.js"></script>
+<script src="courses-data.js"></script>
+<script src="courses.js"></script>
 </body>
 </html>

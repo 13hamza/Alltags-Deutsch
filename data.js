@@ -8068,6 +8068,16 @@ const TOPICS = [
   }
 ];
 
+/* ---------- Shared speaker icon (used by course.js; other pages keep
+   their own local copy for now — see README cleanup note) ---------- */
+function speakerIconSVG() {
+  return `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+    <path d="M4 9v6h4l5 5V4L8 9H4z" fill="currentColor"/>
+    <path d="M16.5 8.5a5 5 0 0 1 0 7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" fill="none"/>
+    <path d="M19 6a9 9 0 0 1 0 12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" fill="none" opacity="0.6"/>
+  </svg>`;
+}
+
 /* ---------- Shared pronunciation helper (used by app.js & topic.js) ---------- */
 
 let __deVoice = null;

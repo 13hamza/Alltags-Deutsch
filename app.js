@@ -75,6 +75,32 @@ function renderStoriesTeaser() {
   grid.innerHTML = STORIES.slice(0, 3).map(storyTeaserCard).join("");
 }
 
+function courseTeaserCard(course) {
+  if (course.status !== "available") {
+    return `
+      <div class="course-card course-card--soon" data-level="${course.level}">
+        <span class="level-pill" data-level="${course.level}">${course.level}</span>
+        <h3>${course.title}</h3>
+        <span class="course-card-badge-soon">Kommt bald</span>
+      </div>
+    `;
+  }
+  return `
+    <a class="course-card" data-level="${course.level}" href="course.html?level=${encodeURIComponent(course.id)}">
+      <span class="level-pill" data-level="${course.level}">${course.level}</span>
+      <h3>${course.title}</h3>
+      <span class="course-card-sub">${course.subtitle}</span>
+      <span class="story-card-meta">${course.topics.length} topics · start course →</span>
+    </a>
+  `;
+}
+
+function renderCoursesTeaser() {
+  const grid = document.getElementById("courses-teaser-grid");
+  if (!grid || typeof COURSES === "undefined") return;
+  grid.innerHTML = COURSES.map(courseTeaserCard).join("");
+}
+
 function teaserSpeakerIconSVG() {
   return `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
     <path d="M4 9v6h4l5 5V4L8 9H4z" fill="currentColor"/>
@@ -108,6 +134,7 @@ function renderWordsTeaser() {
 
 document.addEventListener("DOMContentLoaded", () => {
   renderWordsTeaser();
+  renderCoursesTeaser();
   renderStoriesTeaser();
   renderTopicsTeaser();
   renderGamesTeaser();
