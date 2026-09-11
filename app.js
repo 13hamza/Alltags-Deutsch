@@ -98,7 +98,7 @@ function courseTeaserCard(course) {
 function renderCoursesTeaser() {
   const grid = document.getElementById("courses-teaser-grid");
   if (!grid || typeof COURSES === "undefined") return;
-  grid.innerHTML = COURSES.map(courseTeaserCard).join("");
+  grid.innerHTML = COURSES.slice(0, 3).map(courseTeaserCard).join("");
 }
 
 function teaserSpeakerIconSVG() {
@@ -133,9 +133,9 @@ function renderWordsTeaser() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  renderWordsTeaser();
   renderCoursesTeaser();
+  renderWordsTeaser();
+  renderGamesTeaser();
   renderStoriesTeaser();
   renderTopicsTeaser();
-  renderGamesTeaser();
 });

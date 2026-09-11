@@ -21,11 +21,11 @@
     </a>
     <nav class="site-nav">
       <a class="nav-link is-active" href="index.html">Home</a>
-      <a class="nav-link" href="topics.html">Topics</a>
-      <a class="nav-link" href="stories.html">Stories</a>
-      <a class="nav-link" href="words.html">Words</a>
       <a class="nav-link" href="courses.html">Courses</a>
+      <a class="nav-link" href="words.html">Words</a>
       <a class="nav-link" href="games.html">Games</a>
+      <a class="nav-link" href="stories.html">Stories</a>
+      <a class="nav-link" href="topics.html">Topics</a>
     </nav>
   </div>
 </header>
@@ -64,6 +64,19 @@
 <section class="stories-teaser">
   <div class="wrap">
     <div class="stories-teaser-head">
+      <h2>Courses</h2>
+      <a class="nav-link" href="courses.html" style="color: var(--brick); border-color: var(--brick);">All courses →</a>
+    </div>
+    <p class="section-hint" style="margin-top: -14px;">Structured grammar, level by level — A1 is ready, A2–B2 are coming soon.</p>
+    <div class="course-grid" id="courses-teaser-grid">
+      <!-- Filled in by app.js from COURSES in courses-data.js -->
+    </div>
+  </div>
+</section>
+
+<section class="stories-teaser">
+  <div class="wrap">
+    <div class="stories-teaser-head">
       <h2>Words</h2>
       <a class="nav-link" href="words.html" style="color: var(--brick); border-color: var(--brick);">All words →</a>
     </div>
@@ -77,12 +90,12 @@
 <section class="stories-teaser">
   <div class="wrap">
     <div class="stories-teaser-head">
-      <h2>Courses</h2>
-      <a class="nav-link" href="courses.html" style="color: var(--brick); border-color: var(--brick);">All courses →</a>
+      <h2>Games</h2>
+      <a class="nav-link" href="games.html" style="color: var(--brick); border-color: var(--brick);">All games →</a>
     </div>
-    <p class="section-hint" style="margin-top: -14px;">Structured grammar, level by level — A1 is ready, A2–B2 are coming soon.</p>
-    <div class="course-grid" id="courses-teaser-grid">
-      <!-- Filled in by app.js from COURSES in courses-data.js -->
+    <p class="section-hint" style="margin-top: -14px;">Practice what you've learned — three quick games, same vocabulary.</p>
+    <div class="stories-teaser-grid" id="games-teaser-grid">
+      <!-- Filled in by app.js from GAME_MODES -->
     </div>
   </div>
 </section>
@@ -109,19 +122,6 @@
     <p class="section-hint" style="margin-top: -14px;">Pick a topic to see its signboard of everyday words and dialogues.</p>
     <div class="signboard-grid" id="topics-teaser-grid">
       <!-- Filled in by app.js from TOPICS in data.js -->
-    </div>
-  </div>
-</section>
-
-<section class="stories-teaser">
-  <div class="wrap">
-    <div class="stories-teaser-head">
-      <h2>Games</h2>
-      <a class="nav-link" href="games.html" style="color: var(--brick); border-color: var(--brick);">All games →</a>
-    </div>
-    <p class="section-hint" style="margin-top: -14px;">Practice what you've learned — three quick games, same vocabulary.</p>
-    <div class="stories-teaser-grid" id="games-teaser-grid">
-      <!-- Filled in by app.js from GAME_MODES -->
     </div>
   </div>
 </section>
