@@ -23,7 +23,7 @@ const COURSES = [
     id: "a1",
     level: "A1",
     title: "German A1",
-    subtitle: "A Beginner's Guide — Explained in English",
+    subtitle: "A Beginner's Guide Explained in English",
     tagline: "Nouns, verbs, pronouns, sentence structure, questions, negation, and the accusative case — every core A1 topic, explained with examples.",
     status: "available",
     topics: [
