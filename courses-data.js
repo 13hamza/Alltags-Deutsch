@@ -24,7 +24,7 @@ const COURSES = [
     level: "A1",
     title: "German A1",
     subtitle: "A Beginner's Guide — Explained in English",
-    tagline: "Nouns, verbs, pronouns, sentence structure, questions, negation, and the accusative case every core A1 topic, explained with examples.",
+    tagline: "Nouns, verbs, pronouns, sentence structure, questions, negation, and the accusative case — every core A1 topic, explained with examples.",
     status: "available",
     topics: [
       {
@@ -408,6 +408,158 @@ const COURSES = [
           { de: "die Tische", en: "the tables" },
           { de: "die Frauen", en: "the women" },
           { de: "die Autos", en: "the cars" }
+        ]
+      },
+      {
+        number: "14",
+        id: "dativ",
+        en: "Dativ (Dative Case)",
+        de: "Dativ",
+        intro: [
+          "The Dativ case is used for the indirect object usually the person something is given to, told to, or done for. It also follows a fixed set of prepositions (mit, nach, bei, seit, von, zu, aus — see Prepositions above). Unlike the Akkusativ, all three genders and the plural change their article in the Dativ."
+        ],
+        tables: [
+          {
+            caption: "Article changes: nominative vs dativ",
+            headers: ["Gender", "Nominative", "Dativ"],
+            rows: [
+              ["Masculine", "der / ein", "dem / einem"],
+              ["Feminine", "die / eine", "der / einer"],
+              ["Neuter", "das / ein", "dem / einem"],
+              ["Plural", "die", "den (+ -n on the noun: die Kinder → den Kindern)"]
+            ]
+          }
+        ],
+        tip: "To find the Dativ object, ask \u201cwem?\u201d (to/for whom?). \u201cIch gebe dem Kind einen Apfel\u201d → \u201cWem gebe ich einen Apfel?\u201d → \u201cdem Kind.\u201d Verbs like geben, helfen, danken, and gehören almost always take a Dativ object.",
+        examples: [
+          { de: "Ich gebe dem Mann das Buch.", en: "I give the man the book. (der → dem)" },
+          { de: "Sie hilft der Frau.", en: "She helps the woman. (die → der)" },
+          { de: "Wir danken dem Kind.", en: "We thank the child. (das → dem)" },
+          { de: "Das gehört den Kindern.", en: "That belongs to the children. (plural + -n)" },
+          { de: "Ich fahre mit dem Bus.", en: "I travel by bus. (mit + Dativ)" }
+        ]
+      },
+      {
+        number: "15",
+        id: "perfekt",
+        en: "Perfekt (Past Tense)",
+        de: "Perfekt",
+        intro: [
+          "The Perfekt tense is how German normally talks about the past in everyday speech (not just in writing). It's built from a helper verb — haben or sein — conjugated in the present tense, plus a Partizip II (past participle) sent to the very end of the sentence.",
+          "Most verbs use haben. Verbs of motion or change of state (gehen, fahren, kommen, sein, werden…) use sein instead."
+        ],
+        tables: [
+          {
+            caption: "Forming the Partizip II",
+            headers: ["Verb type", "Pattern", "Example"],
+            rows: [
+              ["Regular (weak)", "ge- + stem + -t", "machen → gemacht"],
+              ["Irregular (strong)", "ge- + stem (often changed) + -en", "gehen → gegangen"],
+              ["-ieren verbs", "stem + -t (no ge-)", "studieren → studiert"],
+              ["Separable verbs", "prefix + ge- + stem", "aufstehen → aufgestanden"]
+            ]
+          }
+        ],
+        tip: "Quick test for haben vs sein: if the verb describes movement from A to B, or a change of state (aufwachen, sterben, werden…), use sein. Otherwise, default to haben. And sein itself is irregular: ich bin gewesen (I have been).",
+        examples: [
+          { de: "Ich habe Deutsch gelernt.", en: "I have learned German. / I learned German." },
+          { de: "Du hast Pizza gegessen.", en: "You ate pizza." },
+          { de: "Er ist nach Berlin gefahren.", en: "He drove/traveled to Berlin. (sein)" },
+          { de: "Wir sind ins Kino gegangen.", en: "We went to the cinema. (sein)" },
+          { de: "Sie hat in Spanien studiert.", en: "She studied in Spain. (-ieren, no ge-)" },
+          { de: "Ich bin um 7 Uhr aufgestanden.", en: "I got up at 7 o'clock. (separable verb)" }
+        ]
+      },
+      {
+        number: "16",
+        id: "imperative",
+        en: "Imperative (Commands)",
+        de: "Imperativ",
+        intro: [
+          "The imperative is used for commands, instructions, and requests. It has three forms depending on who you're talking to — du, ihr, or Sie — and the verb always comes first in the sentence."
+        ],
+        tables: [
+          {
+            caption: "Imperative forms — \u201cmachen\u201d (to do)",
+            headers: ["Form", "Pattern", "Example"],
+            rows: [
+              ["du", "stem (no -st ending)", "Mach das! (Do that!)"],
+              ["ihr", "same as ihr present tense", "Macht das! (Do that, you all!)"],
+              ["Sie", "infinitive + Sie", "Machen Sie das! (Do that, please.)"]
+            ]
+          }
+        ],
+        tip: "Stem-changing e→i/ie verbs (like sehen, nehmen) keep that change in the du-form imperative but drop the usual -e: Sieh! (not Siehe!), Nimm! (not Nehme!). The Sie-form is always the most polite and simply flips infinitive + Sie.",
+        examples: [
+          { de: "Komm her!", en: "Come here! (du)" },
+          { de: "Setzt euch!", en: "Sit down, everyone! (ihr)" },
+          { de: "Kommen Sie bitte mit!", en: "Please come along. (Sie)" },
+          { de: "Sei ruhig!", en: "Be quiet! (du, irregular from sein)" },
+          { de: "Öffnen Sie das Fenster.", en: "Open the window. (Sie)" }
+        ]
+      },
+      {
+        number: "17",
+        id: "conjunctions",
+        en: "Conjunctions & Word Order",
+        de: "Konjunktionen & Wortstellung",
+        intro: [
+          "Coordinating conjunctions (und, oder, aber, denn) simply link two main clauses they don't change word order at all. Subordinating conjunctions (weil, dass, wenn) are different: they send the conjugated verb all the way to the end of their own clause."
+        ],
+        tables: [
+          {
+            caption: "Coordinating (no word-order change) vs subordinating (verb-to-end)",
+            headers: ["Type", "Conjunctions", "Effect on word order"],
+            rows: [
+              ["Coordinating", "und, oder, aber, denn", "none — verb stays in position 2"],
+              ["Subordinating", "weil, dass, wenn, ob", "verb moves to the very end of its clause"]
+            ]
+          }
+        ],
+        tip: "\u201cDenn\u201d and \u201cweil\u201d both mean \u201cbecause\u201d, which is why learners mix them up — but denn is coordinating (normal word order) and weil is subordinating (verb to the end): \u201cIch bleibe zu Hause, denn ich bin müde\u201d vs. \u201cIch bleibe zu Hause, weil ich müde bin.\u201d",
+        examples: [
+          { de: "Ich lerne Deutsch, und du lernst Englisch.", en: "I'm learning German, and you're learning English." },
+          { de: "Wir bleiben zu Hause, aber sie gehen aus.", en: "We're staying home, but they're going out." },
+          { de: "Ich bleibe zu Hause, denn ich bin müde.", en: "I'm staying home, because I'm tired. (normal order)" },
+          { de: "Ich bleibe zu Hause, weil ich müde bin.", en: "I'm staying home because I'm tired. (verb to end)" },
+          { de: "Ich weiß, dass du müde bist.", en: "I know that you're tired. (verb to end)" },
+          { de: "Ruf mich an, wenn du ankommst.", en: "Call me when you arrive. (verb to end)" }
+        ]
+      },
+      {
+        number: "18",
+        id: "time-expressions",
+        en: "Time Expressions",
+        de: "Zeitangaben",
+        intro: [
+          "German uses three different little words to say \u201cat/on/in\u201d depending on whether you're naming a clock time, a day, or a month mixing them up is one of the most common A1 mistakes."
+        ],
+        tables: [
+          {
+            caption: "um / am / im",
+            headers: ["Word", "Used with", "Example"],
+            rows: [
+              ["um", "clock times", "um 8 Uhr (at 8 o'clock)"],
+              ["am", "days & dates", "am Montag (on Monday), am 3. Mai (on May 3rd)"],
+              ["im", "months & seasons", "im Januar (in January), im Winter (in winter)"]
+            ]
+          },
+          {
+            caption: "Days of the week",
+            headers: ["German", "English"],
+            rows: [
+              ["Montag, Dienstag, Mittwoch", "Monday, Tuesday, Wednesday"],
+              ["Donnerstag, Freitag", "Thursday, Friday"],
+              ["Samstag/Sonnabend, Sonntag", "Saturday, Sunday"]
+            ]
+          }
+        ],
+        examples: [
+          { de: "Der Kurs beginnt um 8 Uhr.", en: "The course starts at 8 o'clock." },
+          { de: "Wir treffen uns am Montag.", en: "We're meeting on Monday." },
+          { de: "Ihr Geburtstag ist im Januar.", en: "Her birthday is in January." },
+          { de: "Am Wochenende habe ich frei.", en: "I'm off on the weekend." },
+          { de: "Im Sommer fahren wir ans Meer.", en: "In summer we go to the seaside." }
         ]
       }
     ]
