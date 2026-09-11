@@ -24,7 +24,7 @@ const COURSES = [
     level: "A1",
     title: "German A1",
     subtitle: "A Beginner's Guide — Explained in English",
-    tagline: "Nouns, verbs, pronouns, sentence structure, questions, negation, and the accusative case — every core A1 topic, explained with examples.",
+    tagline: "Nouns, verbs, pronouns, sentence structure, questions, negation, and the accusative case every core A1 topic, explained with examples.",
     status: "available",
     topics: [
       {
@@ -33,7 +33,7 @@ const COURSES = [
         en: "Nouns & Articles",
         de: "Nomen & Artikel",
         intro: [
-          "In German, every noun has a gender: masculine (der), feminine (die), or neuter (das). Unlike English, German nouns are always capitalized, no matter where they appear in a sentence. The article (der/die/das) tells you the gender — and you usually just have to memorize it along with the noun."
+          "In German, every noun has a gender: masculine (der), feminine (die), or neuter (das). Unlike English, German nouns are always capitalized, no matter where they appear in a sentence. The article (der/die/das) tells you the gender and you usually just have to memorize it along with the noun."
         ],
         tables: [
           {
@@ -56,7 +56,7 @@ const COURSES = [
             ]
           }
         ],
-        tip: "There's no reliable rule for guessing gender every time, so it's best to always learn a noun together with its article — say \u201cdie Lampe\u201d, not just \u201cLampe\u201d.",
+        tip: "There's no reliable rule for guessing gender every time, so it's best to always learn a noun together with its article say \u201cdie Lampe\u201d, not just \u201cLampe\u201d.",
         examples: [
           { de: "der Hund", en: "the dog (masculine)" },
           { de: "die Katze", en: "the cat (feminine)" },
@@ -74,12 +74,12 @@ const COURSES = [
         en: "Verbs & Conjugation",
         de: "Verben & Konjugation",
         intro: [
-          "German verbs change their ending depending on who is doing the action (the subject) — this is called conjugation. Most verbs in the infinitive (dictionary form) end in -en, like machen (to do/make) or spielen (to play).",
-          "A handful of common verbs are irregular and change their stem vowel — but only in the du and er/sie/es forms. Ich, wir, and ihr almost always stay regular. One verb, wissen, is the exception: it changes in ich, du, AND er (ich weiß, du weißt, er weiß)."
+          "German verbs change their ending depending on who is doing the action (the subject) this is called conjugation. Most verbs in the infinitive (dictionary form) end in -en, like machen (to do/make) or spielen (to play).",
+          "A handful of common verbs are irregular and change their stem vowel but only in the du and er/sie/es forms. Ich, wir, and ihr almost always stay regular. One verb, wissen, is the exception: it changes in ich, du, AND er (ich weiß, du weißt, er weiß)."
         ],
         tables: [
           {
-            caption: "Present tense — regular verb \u201cmachen\u201d (to do/make)",
+            caption: "Present tense regular verb \u201cmachen\u201d (to do/make)",
             headers: ["Pronoun", "Verb form", "Meaning"],
             rows: [
               ["ich (I)", "mache", "I do"],
@@ -91,7 +91,7 @@ const COURSES = [
             ]
           },
           {
-            caption: "Two key irregular verbs — \u201csein\u201d (to be) and \u201chaben\u201d (to have)",
+            caption: "Two key irregular verbs \u201csein\u201d (to be) and \u201chaben\u201d (to have)",
             headers: ["Pronoun", "sein (to be)", "haben (to have)"],
             rows: [
               ["ich", "bin", "habe"],
@@ -123,7 +123,7 @@ const COURSES = [
         en: "Pronouns",
         de: "Pronomen",
         intro: [
-          "Personal pronouns replace nouns (like \u201cI\u201d, \u201cyou\u201d, \u201che\u201d). German has an informal \u201cyou\u201d (du) for friends and family, and a formal \u201cyou\u201d (Sie) for strangers, elders, or professional settings — Sie is always capitalized."
+          "Personal pronouns replace nouns (like \u201cI\u201d, \u201cyou\u201d, \u201che\u201d). German has an informal \u201cyou\u201d (du) for friends and family, and a formal \u201cyou\u201d (Sie) for strangers, elders, or professional settings Sie is always capitalized."
         ],
         tables: [
           {
@@ -142,7 +142,7 @@ const COURSES = [
             ]
           }
         ],
-        tip: "Use \u201cdu\u201d with people your own age or younger, family, and friends. Use \u201cSie\u201d with strangers, in shops, at work, or with anyone older — when in doubt, use \u201cSie\u201d.",
+        tip: "Use \u201cdu\u201d with people your own age or younger, family, and friends. Use \u201cSie\u201d with strangers, in shops, at work, or with anyone older when in doubt, use \u201cSie\u201d.",
         examples: [
           { de: "Ich heiße Anna.", en: "My name is Anna." },
           { de: "Du bist mein Freund.", en: "You are my friend." },
@@ -160,7 +160,7 @@ const COURSES = [
         en: "Sentence Structure",
         de: "Satzbau",
         intro: [
-          "The most important rule in German main clauses is the \u201cVerb-Second\u201d (V2) rule: the conjugated verb is always the second element of the sentence — not necessarily the second word, but the second unit of meaning ('chunk'). This means you can start a sentence with something other than the subject (like a time or place), and the verb still stays in position two — the subject simply moves after it."
+          "The most important rule in German main clauses is the \u201cVerb-Second\u201d (V2) rule: the conjugated verb is always the second element of the sentence not necessarily the second word, but the second unit of meaning ('chunk'). This means you can start a sentence with something other than the subject (like a time or place), and the verb still stays in position two the subject simply moves after it."
         ],
         tip: "Count the sentence in 'chunks,' not words. \u201cIn Berlin\u201d is one chunk (position 1), so the verb \u201cwohnt\u201d must come right after it — position 2 — even though it's technically the third word.",
         examples: [
@@ -247,7 +247,7 @@ const COURSES = [
         en: "Akkusativ (Accusative Case)",
         de: "Akkusativ",
         intro: [
-          "The Akkusativ case is used for the direct object of a sentence — the thing that directly receives the action of the verb. Only the masculine article changes in the accusative; feminine, neuter, and plural stay the same as in the nominative (subject) case."
+          "The Akkusativ case is used for the direct object of a sentence the thing that directly receives the action of the verb. Only the masculine article changes in the accusative; feminine, neuter, and plural stay the same as in the nominative (subject) case."
         ],
         tables: [
           {
@@ -261,7 +261,7 @@ const COURSES = [
             ]
           }
         ],
-        tip: "To find the Akkusativ object, ask \u201cwen?\u201d (whom?) or \u201cwas?\u201d (what?) after the verb: \u201cIch sehe den Mann\u201d → \u201cWen sehe ich?\u201d → \u201cden Mann.\u201d Remember: only masculine der/ein change (to den/einen) — everything else stays the same.",
+        tip: "To find the Akkusativ object, ask \u201cwen?\u201d (whom?) or \u201cwas?\u201d (what?) after the verb: \u201cIch sehe den Mann\u201d → \u201cWen sehe ich?\u201d → \u201cden Mann.\u201d Remember: only masculine der/ein change (to den/einen) everything else stays the same.",
         examples: [
           { de: "Ich sehe den Mann.", en: "I see the man. (der → den)" },
           { de: "Ich kaufe einen Apfel.", en: "I am buying an apple. (ein → einen)" },
@@ -336,7 +336,7 @@ const COURSES = [
         en: "Separable Verbs",
         de: "Trennbare Verben",
         intro: [
-          "Some German verbs have a prefix that \u201cseparates\u201d and moves to the end of the sentence in the present tense — for example aufstehen (to get up) → auf…stehen."
+          "Some German verbs have a prefix that \u201cseparates\u201d and moves to the end of the sentence in the present tense for example aufstehen (to get up) → auf…stehen."
         ],
         examples: [
           { de: "Ich stehe um 7 Uhr auf.", en: "I get up at 7 o'clock." },
@@ -364,7 +364,7 @@ const COURSES = [
         en: "Numbers & Telling Time",
         de: "Zahlen & Uhrzeit",
         intro: [
-          "Numbers and clock time come up constantly in everyday German — prices, phone numbers, appointments, opening hours."
+          "Numbers and clock time come up constantly in everyday German prices, phone numbers, appointments, opening hours."
         ],
         tables: [
           {
@@ -389,7 +389,7 @@ const COURSES = [
         en: "Plural Noun Forms",
         de: "Pluralformen",
         intro: [
-          "German plurals don't just add \u201c-s\u201d like English. Common patterns include adding -e, -er, -n/-en, or an umlaut — each noun's plural is usually learned individually, alongside the noun itself."
+          "German plurals don't just add \u201c-s\u201d like English. Common patterns include adding -e, -er, -n/-en, or an umlaut each noun's plural is usually learned individually, alongside the noun itself."
         ],
         tables: [
           {
