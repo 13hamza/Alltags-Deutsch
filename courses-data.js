@@ -33,7 +33,9 @@ const COURSES = [
         en: "Nouns & Articles",
         de: "Nomen & Artikel",
         intro: [
-          "In German, every noun has a gender: masculine (der), feminine (die), or neuter (das). Unlike English, German nouns are always capitalized, no matter where they appear in a sentence. The article (der/die/das) tells you the gender — and you usually just have to memorize it along with the noun."
+          "Think of every German noun as wearing a little name tag that says whether it's a \u2018boy word\u2019, a \u2018girl word\u2019, or a \u2018neither word\u2019. Grammar books call these genders masculine, feminine, and neuter — but it has nothing to do with real-life boys and girls. \u201cDas Mädchen\u201d (the girl) is actually neuter! It's just a label the word carries around, and German speakers learned which label goes with which word the same way you learned that a stove is hot: by hearing it over and over as a kid.",
+          "The name tag itself is the article — a tiny word that comes right before the noun. \u201cDer\u201d marks a boy word, \u201cdie\u201d marks a girl word, and \u201cdas\u201d marks a neither word. So \u201cder Mann\u201d, \u201cdie Frau\u201d, and \u201cdas Kind\u201d are really just \u201clabel + word\u201d pairs. There's a second kind of label too: \u201cein/eine\u201d, which works like English \u201ca/an\u201d — it means you're talking about any one example of something (\u201ca dog\u201d), not one specific thing (\u201cthe dog\u201d).",
+          "One more thing that surprises beginners: in German, every single noun starts with a capital letter, always — not just names of people and places like in English, but ordinary words too, like \u201cHund\u201d (dog) or \u201cTisch\u201d (table). So if you see a capital letter in the middle of a German sentence, that's your clue: \u201cthis word is a thing\u201d."
         ],
         tables: [
           {
@@ -74,8 +76,9 @@ const COURSES = [
         en: "Verbs & Conjugation",
         de: "Verben & Konjugation",
         intro: [
-          "German verbs change their ending depending on who is doing the action (the subject) — this is called conjugation. Most verbs in the infinitive (dictionary form) end in -en, like machen (to do/make) or spielen (to play).",
-          "A handful of common verbs are irregular and change their stem vowel — but only in the du and er/sie/es forms. Ich, wir, and ihr almost always stay regular. One verb, wissen, is the exception: it changes in ich, du, AND er (ich weiß, du weißt, er weiß)."
+          "A verb is an action word — running, eating, learning. In German, the verb changes its ending depending on WHO is doing the action, kind of like how the verb wears a different little hat for \u201cI\u201d than it does for \u201cwe\u201d. This changing is called conjugation, and it happens every single time you use a verb, so it's worth getting comfortable with early on.",
+          "Here's the easy part: almost every German verb starts life in a plain, un-conjugated form called the infinitive — the form you'd look up in a dictionary — and it ends in \u201c-en\u201d, like machen (to do/make) or spielen (to play). To conjugate it, you chop off the \u201c-en\u201d to get the stem (mach-, spiel-) and glue on a new ending that matches the subject: -e for ich, -st for du, -t for er/sie/es, and so on. The stem itself never changes for regular verbs — only the ending does.",
+          "A small group of very common verbs are a bit rebellious: their middle vowel changes, but ONLY when the subject is du or er/sie/es — never for ich, wir, or ihr. For example sehen (to see) becomes du siehst and er sieht, even though ich sehe stays normal. There's exactly one verb that breaks even that pattern: wissen (to know a fact), which changes for ich, du, AND er all three: ich weiß, du weißt, er weiß."
         ],
         tables: [
           {
@@ -123,7 +126,8 @@ const COURSES = [
         en: "Pronouns",
         de: "Pronomen",
         intro: [
-          "Personal pronouns replace nouns (like \u201cI\u201d, \u201cyou\u201d, \u201che\u201d). German has an informal \u201cyou\u201d (du) for friends and family, and a formal \u201cyou\u201d (Sie) for strangers, elders, or professional settings — Sie is always capitalized."
+          "A pronoun is just a short word that stands in for a noun so you don't have to repeat it — instead of saying \u201cAnna is happy, Anna is going home\u201d, you say \u201cAnna is happy, she is going home.\u201d German pronouns work the same job as English ones: ich (I), du (you), er (he), sie (she), es (it), wir (we), ihr (you all), sie (they).",
+          "The one big difference from English is that German has TWO separate words for \u201cyou\u201d, and choosing the right one matters. \u201cDu\u201d is the casual, warm, everyday \u201cyou\u201d you'd use with friends, family, and other kids — like talking to your best friend. \u201cSie\u201d (always spelled with a capital S, even in the middle of a sentence) is the polite, respectful \u201cyou\u201d you'd use with a teacher, a shopkeeper, or any grown-up you don't know well — a bit like calling an adult \u201cMr./Ms. Smith\u201d instead of their first name. Picking the wrong one isn't dangerous, but it can sound either too formal with a friend or too casual with a stranger, so German speakers pay close attention to it."
         ],
         tables: [
           {
@@ -160,7 +164,9 @@ const COURSES = [
         en: "Sentence Structure",
         de: "Satzbau",
         intro: [
-          "The most important rule in German main clauses is the \u201cVerb-Second\u201d (V2) rule: the conjugated verb is always the second element of the sentence — not necessarily the second word, but the second unit of meaning ('chunk'). This means you can start a sentence with something other than the subject (like a time or place), and the verb still stays in position two — the subject simply moves after it."
+          "Imagine a German sentence as a line of train cars, and the verb is a car that is ALWAYS only allowed to park in the second spot on the track — no matter what. This is the single most important rule of German word order, and once it clicks, a lot of \u201cweird\u201d German sentences suddenly make sense.",
+          "In the simplest sentences, the subject comes first and the verb comes right after, just like in English: \u201cIch trinke Kaffee\u201d (I drink coffee). But the \u201cfirst spot\u201d doesn't have to be the subject — it can be a time word, a place, or almost anything else, as long as it's only ONE chunk of meaning. If you put something else first, the subject simply hops over the verb to third place, but the verb itself never moves out of position two.",
+          "So \u201cheute\u201d (today) can go first: \u201cHeute gehe ich ins Kino\u201d (Today I'm going to the cinema) — \u201cgehe\u201d is still the second thing in the sentence, and \u201cich\u201d slid to third place to make room. The trick is to count in chunks of meaning, not in words: \u201cIn Berlin\u201d is one chunk even though it's two words, so the verb still has to land right after it."
         ],
         tip: "Count the sentence in 'chunks,' not words. \u201cIn Berlin\u201d is one chunk (position 1), so the verb \u201cwohnt\u201d must come right after it — position 2 — even though it's technically the third word.",
         examples: [
@@ -180,7 +186,9 @@ const COURSES = [
         en: "Questions",
         de: "Fragen",
         intro: [
-          "There are two main types of questions in German: Yes/No questions (Ja/Nein-Fragen), formed by putting the verb first; and W-questions (W-Fragen), formed with a question word, similar to English \u201cwh-\u201d words."
+          "There are only two ways to ask a question in German, and both are simpler than they sound. The first is a Yes/No question (Ja/Nein-Frage) — the kind where the answer is just \u201cyes\u201d or \u201cno\u201d. To make one, you don't add any extra word at all; you just pick up the verb and move it to the very front of the sentence, ahead of the subject. \u201cDu kommst\u201d (You are coming) turns into \u201cKommst du?\u201d (Are you coming?) simply by swapping the order of those two words.",
+          "The second type is a W-question (W-Frage), named after the fact that almost all German question words start with the letter W — wer (who), was (what), wo (where), wann (when), warum (why), wie (how), woher (where...from). The pattern here is: W-word, then verb, then subject, then everything else. So \u201cWo wohnst du?\u201d literally lines up as \u201cWhere / live / you?\u201d — the question word grabs the very first spot, and the verb still has to sit in second place, exactly like in a normal statement.",
+          "Now here's the part learners often aren't shown: what happens when you want to ask a NEGATIVE question — one that expects the answer \u201cno, I'm not\u201d or checks something isn't true, like English \u201cAren't you coming?\u201d or \u201cWhy don't you understand?\u201d. Good news: German doesn't need any special new rule for this. You build the question exactly the same way as always (verb first for Yes/No, W-word first for W-questions), and then you just drop in \u201cnicht\u201d or \u201ckein\u201d in the normal negation spot, at or near the end of the question. \u201cKommst du?\u201d (Are you coming?) becomes \u201cKommst du nicht?\u201d (Aren't you coming? / Are you not coming?). \u201cWarum verstehst du das?\u201d (Why do you understand that?) becomes \u201cWarum verstehst du das nicht?\u201d (Why don't you understand that?). The question shape and the negation shape simply stack on top of each other — nothing new to memorize beyond the two skills you already have."
         ],
         tables: [
           {
@@ -196,17 +204,30 @@ const COURSES = [
               ["woher", "where…from"],
               ["welche/r/s", "which"]
             ]
+          },
+          {
+            caption: "Turning a question negative",
+            headers: ["Positive question", "Negative question", "Meaning"],
+            rows: [
+              ["Kommst du mit?", "Kommst du nicht mit?", "Are you coming along? → Aren't you coming along?"],
+              ["Verstehst du das?", "Verstehst du das nicht?", "Do you understand that? → Don't you understand that?"],
+              ["Hast du Zeit?", "Hast du keine Zeit?", "Do you have time? → Don't you have time? (kein, indefinite noun)"],
+              ["Warum kommst du?", "Warum kommst du nicht?", "Why are you coming? → Why aren't you coming?"]
+            ]
           }
         ],
-        tip: "In a W-question, the pattern is: W-word + Verb + Subject + rest. In a Yes/No question, just move the verb to the very front: \u201cDu kommst.\u201d → \u201cKommst du?\u201d",
+        tip: "In a W-question, the pattern is: W-word + Verb + Subject + rest. In a Yes/No question, just move the verb to the very front: \u201cDu kommst.\u201d → \u201cKommst du?\u201d To make either type negative, keep the exact same word order and just add \u201cnicht\u201d (usually near the end) or \u201ckein/keine\u201d (right before an indefinite noun) — the same nicht/kein rules you use in statements apply unchanged inside questions.",
         examples: [
           { de: "Kommst du mit?", en: "Are you coming along? (Yes/No — verb first)" },
+          { de: "Kommst du nicht mit?", en: "Aren't you coming along? (negative Yes/No question)" },
           { de: "Sprichst du Deutsch?", en: "Do you speak German?" },
+          { de: "Sprichst du kein Deutsch?", en: "Don't you speak any German? (kein + indefinite noun)" },
           { de: "Wer bist du?", en: "Who are you?" },
           { de: "Was machst du?", en: "What are you doing?" },
+          { de: "Was machst du nicht?", en: "What aren't you doing? (negative W-question)" },
           { de: "Wo wohnst du?", en: "Where do you live?" },
           { de: "Wann beginnt der Film?", en: "When does the film start?" },
-          { de: "Warum lernst du Deutsch?", en: "Why are you learning German?" },
+          { de: "Warum lernst du Deutsch nicht?", en: "Why aren't you learning German? (nicht stacked onto a warum-question)" },
           { de: "Wie heißt du?", en: "What is your name?" },
           { de: "Woher kommst du?", en: "Where are you from?" }
         ]
@@ -217,7 +238,10 @@ const COURSES = [
         en: "Negation",
         de: "Verneinung",
         intro: [
-          "German has two main ways to say \u201cno\u201d or \u201cnot\u201d: nicht and kein. Choosing the right one depends on what you are negating. nicht goes at the end of the sentence when you are negating the verb or the whole action; when you negate a definite noun (der/die/das), you put nicht directly before that noun."
+          "In English you basically have one all-purpose way to say \u201cnot\u201d: you don't understand, you have no money, that's not right — always the same little word doing the job. German splits that one job between TWO different words, nicht and kein, and picking the right one is really just about answering one question: \u201cAm I saying no to a noun that would normally have a/an in front of it, or am I saying no to something else?\u201d",
+          "Use \u201ckein\u201d (or its endings keine, keinen, keinem...) only when you're negating a noun that either has \u201cein/eine\u201d (a/an) in front of it, or no article at all. Think of \u201ckein\u201d as swallowing the \u201cein\u201d whole and turning it into its opposite: \u201cein Auto\u201d (a car) → \u201ckein Auto\u201d (no car / not a car). It's the word you reach for when the English sentence would use \u201ca\u201d, \u201can\u201d, \u201csome\u201d, or \u201cany\u201d.",
+          "Use \u201cnicht\u201d for absolutely everything else: negating a verb (I am not coming), an adjective (it's not big), an adverb (not often), or a noun that already has a definite article like der/die/das (not THIS book, specifically). A simple test that works almost every time: could you put \u201ca/an/some\u201d in front of the English noun you're negating? If yes, reach for kein. If no — because it's a verb, an adjective, or a specific/definite thing — reach for nicht.",
+          "Where does nicht actually go in the sentence? As a general rule of thumb for beginners: if you're negating the WHOLE action (the entire idea of the sentence), nicht tends to land at the very end, after everything else — \u201cIch verstehe das nicht\u201d (I don't understand that). But if nicht is negating one specific word right next to it — an adjective, an adverb, or a definite noun — it jumps in directly before that word instead: \u201cDas ist nicht groß\u201d (That is not big), \u201cIch komme nicht heute\u201d (I'm not coming today, though maybe another day). It feels fuzzy at first, but it becomes natural with practice — for now, defaulting to \u201cnicht near the end\u201d is a safe starting point."
         ],
         tables: [
           {
@@ -227,9 +251,17 @@ const COURSES = [
               ["nicht", "verbs, adjectives, adverbs, definite nouns", "Ich komme nicht. (I'm not coming.)"],
               ["kein / keine", "indefinite nouns (a/an) or nouns with no article", "Ich habe kein Auto. (I don't have a car.)"]
             ]
+          },
+          {
+            caption: "Negation inside questions",
+            headers: ["Type of question", "How to negate it", "Example"],
+            rows: [
+              ["Yes/No question", "keep verb-first order, add nicht/kein near the end", "Kommst du nicht mit? (Aren't you coming along?)"],
+              ["W-question", "keep W-word + verb + subject order, add nicht/kein afterward", "Warum verstehst du das nicht? (Why don't you understand that?)"]
+            ]
           }
         ],
-        tip: "\u201cKein\u201d kills the article, \u201cnicht\u201d kills everything else. Quick test: if you could put \u201ca/an\u201d or \u201csome\u201d in front of the English noun, use kein(e). Otherwise (for verbs, adjectives, or specific/definite things), use nicht.",
+        tip: "\u201cKein\u201d kills the article, \u201cnicht\u201d kills everything else. Quick test: if you could put \u201ca/an\u201d or \u201csome\u201d in front of the English noun, use kein(e). Otherwise (for verbs, adjectives, or specific/definite things), use nicht. And in questions, negation doesn't change the question's word order at all — you build the question exactly as usual, then simply add nicht or kein, the same way you would in a statement.",
         examples: [
           { de: "Ich verstehe das nicht.", en: "I don't understand that." },
           { de: "Das ist nicht richtig.", en: "That is not correct." },
@@ -238,7 +270,10 @@ const COURSES = [
           { de: "Wir sind nicht müde.", en: "We are not tired." },
           { de: "Sie trinkt keinen Kaffee.", en: "She doesn't drink coffee." },
           { de: "Ich mag das nicht.", en: "I don't like that." },
-          { de: "Das ist kein Problem.", en: "That is not a problem." }
+          { de: "Das ist kein Problem.", en: "That is not a problem." },
+          { de: "Kommst du heute nicht?", en: "Aren't you coming today? (negative question)" },
+          { de: "Hast du kein Auto?", en: "Don't you have a car? (negative question with kein)" },
+          { de: "Warum isst du das nicht?", en: "Why aren't you eating that? (negative W-question)" }
         ]
       },
       {
@@ -247,7 +282,8 @@ const COURSES = [
         en: "Akkusativ (Accusative Case)",
         de: "Akkusativ",
         intro: [
-          "The Akkusativ case is used for the direct object of a sentence — the thing that directly receives the action of the verb. Only the masculine article changes in the accusative; feminine, neuter, and plural stay the same as in the nominative (subject) case."
+          "In English, word order tells you who's doing what: \u201cThe dog bites the man\u201d means something very different from \u201cThe man bites the dog\u201d, even though the words are the same. German has a second trick for showing this on top of word order: it changes the little article word (der/die/das/ein...) depending on whether a noun is the one DOING the action (the subject) or the one RECEIVING the action (the object). The Akkusativ case is the label for \u201cI am the thing this action happens to.\u201d",
+          "The good news for beginners: only the masculine article actually changes shape. \u201cDer\u201d becomes \u201cden\u201d, and \u201cein\u201d becomes \u201ceinen\u201d, whenever a masculine noun is the object instead of the subject. Feminine (die/eine), neuter (das/ein), and plural (die) nouns don't change at all between subject and object — so really, there's just one small pattern to remember."
         ],
         tables: [
           {
@@ -279,7 +315,7 @@ const COURSES = [
         en: "Possessive Articles",
         de: "Possessivartikel (mein, dein, sein…)",
         intro: [
-          "Possessive articles show ownership (\u201cmy\u201d, \u201cyour\u201d, \u201chis\u201d…). They follow the same endings as \u201cein\u201d, so they're called \u201cein-words\u201d."
+          "Possessive articles are the words you use to show that something belongs to someone — my, your, his, her, our. In German they're built from a simple base word (mein-, dein-, sein-, ihr-, unser-, euer-) and then they borrow the exact same set of endings as \u201cein\u201d does, which is why grammar books call them \u201cein-words\u201d. If you already learned how \u201cein/eine/einen\u201d change with gender and case, you already know how \u201cmein/meine/meinen\u201d work too — just swap the front part."
         ],
         tables: [
           {
@@ -308,7 +344,8 @@ const COURSES = [
         en: "Modal Verbs",
         de: "Modalverben (können, müssen, wollen, möchten…)",
         intro: [
-          "Modal verbs express ability, necessity, desire, or permission. They are irregular and push the main verb (in infinitive form) to the very end of the sentence."
+          "Modal verbs are little \u201chelper\u201d verbs that don't describe an action by themselves — instead, they describe your relationship to an action: whether you CAN do it (können), MUST do it (müssen), WANT to do it (wollen), WOULD LIKE to do it (möchten), are ALLOWED to do it (dürfen), or SHOULD do it (sollen). They always team up with a second, real action verb to complete the thought.",
+          "Here's the pattern that makes German feel like it has \u201cbackwards\u201d sentences at first: the modal verb takes the normal conjugated spot (position two, just like any other verb), but the actual action verb gets demoted to its plain, unconjugated infinitive form and gets sent all the way to the very end of the sentence. So \u201cIch kann schwimmen\u201d literally lines up as \u201cI / can / ...(more info)... / swim\u201d — you have to wait until the last word to find out what the action actually is, which takes some getting used to but becomes second nature quickly."
         ],
         tables: [
           {
@@ -336,7 +373,8 @@ const COURSES = [
         en: "Separable Verbs",
         de: "Trennbare Verben",
         intro: [
-          "Some German verbs have a prefix that \u201cseparates\u201d and moves to the end of the sentence in the present tense — for example aufstehen (to get up) → auf…stehen."
+          "Some German verbs are actually two pieces stuck together in the dictionary: a small prefix glued onto a base verb, like \u201caufstehen\u201d (auf + stehen, literally \u201cup-stand\u201d, meaning \u201cto get up\u201d). When you actually use one of these verbs in a normal present-tense sentence, the two pieces come apart — the base verb stays in its usual verb-second spot and gets conjugated as normal, while the little prefix breaks off and floats all the way to the end of the sentence, like a boomerang that gets thrown but lands later.",
+          "So \u201cIch stehe auf\u201d (I get up) is really \u201cIch stehe ... auf\u201d — \u201csteh(e)\u201d is the conjugated piece in position two, and \u201cauf\u201d is the separated prefix waiting patiently at the end. You only see the verb written as one whole word (aufstehen) in its dictionary/infinitive form, or later at the end of a longer sentence with a modal verb."
         ],
         examples: [
           { de: "Ich stehe um 7 Uhr auf.", en: "I get up at 7 o'clock." },
@@ -350,7 +388,7 @@ const COURSES = [
         en: "Prepositions",
         de: "Präpositionen",
         intro: [
-          "Certain prepositions always take the Akkusativ case (für, durch, ohne, gegen, um), while others always take the Dativ case (mit, nach, bei, seit, von, zu, aus)."
+          "A preposition is a small connector word like \u201cfor\u201d, \u201cwith\u201d, or \u201cwithout\u201d that links a noun into the rest of the sentence. The tricky part in German is that certain prepositions always force the noun that follows them into a particular case, no matter what — you don't get to choose, the preposition decides for you. Some prepositions always demand the Akkusativ case (für, durch, ohne, gegen, um), and a different set always demand the Dativ case (mit, nach, bei, seit, von, zu, aus). Since there's no logical reason WHY a given preposition picks one case over the other, the easiest approach is simply to memorize each preposition together with its case, the same way you memorize a noun together with its article."
         ],
         examples: [
           { de: "Das Geschenk ist für dich.", en: "The gift is for you. (Akkusativ)" },
@@ -364,7 +402,7 @@ const COURSES = [
         en: "Numbers & Telling Time",
         de: "Zahlen & Uhrzeit",
         intro: [
-          "Numbers and clock time come up constantly in everyday German — prices, phone numbers, appointments, opening hours."
+          "Numbers and clock times are some of the most useful words you'll ever learn in German, because they show up everywhere in daily life: reading a price tag, giving someone your phone number, agreeing on when to meet, or checking when a shop opens. The number words themselves follow a fairly logical building pattern once you know 1 through 12 by heart, similar to how English counts \u201cthirteen, fourteen, fifteen\u201d by combining smaller pieces — German just glues its pieces together slightly differently (and often in reverse order for two-digit numbers, e.g. \u201ceinundzwanzig\u201d is literally \u201cone-and-twenty\u201d for 21)."
         ],
         tables: [
           {
@@ -389,7 +427,7 @@ const COURSES = [
         en: "Plural Noun Forms",
         de: "Pluralformen",
         intro: [
-          "German plurals don't just add \u201c-s\u201d like English. Common patterns include adding -e, -er, -n/-en, or an umlaut — each noun's plural is usually learned individually, alongside the noun itself."
+          "In English, making something plural is almost always the same simple trick: add an \u201c-s\u201d (dog → dogs). German doesn't have one single trick — instead it has several different plural patterns, and which one applies depends on the individual noun rather than a strict rule. A noun's ending might get \u201c-e\u201d added, or \u201c-er\u201d, or \u201c-n\u201d/\u201c-en\u201d, sometimes together with an umlaut change on the main vowel (a→ä, o→ö, u→ü) — and a small number of nouns don't change at all in the plural. Because of this, the safest habit is to learn each noun's plural form at the same time you learn the noun itself, the way you already learn it together with its article."
         ],
         tables: [
           {
@@ -416,7 +454,8 @@ const COURSES = [
         en: "Dativ (Dative Case)",
         de: "Dativ",
         intro: [
-          "The Dativ case is used for the indirect object — usually the person something is given to, told to, or done for. It also follows a fixed set of prepositions (mit, nach, bei, seit, von, zu, aus — see Prepositions above). Unlike the Akkusativ, all three genders and the plural change their article in the Dativ."
+          "Some sentences have not just one, but two objects: think of \u201cI give the man the book.\u201d The book is the thing being given (that's the direct object, in the Akkusativ case you already learned) — but \u201cthe man\u201d is the person RECEIVING it, and that role gets its own special case in German: the Dativ. A good way to spot a Dativ object is to ask yourself \u201cto whom, or for whom, is this happening?\u201d",
+          "Unlike the Akkusativ (where only the masculine article changed), the Dativ case changes the article for ALL genders and the plural: der→dem, die→der, das→dem, and die (plural)→den, with an extra \u201c-n\u201d tacked onto the end of most plural nouns themselves. The Dativ also shows up automatically after a fixed group of prepositions you just have to memorize — mit, nach, bei, seit, von, zu, aus — the same way you learned in the Prepositions topic."
         ],
         tables: [
           {
@@ -445,8 +484,8 @@ const COURSES = [
         en: "Perfekt (Past Tense)",
         de: "Perfekt",
         intro: [
-          "The Perfekt tense is how German normally talks about the past in everyday speech (not just in writing). It's built from a helper verb — haben or sein — conjugated in the present tense, plus a Partizip II (past participle) sent to the very end of the sentence.",
-          "Most verbs use haben. Verbs of motion or change of state (gehen, fahren, kommen, sein, werden…) use sein instead."
+          "When German speakers talk about something that already happened — even something that happened five minutes ago — they usually don't use one single past-tense verb form the way English does with \u201cate\u201d or \u201cwent\u201d. Instead, everyday spoken German reaches for a two-piece construction called the Perfekt: a small helper verb (either haben or sein), conjugated normally in the present tense and sitting in the usual verb-second spot, plus a second piece called the Partizip II (past participle) that gets shipped off to the very end of the sentence — very similar in spirit to how modal verbs push the action verb to the end.",
+          "So how do you know whether to use haben or sein as your helper? Most verbs — the large majority — simply use haben, and that's a safe default if you're unsure. A smaller, specific group of verbs use sein instead: mainly verbs about moving from one place to another (gehen \u2013 to go, fahren \u2013 to drive/travel, kommen \u2013 to come) or about changing from one state into another (werden \u2013 to become, sterben \u2013 to die), plus the verb sein itself. Think of sein-verbs as \u201cverbs where something's location or condition changes\u201d — everything else defaults to haben."
         ],
         tables: [
           {
@@ -476,7 +515,7 @@ const COURSES = [
         en: "Imperative (Commands)",
         de: "Imperativ",
         intro: [
-          "The imperative is used for commands, instructions, and requests. It has three forms depending on who you're talking to — du, ihr, or Sie — and the verb always comes first in the sentence."
+          "The imperative is the \u201cbossy\u201d form of a verb — the one you use to tell someone to do something, whether it's a friendly request (\u201cPass the salt!\u201d) or a firm instruction (\u201cStop!\u201d). Just like with the pronoun \u201cyou\u201d, German has different imperative forms depending on exactly who you're talking to: one for a single person you'd call du, one for a group of people you'd call ihr, and one polite form for anyone you'd address as Sie. In every case, the trick is simple: the verb jumps to the very front of the sentence, ahead of everything else, since there's no need to even say the word \u201cyou\u201d out loud — it's already obvious from context."
         ],
         tables: [
           {
@@ -504,7 +543,9 @@ const COURSES = [
         en: "Conjunctions & Word Order",
         de: "Konjunktionen & Wortstellung",
         intro: [
-          "Coordinating conjunctions (und, oder, aber, denn) simply link two main clauses — they don't change word order at all. Subordinating conjunctions (weil, dass, wenn) are different: they send the conjugated verb all the way to the end of their own clause."
+          "A conjunction is a connector word that joins two smaller sentences (clauses) into one bigger sentence — words like \u201cand\u201d, \u201cbut\u201d, or \u201cbecause\u201d. German conjunctions come in two very different families, and telling them apart matters a lot because they affect word order in completely opposite ways.",
+          "Coordinating conjunctions — und (and), oder (or), aber (but), denn (because/for) — are the easy, low-stakes family: they just glue two complete, independent sentences together, side by side, and don't disturb the word order of either one at all. The conjugated verb in the second clause stays exactly where it would normally be, in position two.",
+          "Subordinating conjunctions — weil (because), dass (that), wenn (if/when), ob (whether) — are the trickier family. The moment you use one of these, the conjugated verb in that clause gets kicked out of its usual second-place spot and marched all the way to the very end of its own clause, after everything else. This is one of the most distinctive quirks of German sentence structure, and it takes practice to say naturally, but the payoff is that you can spot a subordinating conjunction instantly just by noticing the verb has moved to the end."
         ],
         tables: [
           {
@@ -532,7 +573,7 @@ const COURSES = [
         en: "Time Expressions",
         de: "Zeitangaben",
         intro: [
-          "German uses three different little words to say \u201cat/on/in\u201d depending on whether you're naming a clock time, a day, or a month — mixing them up is one of the most common A1 mistakes."
+          "English gets away with using \u201cat\u201d, \u201con\u201d, and \u201cin\u201d fairly loosely for time (at 8 o'clock, on Monday, in January), but the choice isn't always obvious to a learner going the other direction. German actually makes this easier once you see the pattern: it uses three specific little words, and each one is tied to a specific TYPE of time word, not just picked at random. \u201cUm\u201d always pairs with a clock time (um 8 Uhr — at 8 o'clock). \u201cAm\u201d always pairs with a day or date (am Montag — on Monday). \u201cIm\u201d always pairs with a month or season (im Januar — in January). Once you know which bucket a time word falls into — exact clock time, day, or month/season — the right little word follows automatically, which is why mixing them up is one of the easiest mistakes to fix once you notice the pattern."
         ],
         tables: [
           {
