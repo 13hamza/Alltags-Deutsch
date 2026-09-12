@@ -1958,7 +1958,6 @@ body.word-popup-lock { overflow: hidden; }
 }
 
 .course-topic-p {
-  max-width: 74ch;
   line-height: 1.65;
   margin: 0 0 16px;
 }
@@ -2021,7 +2020,6 @@ body.word-popup-lock { overflow: hidden; }
   border-radius: var(--radius);
   padding: 14px 18px;
   margin: 0 0 26px;
-  max-width: 74ch;
 }
 
 .course-tip-label {

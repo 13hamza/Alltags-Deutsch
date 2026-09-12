@@ -56,9 +56,19 @@ const COURSES = [
               ["Feminine", "die Lampe", "eine Lampe"],
               ["Neuter", "das Buch", "ein Buch"]
             ]
+          },
+          {
+            caption: "Pointing something out: \u201cDas ist / Das sind...\u201d",
+            headers: ["Gender", "Definite", "Indefinite", "Pointing it out"],
+            rows: [
+              ["Masculine", "der Mann", "ein Mann", "Das ist ein Mann."],
+              ["Neuter", "das Auto", "ein Auto", "Das ist ein Auto."],
+              ["Feminine", "die Frau", "eine Frau", "Das ist eine Frau."],
+              ["Plural", "die Bücher", "\u2014", "Das sind Bücher."]
+            ]
           }
         ],
-        tip: "There's no reliable rule for guessing gender every time, so it's best to always learn a noun together with its article — say \u201cdie Lampe\u201d, not just \u201cLampe\u201d.",
+        tip: "There's no reliable rule for guessing gender every time, so it's best to always learn a noun together with its article — say \u201cdie Lampe\u201d, not just \u201cLampe\u201d. \u201cDas ist...\u201d (that is...) and \u201cDas sind...\u201d (those are...) are the easiest way to point something out and practice articles at the same time — \u201cdas\u201d itself doesn't change here; it just means \u201cthat/this\u201d, not the neuter article.",
         examples: [
           { de: "der Hund", en: "the dog (masculine)" },
           { de: "die Katze", en: "the cat (feminine)" },
@@ -67,7 +77,8 @@ const COURSES = [
           { de: "eine Tasche", en: "a bag (feminine, indefinite)" },
           { de: "ein Auto", en: "a car (neuter, indefinite)" },
           { de: "die Bücher", en: "the books (plural)" },
-          { de: "Der Tisch ist groß.", en: "The table is big." }
+          { de: "Der Tisch ist groß.", en: "The table is big." },
+          { de: "Das ist eine Kirche. Die Kirche heißt Michaeliskirche.", en: "That is a church. The church is called Michaeliskirche." }
         ]
       },
       {
@@ -117,7 +128,10 @@ const COURSES = [
           { de: "Ich weiß die Antwort nicht.", en: "I don't know the answer." },
           { de: "Er nimmt den Zug.", en: "He takes the train." },
           { de: "Sie sieht fern.", en: "She watches TV." },
-          { de: "Wir fahren nach Berlin.", en: "We are driving to Berlin." }
+          { de: "Wir fahren nach Berlin.", en: "We are driving to Berlin." },
+          { de: "Ich komme aus Pakistan.", en: "I come from Pakistan." },
+          { de: "Woher kommst du? — Ich komme aus Pakistan.", en: "Where are you from? — I come from Pakistan." },
+          { de: "Wo wohnst du? — Ich wohne in Lahore.", en: "Where do you live? — I live in Lahore." }
         ]
       },
       {
@@ -155,7 +169,10 @@ const COURSES = [
           { de: "Es regnet.", en: "It is raining." },
           { de: "Wir gehen ins Kino.", en: "We are going to the cinema." },
           { de: "Woher kommt ihr?", en: "Where do you all come from?" },
-          { de: "Sprechen Sie Englisch?", en: "Do you (formal) speak English?" }
+          { de: "Sprechen Sie Englisch?", en: "Do you (formal) speak English?" },
+          { de: "Wie heißen Sie?", en: "What is your name? (formal, to Sie)" },
+          { de: "Wo wohnen Sie?", en: "Where do you live? (formal)" },
+          { de: "Welche Sprachen sprechen Sie?", en: "Which languages do you speak? (formal)" }
         ]
       },
       {
@@ -261,7 +278,7 @@ const COURSES = [
             ]
           }
         ],
-        tip: "\u201cKein\u201d kills the article, \u201cnicht\u201d kills everything else. Quick test: if you could put \u201ca/an\u201d or \u201csome\u201d in front of the English noun, use kein(e). Otherwise (for verbs, adjectives, or specific/definite things), use nicht. And in questions, negation doesn't change the question's word order at all — you build the question exactly as usual, then simply add nicht or kein, the same way you would in a statement.",
+        tip: "\u201cKein\u201d kills the article, \u201cnicht\u201d kills everything else. Quick test: if you could put \u201ca/an\u201d or \u201csome\u201d in front of the English noun, use kein(e). Otherwise (for verbs, adjectives, or specific/definite things), use nicht. And in questions, negation doesn't change the question's word order at all — you build the question exactly as usual, then simply add nicht or kein, the same way you would in a statement. A very common everyday pattern combines all of this: someone guesses wrong, you say \u201cNein, das ist kein/keine...\u201d, and then correct them with the real answer.",
         examples: [
           { de: "Ich verstehe das nicht.", en: "I don't understand that." },
           { de: "Das ist nicht richtig.", en: "That is not correct." },
@@ -273,7 +290,11 @@ const COURSES = [
           { de: "Das ist kein Problem.", en: "That is not a problem." },
           { de: "Kommst du heute nicht?", en: "Aren't you coming today? (negative question)" },
           { de: "Hast du kein Auto?", en: "Don't you have a car? (negative question with kein)" },
-          { de: "Warum isst du das nicht?", en: "Why aren't you eating that? (negative W-question)" }
+          { de: "Warum isst du das nicht?", en: "Why aren't you eating that? (negative W-question)" },
+          { de: "Ist das ein Auto? — Nein, das ist kein Auto. Das ist ein Buch.", en: "Is that a car? — No, that's not a car. That's a book." },
+          { de: "Ist das eine Katze? — Nein, das ist keine Katze. Das ist ein Hund.", en: "Is that a cat? — No, that's not a cat. That's a dog." },
+          { de: "Ist das eine Kirche? — Nein, das ist keine Kirche. Das ist ein Bahnhof.", en: "Is that a church? — No, that's not a church. That's a train station." },
+          { de: "Ist das ein Restaurant? — Nein, das ist kein Restaurant. Das ist ein Hotel.", en: "Is that a restaurant? — No, that's not a restaurant. That's a hotel." }
         ]
       },
       {
@@ -295,9 +316,17 @@ const COURSES = [
               ["Neuter", "das / ein", "das / ein (no change)"],
               ["Plural", "die", "die (no change)"]
             ]
+          },
+          {
+            caption: "der / ein / kein — the full pattern in one sentence",
+            headers: ["Statement (Nominativ)", "der → den", "ein → einen", "kein → keinen"],
+            rows: [
+              ["Der Apfel ist süß.", "Ich kaufe den Apfel.", "Ich kaufe einen Apfel.", "Ich kaufe keinen Apfel."],
+              ["Das Brot ist lecker.", "Ich esse das Brot. (no change)", "Ich esse ein Brot.", "Ich esse kein Brot."]
+            ]
           }
         ],
-        tip: "To find the Akkusativ object, ask \u201cwen?\u201d (whom?) or \u201cwas?\u201d (what?) after the verb: \u201cIch sehe den Mann\u201d → \u201cWen sehe ich?\u201d → \u201cden Mann.\u201d Remember: only masculine der/ein change (to den/einen) — everything else stays the same.",
+        tip: "To find the Akkusativ object, ask \u201cwen?\u201d (whom?) or \u201cwas?\u201d (what?) after the verb: \u201cIch sehe den Mann\u201d → \u201cWen sehe ich?\u201d → \u201cden Mann.\u201d Remember: only masculine der/ein change (to den/einen) — everything else stays the same. A handful of very common verbs almost always come with an Akkusativ object, so it's worth learning them as a group: machen, haben, kaufen, kochen, nehmen, brauchen, essen, trinken.",
         examples: [
           { de: "Ich sehe den Mann.", en: "I see the man. (der → den)" },
           { de: "Ich kaufe einen Apfel.", en: "I am buying an apple. (ein → einen)" },
@@ -306,7 +335,13 @@ const COURSES = [
           { de: "Ich trinke einen Kaffee.", en: "I drink a coffee." },
           { de: "Er isst den Kuchen.", en: "He eats the cake." },
           { de: "Ich suche eine Wohnung.", en: "I am looking for an apartment." },
-          { de: "Kennst du den Lehrer?", en: "Do you know the teacher?" }
+          { de: "Kennst du den Lehrer?", en: "Do you know the teacher?" },
+          { de: "Wir essen den/einen/keinen Salat.", en: "We eat the/a/no salad. (der Salat, showing all three forms)" },
+          { de: "Ich esse den Käse. / Ich esse einen Käse.", en: "I eat the cheese. / I eat a cheese." },
+          { de: "Der Hund isst den Keks.", en: "The dog eats the cookie." },
+          { de: "Ich esse die Gurke.", en: "I eat the cucumber. (die stays die)" },
+          { de: "Ich mache die Marmelade.", en: "I make the jam." },
+          { de: "Die Marmelade ist rot. Ich nehme die Marmelade.", en: "The jam is red. I'll take the jam." }
         ]
       },
       {
@@ -332,10 +367,19 @@ const COURSES = [
             ]
           }
         ],
+        tip: "Notice that \u201cmein\u201d has NO ending before a masculine or neuter noun (mein Buch, mein Bruder) but adds \u201c-e\u201d before a feminine or plural noun (meine Schwester, meine Kinder) — exactly the pattern \u201cein\u201d already follows. The whole family of possessives lines up one-to-one with the pronoun that owns the thing: ich→mein, du→dein, er→sein, sie→ihr, wir→unser, ihr→euer, Sie→Ihr.",
         examples: [
           { de: "Das ist mein Bruder.", en: "That is my brother." },
           { de: "Wo ist deine Tasche?", en: "Where is your bag?" },
-          { de: "Das ist ihre Katze.", en: "That is her cat." }
+          { de: "Das ist ihre Katze.", en: "That is her cat." },
+          { de: "Ich bin Max. Das ist mein Buch. Das ist meine Flasche.", en: "I'm Max. That's my book. That's my bottle. (das Buch/neuter, die Flasche/feminine)" },
+          { de: "Du bist Anna. Das ist dein Fahrrad. Das sind deine Bücher.", en: "You're Anna. That's your bike. Those are your books." },
+          { de: "Er ist Luca. Das ist sein Hund. Das sind seine Autos.", en: "He's Luca. That's his dog. Those are his cars." },
+          { de: "Sie ist Anna. Das ist ihr Auto. Das ist ihre Tasche.", en: "She's Anna. That's her car. That's her bag." },
+          { de: "Wir sind Studenten. Das ist unsere Schule.", en: "We're students. That's our school." },
+          { de: "Ihr seid meine Kinder. Das ist euer Zimmer.", en: "You all are my children. That's your room." },
+          { de: "Sie sind mein Chef. Das ist Ihr Handy.", en: "You are my boss. That's your phone. (formal Ihr)" },
+          { de: "Wie ist deine Handynummer? / Wie ist Ihre Handynummer?", en: "What's your phone number? (informal / formal)" }
         ]
       },
       {
@@ -371,16 +415,32 @@ const COURSES = [
               ["ihr", "sollt", "dürft"],
               ["Sie/sie", "sollen", "dürfen"]
             ]
+          },
+          {
+            caption: "möchten conjugated (the polite way to say \u2018would like\u2019)",
+            headers: ["Pronoun", "möchten"],
+            rows: [
+              ["ich", "möchte"],
+              ["du", "möchtest"],
+              ["er/sie/es", "möchte"],
+              ["wir", "möchten"],
+              ["ihr", "möchtet"],
+              ["Sie/sie", "möchten"]
+            ]
           }
         ],
-        tip: "\u2018dürfen\u2019 in the negative (\u2018darf nicht\u2019) is how German says something is NOT ALLOWED, which is stronger than just saying you don't want to: \u2018Ich darf nicht im Klassenzimmer essen\u2019 (I'm not allowed to eat in the classroom) is a rule, not a preference. \u2018sollen\u2019 is softer than \u2018müssen\u2019 — it's more like \u2018I'm supposed to\u2019 or advice, while \u2018müssen\u2019 is a hard requirement.",
+        tip: "\u2018dürfen\u2019 in the negative (\u2018darf nicht\u2019) is how German says something is NOT ALLOWED, which is stronger than just saying you don't want to: \u2018Ich darf nicht im Klassenzimmer essen\u2019 (I'm not allowed to eat in the classroom) is a rule, not a preference. \u2018sollen\u2019 is softer than \u2018müssen\u2019 — it's more like \u2018I'm supposed to\u2019 or advice, while \u2018müssen\u2019 is a hard requirement. \u2018möchten\u2019 is really just a politer version of \u2018wollen\u2019 — \u2018Ich möchte einen Kaffee\u2019 sounds nicer than the blunter \u2018Ich will einen Kaffee\u2019, the same way English \u2018I would like\u2019 sounds nicer than \u2018I want\u2019.",
         examples: [
           { de: "Ich kann gut schwimmen.", en: "I can swim well." },
           { de: "Du musst jetzt gehen.", en: "You have to go now." },
           { de: "Wir möchten Pizza essen.", en: "We would like to eat pizza." },
           { de: "Ich soll jeden Tag die Hausaufgabe machen.", en: "I'm supposed to do homework every day." },
           { de: "Ich darf nicht im Klassenzimmer essen.", en: "I'm not allowed to eat in the classroom." },
-          { de: "Du darfst heute ins Kino gehen.", en: "You're allowed to go to the cinema today." }
+          { de: "Du darfst heute ins Kino gehen.", en: "You're allowed to go to the cinema today." },
+          { de: "Ich kann Deutsch lernen. Ich will Deutsch lernen. Ich muss Deutsch lernen.", en: "I can learn German. I want to learn German. I must learn German. (same sentence, three different modals)" },
+          { de: "Ich möchte einen Apfelsaft.", en: "I would like an apple juice." },
+          { de: "Du musst Tee trinken. Du darfst nicht rausgehen.", en: "You have to drink tea. You're not allowed to go outside. (doctor's orders — sollen/dürfen in real use)" },
+          { de: "Du sollst nicht so viel arbeiten.", en: "You shouldn't work so much." }
         ]
       },
       {
@@ -390,12 +450,37 @@ const COURSES = [
         de: "Trennbare Verben",
         intro: [
           "Some German verbs are actually two pieces stuck together in the dictionary: a small prefix glued onto a base verb, like \u201caufstehen\u201d (auf + stehen, literally \u201cup-stand\u201d, meaning \u201cto get up\u201d). When you actually use one of these verbs in a normal present-tense sentence, the two pieces come apart — the base verb stays in its usual verb-second spot and gets conjugated as normal, while the little prefix breaks off and floats all the way to the end of the sentence, like a boomerang that gets thrown but lands later.",
-          "So \u201cIch stehe auf\u201d (I get up) is really \u201cIch stehe ... auf\u201d — \u201csteh(e)\u201d is the conjugated piece in position two, and \u201cauf\u201d is the separated prefix waiting patiently at the end. You only see the verb written as one whole word (aufstehen) in its dictionary/infinitive form, or later at the end of a longer sentence with a modal verb."
+          "So \u201cIch stehe auf\u201d (I get up) is really \u201cIch stehe ... auf\u201d — \u201csteh(e)\u201d is the conjugated piece in position two, and \u201cauf\u201d is the separated prefix waiting patiently at the end. You only see the verb written as one whole word (aufstehen) in its dictionary/infinitive form, or later at the end of a longer sentence with a modal verb.",
+          "And that last point matters: when a separable verb teams up with a modal verb (Topic 9), the prefix doesn't get a chance to separate at all — the WHOLE verb, prefix and all, gets glued back together and sent to the end as one infinitive, exactly like any other verb would with a modal. So \u201cDu musst aufstehen\u201d (You have to get up) keeps \u201caufstehen\u201d as one solid word at the end, unlike the plain present tense \u201cDu stehst auf\u201d where it splits."
         ],
+        tables: [
+          {
+            caption: "Common separable verbs",
+            headers: ["Verb", "Meaning"],
+            rows: [
+              ["einladen", "to invite"],
+              ["abholen", "to pick up (a person)"],
+              ["anrufen", "to call (phone)"],
+              ["anfangen", "to begin"],
+              ["mitkommen", "to come along"],
+              ["mitbringen", "to bring along"],
+              ["mitmachen", "to join in"],
+              ["einsammeln", "to collect/gather"],
+              ["aufstehen", "to get up"],
+              ["vorstellen", "to introduce"]
+            ]
+          }
+        ],
+        tip: "To spot a separable verb in the dictionary, look for a short, meaningful prefix stuck to the front: auf-, an-, ab-, mit-, vor-, ein-, aus-, zu-. Most of these prefixes are also stand-alone words you already know (auf = on/up, an = at/on, mit = with), which is a handy way to remember roughly what they add to the meaning of the base verb.",
         examples: [
           { de: "Ich stehe um 7 Uhr auf.", en: "I get up at 7 o'clock." },
           { de: "Sie ruft mich an.", en: "She calls me." },
-          { de: "Wir machen das Fenster zu.", en: "We close the window." }
+          { de: "Wir machen das Fenster zu.", en: "We close the window." },
+          { de: "Ich lade meine Freunde ein.", en: "I invite my friends." },
+          { de: "Der Unterricht fängt um 18 Uhr an.", en: "The lesson starts at 6pm." },
+          { de: "Ich will meine Freunde einladen.", en: "I want to invite my friends. (whole word glued together with a modal verb)" },
+          { de: "Du musst um 8 Uhr aufstehen.", en: "You have to get up at 8 o'clock. (aufstehen stays together with müssen)" },
+          { de: "Entschuldigung, ich kann um 8 Uhr nicht aufstehen.", en: "Sorry, I can't get up at 8 o'clock." }
         ]
       },
       {
@@ -530,13 +615,15 @@ const COURSES = [
             ]
           }
         ],
-        tip: "To find the Dativ object, ask \u201cwem?\u201d (to/for whom?). \u201cIch gebe dem Kind einen Apfel\u201d → \u201cWem gebe ich einen Apfel?\u201d → \u201cdem Kind.\u201d Verbs like geben, helfen, danken, and gehören almost always take a Dativ object.",
+        tip: "To find the Dativ object, ask \u201cwem?\u201d (to/for whom?). \u201cIch gebe dem Kind einen Apfel\u201d → \u201cWem gebe ich einen Apfel?\u201d → \u201cdem Kind.\u201d Verbs like geben, helfen, danken, and gehören almost always take a Dativ object. And since \u201cin\u201d + a fixed location also takes Dativ (Topic 24's \u201cWo?\u201d rule), everyday shopping-location sentences are a great place to practice it.",
         examples: [
           { de: "Ich gebe dem Mann das Buch.", en: "I give the man the book. (der → dem)" },
           { de: "Sie hilft der Frau.", en: "She helps the woman. (die → der)" },
           { de: "Wir danken dem Kind.", en: "We thank the child. (das → dem)" },
           { de: "Das gehört den Kindern.", en: "That belongs to the children. (plural + -n)" },
-          { de: "Ich fahre mit dem Bus.", en: "I travel by bus. (mit + Dativ)" }
+          { de: "Ich fahre mit dem Bus.", en: "I travel by bus. (mit + Dativ)" },
+          { de: "Wo kaufen Sie Brot? — Ich kaufe Brot in der Bäckerei.", en: "Where do you buy bread? — I buy bread at the bakery. (die Bäckerei → der, Dativ location)" },
+          { de: "in der Metzgerei / auf dem Markt / im Supermarkt", en: "at the butcher's / at the market / at the supermarket (all Dativ locations)" }
         ]
       },
       {
@@ -560,14 +647,19 @@ const COURSES = [
             ]
           }
         ],
-        tip: "Quick test for haben vs sein: if the verb describes movement from A to B, or a change of state (aufwachen, sterben, werden…), use sein. Otherwise, default to haben. And sein itself is irregular: ich bin gewesen (I have been).",
+        tip: "Quick test for haben vs sein: if the verb describes movement from A to B, or a change of state (aufwachen, sterben, werden…), use sein. Otherwise, default to haben. And sein itself is irregular: ich bin gewesen (I have been). \u2018-ieren\u2019 verbs are especially easy since they never take \u2018ge-\u2019 at all — telefonieren, studieren, trainieren, kontrollieren, markieren, fotografieren, inhalieren all just add \u2018-t\u2019 straight onto the stem.",
         examples: [
           { de: "Ich habe Deutsch gelernt.", en: "I have learned German. / I learned German." },
           { de: "Du hast Pizza gegessen.", en: "You ate pizza." },
           { de: "Er ist nach Berlin gefahren.", en: "He drove/traveled to Berlin. (sein)" },
           { de: "Wir sind ins Kino gegangen.", en: "We went to the cinema. (sein)" },
           { de: "Sie hat in Spanien studiert.", en: "She studied in Spain. (-ieren, no ge-)" },
-          { de: "Ich bin um 7 Uhr aufgestanden.", en: "I got up at 7 o'clock. (separable verb)" }
+          { de: "Ich bin um 7 Uhr aufgestanden.", en: "I got up at 7 o'clock. (separable verb)" },
+          { de: "Ich habe am Wochenende trainiert.", en: "I trained over the weekend." },
+          { de: "Tina hat Statistik gelernt. Daniel hat Fußball gespielt.", en: "Tina studied statistics. Daniel played soccer." },
+          { de: "Tina hat in der Bäckerei gearbeitet.", en: "Tina worked at the bakery." },
+          { de: "Wann sind Sie nach Berlin gekommen?", en: "When did you come to Berlin? (question in Perfekt — verb still splits: sind...gekommen)" },
+          { de: "Wo haben Sie letztes Jahr gearbeitet?", en: "Where did you work last year?" }
         ]
       },
       {
@@ -587,15 +679,27 @@ const COURSES = [
               ["ihr", "same as ihr present tense", "Macht das! (Do that, you all!)"],
               ["Sie", "infinitive + Sie", "Machen Sie das! (Do that, please.)"]
             ]
+          },
+          {
+            caption: "Same command, all three forms",
+            headers: ["Sie", "du", "ihr"],
+            rows: [
+              ["Gehen Sie geradeaus!", "Geh geradeaus!", "Geht geradeaus!"],
+              ["Trinken Sie ein Glas Wasser!", "Trink ein Glas Wasser!", "Trinkt ein Glas Wasser!"],
+              ["Seien Sie leise! (irregular, from sein)", "Sei leise!", "Seid leise!"]
+            ]
           }
         ],
-        tip: "Stem-changing e→i/ie verbs (like sehen, nehmen) keep that change in the du-form imperative but drop the usual -e: Sieh! (not Siehe!), Nimm! (not Nehme!). The Sie-form is always the most polite and simply flips infinitive + Sie.",
+        tip: "Stem-changing e\u2192i/ie verbs (like sehen, nehmen) keep that change in the du-form imperative but drop the usual -e: Sieh! (not Siehe!), Nimm! (not Nehme!). The Sie-form is always the most polite and simply flips infinitive + Sie. \u2018sein\u2019 (to be) is irregular in the imperative too \u2014 Sei/Seid/Seien Sie, not the stem \u2018bin-\u2019.",
         examples: [
           { de: "Komm her!", en: "Come here! (du)" },
           { de: "Setzt euch!", en: "Sit down, everyone! (ihr)" },
           { de: "Kommen Sie bitte mit!", en: "Please come along. (Sie)" },
           { de: "Sei ruhig!", en: "Be quiet! (du, irregular from sein)" },
-          { de: "Öffnen Sie das Fenster.", en: "Open the window. (Sie)" }
+          { de: "Öffnen Sie das Fenster.", en: "Open the window. (Sie)" },
+          { de: "Hören Sie das Gespräch!", en: "Listen to the conversation!" },
+          { de: "Kochen Sie Biryani!", en: "Cook biryani!" },
+          { de: "Steh auf!", en: "Get up! (du, separable verb — prefix stays attached)" }
         ]
       },
       {
@@ -654,14 +758,28 @@ const COURSES = [
               ["Donnerstag, Freitag", "Thursday, Friday"],
               ["Samstag/Sonnabend, Sonntag", "Saturday, Sunday"]
             ]
+          },
+          {
+            caption: "Talking about meal times (three ways to say the same thing)",
+            headers: ["am + noun", "-s ending (adverb)", "zum + meal"],
+            rows: [
+              ["am Morgen", "morgens", "zum Frühstück"],
+              ["am Mittag", "mittags", "zum Mittagessen"],
+              ["am Abend", "abends", "zum Abendessen"]
+            ]
           }
         ],
+        tip: "\u2018Zuerst\u2019 (first) and \u2018dann\u2019 (then) are handy little words for putting several actions in order — and just like any other single-chunk time word, each one can take the very first slot in its sentence, pushing the verb into position two and the subject after it: \u2018Zuerst lerne ich Deutsch. Dann gehe ich ins Kino.\u2019 (First I learn German. Then I go to the cinema.)",
         examples: [
           { de: "Der Kurs beginnt um 8 Uhr.", en: "The course starts at 8 o'clock." },
           { de: "Wir treffen uns am Montag.", en: "We're meeting on Monday." },
           { de: "Ihr Geburtstag ist im Januar.", en: "Her birthday is in January." },
           { de: "Am Wochenende habe ich frei.", en: "I'm off on the weekend." },
-          { de: "Im Sommer fahren wir ans Meer.", en: "In summer we go to the seaside." }
+          { de: "Im Sommer fahren wir ans Meer.", en: "In summer we go to the seaside." },
+          { de: "Ich esse am Morgen Brot mit Milch. / Am Morgen esse ich Brot mit Milch.", en: "I eat bread with milk in the morning. (both orders are correct, verb stays position two)" },
+          { de: "Zum Mittagessen esse ich Biryani.", en: "For lunch I eat biryani." },
+          { de: "Zuerst lerne ich Deutsch. Dann gehe ich ins Kino.", en: "First I learn German. Then I go to the cinema." },
+          { de: "Zuerst muss Anna zur Bank gehen. Dann muss Anna mit dem Chef sprechen.", en: "First Anna has to go to the bank. Then Anna has to talk to the boss." }
         ]
       },
       {
@@ -697,7 +815,12 @@ const COURSES = [
               ["au", "like English \u2018ow\u2019 in \u2018cow\u2019", "Auto, Frau, aus"],
               ["eu", "like English \u2018oy\u2019 in \u2018boy\u2019", "Leute, Freund, neu"],
               ["tion", "like English \u2018tsyohn\u2019, stress on the last part", "Information, Lektion"],
-              ["-ig (at the end of a word)", "like English \u2018ich\u2019, not a hard \u2018g\u2019", "fertig, zwanzig"]
+              ["-ig (at the end of a word)", "like English \u2018ich\u2019, not a hard \u2018g\u2019", "fertig, zwanzig"],
+              ["z", "like English \u2018ts\u2019 in \u2018cats\u2019, never like English \u2018z\u2019", "zu, Zahl, zwanzig"],
+              ["s (at the start of a word)", "like English \u2018z\u2019 in \u2018zoo\u2019", "Sofa, Salat, Saft"],
+              ["s (at the end of a word)", "like English \u2018s\u2019 in \u2018bus\u2019", "Bus, aus"],
+              ["sp / st (at the start of a word)", "sounds like \u2018shp\u2019 / \u2018sht\u2019", "Sport, Start, Straße"],
+              ["doubled letters (nn, mm, ss…)", "just makes the vowel before it short — say the consonant once", "Sonne, lassen, kommen"]
             ]
           }
         ],
@@ -935,7 +1058,10 @@ const COURSES = [
           { de: "Kochen Sie gern?", en: "Do you like cooking? (formal)" },
           { de: "Gehst du gern ins Kino?", en: "Do you like going to the cinema?" },
           { de: "Mein Hobby ist lesen.", en: "My hobby is reading." },
-          { de: "Meine Hobbys sind Kochen und Schwimmen.", en: "My hobbies are cooking and swimming." }
+          { de: "Meine Hobbys sind Kochen und Schwimmen.", en: "My hobbies are cooking and swimming." },
+          { de: "Schwimmen Sie gern? — Wir schwimmen gern.", en: "Do you like swimming? — We like swimming." },
+          { de: "Er schwimmt gern.", en: "He likes swimming." },
+          { de: "Gehen wir ins Kino?", en: "Shall we go to the cinema? (a plain Yes/No question: Verb + Subjekt + …)" }
         ]
       },
       {
@@ -964,7 +1090,8 @@ const COURSES = [
           { de: "Es tut mir leid, aber ich kann leider nicht kommen.", en: "I'm sorry, but unfortunately I can't come." },
           { de: "Sehr geehrte Damen und Herren, ich suche eine Wohnung für sechs Monate.", en: "Dear Sir or Madam, I'm looking for an apartment for six months. (formal inquiry)" },
           { de: "Ich komme am 5. Mai in Weimar an. Ich warte auf die Antwort.", en: "I'll arrive in Weimar on May 5th. I look forward to your reply." },
-          { de: "Mit freundlichen Grüßen", en: "Kind regards (formal sign-off)" }
+          { de: "Mit freundlichen Grüßen", en: "Kind regards (formal sign-off)" },
+          { de: "Liebe Anna, ich habe am Samstag Geburtstag und ich möchte dich einladen. Kommst du?", en: "Dear Anna, it's my birthday on Saturday and I'd like to invite you. Are you coming? (informal invitation)" }
         ]
       },
       {
@@ -990,27 +1117,41 @@ const COURSES = [
             caption: "Permission & prohibition",
             headers: ["Pattern", "Example"],
             rows: [
-              ["Bitte … Sie hier nicht. Es ist verboten.", "Bitte rauchen Sie hier nicht. Es ist verboten. (Please don't smoke here. It's forbidden.)"],
+              ["Bitte … Sie hier nicht. Es ist verboten.", "Bitte rauchen/schwimmen Sie hier nicht. Es ist verboten. (Please don't smoke/swim here. It's forbidden.)"],
+              ["Bitte sprechen/telefonieren Sie hier nicht.", "Bitte sprechen Sie hier nicht laut. / Bitte telefonieren Sie hier nicht."],
               ["Es tut mir leid. Ich weiß das nicht.", "I'm sorry. I don't know that. (a safe, polite way to say you weren't aware of a rule)"],
-              ["Bitte machen Sie … an/aus/auf/zu.", "Bitte machen Sie das Fenster auf. (Please open the window.)"]
+              ["Bitte machen Sie … an/aus/auf/zu.", "Bitte machen Sie das Fenster auf. / Bitte machen Sie die Tür zu."]
             ]
           },
           {
             caption: "Asking for directions",
             headers: ["Pattern", "Example"],
             rows: [
-              ["Bitte sagen Sie mir den Weg zu…", "Bitte sagen Sie mir den Weg zum Hotel. (Please tell me the way to the hotel.)"],
-              ["Antwort", "Gehen Sie links, dann geradeaus und dann rechts. (Go left, then straight, then right.)"]
+              ["Bitte sagen Sie mir den Weg zu…", "Bitte sagen Sie mir den Weg zum Supermarkt. / …zur Kirche."],
+              ["Antwort", "Gehen Sie links, dann geradeaus und dann rechts. Da ist die U-Bahn."]
+            ]
+          },
+          {
+            caption: "Asking for someone's personal details",
+            headers: ["Question", "What it means"],
+            rows: [
+              ["Buchstabieren Sie Ihren Vornamen/Nachnamen!", "Spell your first/last name! (letter by letter)"],
+              ["Wie ist Ihre Handynummer/Postleitzahl/Hausnummer?", "What's your mobile number/postal code/house number?"],
+              ["Wie ist Ihre E-Mail-Adresse?", "What's your email address?"]
             ]
           }
         ],
-        tip: "\u2018anmachen\u2019 (turn on), \u2018ausmachen\u2019 (turn off), \u2018aufmachen\u2019 = öffnen (open), and \u2018zumachen\u2019 = schließen (close) are separable verbs (remember Topic 10!) \u2014 the little an/aus/auf/zu piece jumps to the end: \u2018Bitte machen Sie das Licht an.\u2019",
+        tip: "\u2018anmachen\u2019 (turn on), \u2018ausmachen\u2019 (turn off), \u2018aufmachen\u2019 = öffnen (open), and \u2018zumachen\u2019 = schließen (close) are separable verbs (remember Topic 10!) \u2014 the little an/aus/auf/zu piece jumps to the end: \u2018Bitte machen Sie das Licht an.\u2019 When reading an email address or spelling something out loud, @ is read as \u2018ät\u2019, a period is \u2018Punkt\u2019, a hyphen is \u2018minus\u2019, and an underscore is \u2018Unterstrich\u2019.",
         examples: [
           { de: "Bitte zeigen Sie mir Ihren Ausweis.", en: "Please show me your ID." },
+          { de: "Ich habe Hunger. Bitte geben Sie mir einen Apfel.", en: "I'm hungry. Please give me an apple." },
           { de: "Bitte rauchen Sie hier nicht. Es ist verboten.", en: "Please don't smoke here. It's forbidden." },
           { de: "Bitte machen Sie das Radio aus.", en: "Please turn the radio off." },
           { de: "Bitte sagen Sie mir den Weg zur Bank.", en: "Please tell me the way to the bank." },
-          { de: "Da links ist das Hotel.", en: "The hotel is there on the left." }
+          { de: "Da links ist das Hotel.", en: "The hotel is there on the left." },
+          { de: "Wo ist die U-Bahn? — Gehen Sie links, dann geradeaus und dann rechts.", en: "Where is the subway? — Go left, then straight, then right." },
+          { de: "Wie ist deine Handynummer? / Wie ist deine E-Mail-Adresse?", en: "What's your phone number? / What's your email address?" },
+          { de: "Schönes Wochenende! — Gleichfalls!", en: "Have a nice weekend! — You too!" }
         ]
       },
       {
@@ -1043,6 +1184,42 @@ const COURSES = [
           { de: "Wir sind Studenten. > Wir waren Studenten.", en: "We are students. > We were students." },
           { de: "Ich war am Wochenende im Café. Das Café war sehr schön.", en: "I was at the café over the weekend. The café was very nice." },
           { de: "Ich hatte viel Hunger. Der Tee war nicht gut.", en: "I was very hungry. The tea wasn't good." }
+        ]
+      },
+      {
+        number: "29",
+        id: "self-introduction",
+        en: "Introducing Yourself",
+        de: "Sich vorstellen",
+        intro: [
+          "Introducing yourself in German follows a predictable checklist that comes up constantly — in class, at the start of a language exam, or just meeting someone new: your name, your age, where you're from, where you live, what languages you speak, your job, and your hobby. Because it's such a fixed set of questions, it's worth preparing your own answers to all seven ahead of time, the way you'd rehearse an elevator pitch.",
+          "Notice that each answer reuses grammar you already know: \u201cIch bin...\u201d/\u201cIch heiße...\u201d for your name (Topic 2), \u201cIch komme aus...\u201d + Topic 11's Dativ preposition aus, \u201cIch wohne in...\u201d, \u201cIch spreche...\u201d for languages, \u201cIch bin [Beruf]\u201d with no article (Topic 22), and \u201cMein Hobby ist...\u201d (Topic 25). Self-introduction isn't really new grammar — it's a chance to combine everything you've learned into one short, confident paragraph."
+        ],
+        tables: [
+          {
+            caption: "The self-introduction checklist",
+            headers: ["Category", "Question", "Answer pattern"],
+            rows: [
+              ["Name", "Wie heißen Sie? / Wie heißt du?", "Mein Name ist… / Ich heiße…"],
+              ["Alter (age)", "Wie alt sind Sie? / Wie alt bist du?", "Ich bin … Jahre alt."],
+              ["Land (country)", "Woher kommen Sie?", "Ich komme aus…"],
+              ["Wohnort (residence)", "Wo wohnen Sie?", "Ich wohne in…"],
+              ["Sprachen (languages)", "Welche Sprachen sprechen Sie?", "Ich spreche…"],
+              ["Beruf (job)", "Was sind Sie von Beruf?", "Ich bin… (no article before the job)"],
+              ["Hobby", "Was ist Ihr Hobby?", "Mein Hobby ist… / Meine Hobbys sind…"]
+            ]
+          }
+        ],
+        tip: "In a speaking exam or a first meeting, you don't need to answer these questions one at a time — you can string them into one short paragraph, moving from name to age to country to languages to job to hobby, exactly the way the sample below does. Once you've built and practiced your own version, you'll be ready for almost any \u2018tell me about yourself\u2019 moment.",
+        examples: [
+          { de: "Mein Name ist Luqman.", en: "My name is Luqman." },
+          { de: "Ich bin 25 Jahre alt.", en: "I am 25 years old." },
+          { de: "Ich komme aus Pakistan.", en: "I come from Pakistan." },
+          { de: "Ich wohne in Gujranwala.", en: "I live in Gujranwala." },
+          { de: "Ich spreche Urdu, Englisch und ein bisschen Deutsch.", en: "I speak Urdu, English, and a bit of German." },
+          { de: "Ich bin Student.", en: "I am a student." },
+          { de: "Mein Hobby ist lesen.", en: "My hobby is reading." },
+          { de: "Ich bin Luca. Ich wohne in Berlin. Ich komme aus Deutschland.", en: "I'm Luca. I live in Berlin. I come from Germany." }
         ]
       }
     ]
