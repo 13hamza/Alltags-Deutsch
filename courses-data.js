@@ -359,12 +359,28 @@ const COURSES = [
               ["dürfen", "to be allowed to"],
               ["sollen", "should"]
             ]
+          },
+          {
+            caption: "sollen and dürfen conjugated",
+            headers: ["Pronoun", "sollen (should)", "dürfen (may/allowed to)"],
+            rows: [
+              ["ich", "soll", "darf"],
+              ["du", "sollst", "darfst"],
+              ["er/es/sie", "soll", "darf"],
+              ["wir", "sollen", "dürfen"],
+              ["ihr", "sollt", "dürft"],
+              ["Sie/sie", "sollen", "dürfen"]
+            ]
           }
         ],
+        tip: "\u2018dürfen\u2019 in the negative (\u2018darf nicht\u2019) is how German says something is NOT ALLOWED, which is stronger than just saying you don't want to: \u2018Ich darf nicht im Klassenzimmer essen\u2019 (I'm not allowed to eat in the classroom) is a rule, not a preference. \u2018sollen\u2019 is softer than \u2018müssen\u2019 — it's more like \u2018I'm supposed to\u2019 or advice, while \u2018müssen\u2019 is a hard requirement.",
         examples: [
           { de: "Ich kann gut schwimmen.", en: "I can swim well." },
           { de: "Du musst jetzt gehen.", en: "You have to go now." },
-          { de: "Wir möchten Pizza essen.", en: "We would like to eat pizza." }
+          { de: "Wir möchten Pizza essen.", en: "We would like to eat pizza." },
+          { de: "Ich soll jeden Tag die Hausaufgabe machen.", en: "I'm supposed to do homework every day." },
+          { de: "Ich darf nicht im Klassenzimmer essen.", en: "I'm not allowed to eat in the classroom." },
+          { de: "Du darfst heute ins Kino gehen.", en: "You're allowed to go to the cinema today." }
         ]
       },
       {
@@ -390,35 +406,80 @@ const COURSES = [
         intro: [
           "A preposition is a small connector word like \u201cfor\u201d, \u201cwith\u201d, or \u201cwithout\u201d that links a noun into the rest of the sentence. The tricky part in German is that certain prepositions always force the noun that follows them into a particular case, no matter what — you don't get to choose, the preposition decides for you. Some prepositions always demand the Akkusativ case (für, durch, ohne, gegen, um), and a different set always demand the Dativ case (mit, nach, bei, seit, von, zu, aus). Since there's no logical reason WHY a given preposition picks one case over the other, the easiest approach is simply to memorize each preposition together with its case, the same way you memorize a noun together with its article."
         ],
+        tables: [
+          {
+            caption: "Dativ prepositions and their contractions",
+            headers: ["Preposition", "Meaning", "Contraction", "Example"],
+            rows: [
+              ["aus", "from/out of", "\u2014", "Ich komme aus der Bank."],
+              ["bei", "at/near", "bei + dem = beim", "Ich bin beim Arzt."],
+              ["mit", "with", "\u2014", "Ich gehe mit dem Auto."],
+              ["nach", "after/to", "\u2014", "Ich esse Pizza nach dem Unterricht."],
+              ["seit", "since/for (time)", "\u2014", "Ich lerne Deutsch seit einem Monat."],
+              ["von", "from/of", "von + dem = vom", "Ich komme vom Arzt."],
+              ["zu", "to", "zu + der = zur, zu + dem = zum", "Ich gehe zur Schule. / Ich gehe zum Arzt."]
+            ]
+          }
+        ],
+        tip: "German loves to squash a preposition and its following \u2018dem/der\u2019 into one shorter word when they'd otherwise be said constantly — zu+dem becomes zum, zu+der becomes zur, bei+dem becomes beim, von+dem becomes vom. You'll hear the contracted forms far more often than the two separate words, so it's worth learning them as their own vocabulary items.",
         examples: [
           { de: "Das Geschenk ist für dich.", en: "The gift is for you. (Akkusativ)" },
           { de: "Ich fahre mit dem Bus.", en: "I travel by bus. (Dativ)" },
-          { de: "Wir gehen ohne ihn.", en: "We are going without him. (Akkusativ)" }
+          { de: "Wir gehen ohne ihn.", en: "We are going without him. (Akkusativ)" },
+          { de: "Ich gehe zum Arzt.", en: "I'm going to the doctor. (zu + dem = zum)" },
+          { de: "Ich komme vom Supermarkt.", en: "I'm coming from the supermarket. (von + dem = vom)" }
         ]
       },
       {
         number: "12",
         id: "numbers-time",
-        en: "Numbers & Telling Time",
-        de: "Zahlen & Uhrzeit",
+        en: "Numbers",
+        de: "Zahlen",
         intro: [
-          "Numbers and clock times are some of the most useful words you'll ever learn in German, because they show up everywhere in daily life: reading a price tag, giving someone your phone number, agreeing on when to meet, or checking when a shop opens. The number words themselves follow a fairly logical building pattern once you know 1 through 12 by heart, similar to how English counts \u201cthirteen, fourteen, fifteen\u201d by combining smaller pieces — German just glues its pieces together slightly differently (and often in reverse order for two-digit numbers, e.g. \u201ceinundzwanzig\u201d is literally \u201cone-and-twenty\u201d for 21)."
+          "Numbers are some of the most useful words you'll ever learn in German, because they show up everywhere in daily life: reading a price tag, giving someone your phone number, agreeing on how many of something you need, or reading an address. Once you know 0 through 12 by heart, the rest builds fairly logically, similar to how English counts \u201cthirteen, fourteen, fifteen\u201d by combining smaller pieces — German just glues its pieces together slightly differently, and often in REVERSE order for two-digit numbers: \u201ceinundzwanzig\u201d (21) is literally \u201cone-and-twenty\u201d, said one-digit-first the way English never does.",
+          "For big numbers — hundreds, thousands, millions — German just keeps gluing everything into one long compound word instead of using spaces like English: 2,323 isn't written or said as separate chunks, it becomes one solid word, \u201czweitausenddreihundertdreiundzwanzig\u201d (two-thousand-three-hundred-three-and-twenty). It looks intimidating on the page, but if you can already say each piece — zwei, tausend, drei, hundert, dreiundzwanzig — you can build the whole thing; German just removes the spaces English would use."
         ],
         tables: [
           {
-            caption: "Numbers 1–100",
-            headers: ["Range", "German"],
+            caption: "Numbers 0–20",
+            headers: ["Number", "German"],
             rows: [
-              ["1–5", "eins, zwei, drei, vier, fünf"],
+              ["0–5", "null, eins, zwei, drei, vier, fünf"],
               ["6–10", "sechs, sieben, acht, neun, zehn"],
               ["11–15", "elf, zwölf, dreizehn, vierzehn, fünfzehn"],
-              ["20 / 30 / 100", "zwanzig / dreißig / hundert"]
+              ["16–20", "sechzehn, siebzehn, achtzehn, neunzehn, zwanzig"]
+            ]
+          },
+          {
+            caption: "Tens (note the reversed order: einundzwanzig = 'one-and-twenty')",
+            headers: ["Number", "German"],
+            rows: [
+              ["20 / 30 / 40 / 50", "zwanzig / dreißig / vierzig / fünfzig"],
+              ["60 / 70 / 80 / 90", "sechzig / siebzig / achtzig / neunzig"],
+              ["21 / 22 / 23", "einundzwanzig / zweiundzwanzig / dreiundzwanzig"],
+              ["55 / 76 / 95", "fünfundfünfzig / sechsundsiebzig / fünfundneunzig"]
+            ]
+          },
+          {
+            caption: "Hundreds, thousands, and beyond",
+            headers: ["Number", "German"],
+            rows: [
+              ["100 / 200 / 900", "(ein)hundert / zweihundert / neunhundert"],
+              ["1.000 / 10.000", "(ein)tausend / zehntausend"],
+              ["1.000.000", "eine Million"],
+              ["126", "einhundertsechsundzwanzig"],
+              ["2.323", "zweitausenddreihundertdreiundzwanzig"],
+              ["7.490", "siebentausendvierhundertneunzig"]
             ]
           }
         ],
+        tip: "The single trickiest habit to build is reading two-digit numbers RIGHT to LEFT: for 24, say the \u20184\u2019 first (vier-) then \u2018and\u2019 (und) then \u2018twenty\u2019 (zwanzig) — vierundzwanzig. It feels backwards at first coming from English, but it becomes automatic with practice, and every two-digit number (21–99) follows this same pattern without exception.",
         examples: [
-          { de: "Es ist drei Uhr.", en: "It is three o'clock." },
-          { de: "Wie viel Uhr ist es?", en: "What time is it?" }
+          { de: "Ich habe drei Bücher.", en: "I have three books." },
+          { de: "Meine Handynummer ist…", en: "My phone number is…" },
+          { de: "Das kostet zwanzig Euro.", en: "That costs twenty euros." },
+          { de: "einundzwanzig, zweiundzwanzig, dreiundzwanzig", en: "twenty-one, twenty-two, twenty-three" },
+          { de: "Ich bin dreiundzwanzig Jahre alt.", en: "I am twenty-three years old." }
         ]
       },
       {
@@ -601,6 +662,387 @@ const COURSES = [
           { de: "Ihr Geburtstag ist im Januar.", en: "Her birthday is in January." },
           { de: "Am Wochenende habe ich frei.", en: "I'm off on the weekend." },
           { de: "Im Sommer fahren wir ans Meer.", en: "In summer we go to the seaside." }
+        ]
+      },
+      {
+        number: "19",
+        id: "alphabet-pronunciation",
+        en: "Alphabet & Pronunciation",
+        de: "Alphabet & Aussprache",
+        intro: [
+          "The German alphabet uses the same 26 letters as English, so you already know most of it. The only newcomers are three vowels with two little dots on top \u2014 ä, ö, ü, called umlauts \u2014 and one special letter that looks like a fancy B: ß (called \u201cEszett\u201d), which is just a shortcut for writing \u201css\u201d. None of these are scary: an umlaut just means \u201cround your mouth into a different shape while making that vowel sound\u201d, and ß simply sounds exactly like ss.",
+          "Beyond individual letters, German has a handful of letter TEAMS \u2014 two or three letters that always work together to make one single sound, the same way English \u201csh\u201d in \u201cship\u201d isn't pronounced as \u201cs\u201d + \u201ch\u201d separately. Once you recognize a team like \u201csch\u201d or \u201cch\u201d or \u201cei\u201d on sight, you stop sounding out letter-by-letter and just say the team's one sound \u2014 which is exactly how native speakers read, too."
+        ],
+        tables: [
+          {
+            caption: "The three umlauts and ß",
+            headers: ["Letter", "How to make the sound", "Example"],
+            rows: [
+              ["ä", "like the \u2018e\u2019 in English \u2018bed\u2019", "Mädchen (girl)"],
+              ["ö", "round your lips like you're saying \u2018o\u2019, but say \u2018e\u2019", "schön (beautiful)"],
+              ["ü", "round your lips like you're saying \u2018u\u2019, but say \u2018i\u2019", "über (over/about)"],
+              ["ß", "always just sounds like \u2018ss\u2019", "Straße (street), groß (big)"]
+            ]
+          },
+          {
+            caption: "Common letter teams and how they sound",
+            headers: ["Team", "Sounds like", "Example"],
+            rows: [
+              ["ei", "English \u2018eye\u2019 (the second letter is the loud one)", "mein, heißen, eins"],
+              ["ie", "English \u2018ee\u2019 as in \u2018see\u2019 (the second letter is the loud one)", "die, wie, Sie"],
+              ["ch (after a, o, u, au)", "a soft, throaty \u2018h\u2019, like clearing your throat gently", "Buch, Nacht, auch"],
+              ["ch (after e, i, ö, ü, l, r, or at the start)", "a soft \u2018hy\u2019 hiss, like the start of \u2018huge\u2019", "ich, Milch, Bücher"],
+              ["sch", "like English \u2018sh\u2019 in \u2018ship\u2019", "Schule, Englisch"],
+              ["tsch", "like English \u2018ch\u2019 in \u2018chips\u2019", "Tschüs, Deutsch"],
+              ["au", "like English \u2018ow\u2019 in \u2018cow\u2019", "Auto, Frau, aus"],
+              ["eu", "like English \u2018oy\u2019 in \u2018boy\u2019", "Leute, Freund, neu"],
+              ["tion", "like English \u2018tsyohn\u2019, stress on the last part", "Information, Lektion"],
+              ["-ig (at the end of a word)", "like English \u2018ich\u2019, not a hard \u2018g\u2019", "fertig, zwanzig"]
+            ]
+          }
+        ],
+        tip: "The easiest way to tell \u2018ei\u2019 and \u2018ie\u2019 apart: whichever vowel comes SECOND is the one you actually hear. \u2018ei\u2019 \u2192 you hear the \u2018i\u2019 sound (\u2018eye\u2019). \u2018ie\u2019 \u2192 you hear the \u2018e\u2019 sound stretched long (\u2018ee\u2019). And remember ß is never its own new sound \u2014 it's just a fancy way of writing double-s.",
+        examples: [
+          { de: "Ä ä, Ö ö, Ü ü, ß", en: "the umlauts and Eszett" },
+          { de: "Mein Name ist Klein.", en: "My name is Klein. (ei = 'eye' sound)" },
+          { de: "Wie heißen Sie?", en: "What's your name? (ie = 'ee' sound, ß = ss)" },
+          { de: "Ich spreche ein bisschen Deutsch.", en: "I speak a little German. (ch, sch, tsch all appear here)" },
+          { de: "Die Straße ist groß.", en: "The street is big. (ß = ss in both words)" }
+        ]
+      },
+      {
+        number: "20",
+        id: "telling-time",
+        en: "Telling Time",
+        de: "Die Uhrzeit",
+        intro: [
+          "German actually has two completely different ways to tell time, and you'll hear both, so it's worth knowing them separately rather than mixing them up. The first is the \u201cofficial\u201d style \u2014 the one used on train timetables, TV schedules, and official invitations. It's wonderfully simple: you just say the hour as a number from 0 to 23 (like a 24-hour clock), followed by \u201cUhr\u201d, followed by the minutes as a plain number. 14:30 is simply \u201cvierzehn Uhr dreißig\u201d \u2014 no tricks, just numbers in order.",
+          "The second style is the \u201cinformal\u201d one people actually use when chatting \u2014 similar to how English speakers say \u201chalf past three\u201d or \u201cquarter to five\u201d instead of \u201c15:45\u201d. German uses viertel (quarter), halb (half), vor (before/to), and nach (after/past) to build these. The one big trap for beginners: \u201chalb\u201d in German always points FORWARD to the next hour, not backward to the current one. So \u201chalb neun\u201d isn't \u201chalf past nine\u201d \u2014 it's \u201chalfway TO nine\u201d, meaning 8:30. This trips up almost every learner at first, so it's worth slowing down on."
+        ],
+        tables: [
+          {
+            caption: "Official time (24-hour, used for schedules)",
+            headers: ["Clock", "German"],
+            rows: [
+              ["3:00", "Es ist drei Uhr."],
+              ["11:00", "Es ist elf Uhr."],
+              ["14:30", "Es ist vierzehn Uhr dreißig."],
+              ["18:17", "Es ist achtzehn Uhr siebzehn."],
+              ["23:45", "Es ist dreiundzwanzig Uhr fünfundvierzig."],
+              ["00:15", "Es ist null Uhr fünfzehn."]
+            ]
+          },
+          {
+            caption: "Informal, spoken time",
+            headers: ["Pattern", "Meaning", "Example"],
+            rows: [
+              ["viertel nach + hour", "quarter past", "12:15 = viertel nach zwölf"],
+              ["halb + NEXT hour", "half past (halfway to the next hour!)", "8:30 = halb neun (not halb acht)"],
+              ["viertel vor + NEXT hour", "quarter to", "8:45 = viertel vor neun"],
+              ["fünf nach halb + NEXT hour", "5 past half — i.e. 12:35 style times", "12:35 = fünf nach halb eins"],
+              ["fünf vor halb + NEXT hour", "5 to half — i.e. 2:25 style times", "2:25 = fünf vor halb drei"]
+            ]
+          }
+        ],
+        tip: "Ask \u2018Wie spät ist es?\u2019 or \u2018Wie viel Uhr ist es?\u2019 to ask what time it is \u2014 both mean the same thing. If you're ever unsure which style to use, the official 24-hour style is always safe and never ambiguous, even in casual conversation \u2014 it just sounds a touch more formal.",
+        examples: [
+          { de: "Wie spät ist es?", en: "What time is it?" },
+          { de: "Es ist drei Uhr.", en: "It's three o'clock." },
+          { de: "Es ist halb neun.", en: "It's 8:30. (halfway to nine, NOT half past nine)" },
+          { de: "Es ist viertel nach zwölf.", en: "It's 12:15." },
+          { de: "Es ist viertel vor neun.", en: "It's 8:45." },
+          { de: "Der Kurs beginnt um vierzehn Uhr dreißig.", en: "The course starts at 14:30." }
+        ]
+      },
+      {
+        number: "21",
+        id: "ordinal-dates",
+        en: "Ordinal Numbers & Dates",
+        de: "Ordnungszahlen & das Datum",
+        intro: [
+          "An ordinal number is the \u201cranking\u201d version of a number \u2014 not \u201cthree\u201d but \u201cthird\u201d, not \u201cten\u201d but \u201ctenth\u201d. German builds these by adding an ending onto the regular number: \u201c-ten\u201d for numbers 1 through 19, and \u201c-sten\u201d for 20 and above. A handful of small numbers are irregular and don't quite follow the pattern \u2014 ersten (1st), dritten (3rd), siebten (7th), and achten (8th) \u2014 so those are worth memorizing individually, the same way English has \u201cfirst\u201d and \u201cthird\u201d instead of \u201conneth\u201d and \u201cthreeth\u201d.",
+          "Dates use these ordinal numbers together with the little word \u201cam\u201d (on): to say \u201con the 15th of April\u201d, German says \u201cam fünfzehnten April\u201d \u2014 literally \u201con the fifteenth April\u201d, no \u201cof\u201d needed. You'll see this constantly when talking about birthdays, appointments, or any date on the calendar."
+        ],
+        tables: [
+          {
+            caption: "Building ordinal numbers",
+            headers: ["Number", "Ordinal", "Pattern"],
+            rows: [
+              ["1", "ersten", "irregular"],
+              ["3", "dritten", "irregular"],
+              ["4", "vierten", "regular: number + -ten"],
+              ["7", "siebten", "irregular"],
+              ["8", "achten", "irregular"],
+              ["10", "zehnten", "regular: number + -ten"],
+              ["19", "neunzehnten", "regular: number + -ten (last one before the switch)"],
+              ["20", "zwanzigsten", "regular: number + -sten (20 and up)"],
+              ["21", "einundzwanzigsten", "regular: number + -sten"],
+              ["31", "einunddreißigsten", "regular: number + -sten"]
+            ]
+          }
+        ],
+        tip: "The switch point to remember: 1\u201319 take \u2018-ten\u2019, but 20 and everything above takes \u2018-sten\u2019 instead. To ask someone's birthday, say \u2018Wann haben Sie Geburtstag?\u2019 (formal) or \u2018Wann hast du Geburtstag?\u2019 (informal) \u2014 the answer always starts with \u2018am\u2019.",
+        examples: [
+          { de: "Wann haben Sie Geburtstag?", en: "When is your birthday? (formal)" },
+          { de: "Ich habe am fünfzehnten April Geburtstag.", en: "My birthday is on April 15th." },
+          { de: "Der Kurs beginnt am ersten Mai.", en: "The course starts on May 1st." },
+          { de: "Wir treffen uns am zweiundzwanzigsten Mai.", en: "We're meeting on May 22nd." },
+          { de: "Ihr Geburtstag ist am dritten September.", en: "Her birthday is on September 3rd." }
+        ]
+      },
+      {
+        number: "22",
+        id: "family-professions",
+        en: "Family, Marital Status & Professions",
+        de: "Familie, Familienstand & Berufe",
+        intro: [
+          "Talking about your family in German mostly means learning a set of vocabulary words \u2014 there's no tricky grammar rule here, just names for relatives, most of which come in matching \u201cmale/female\u201d pairs like der Bruder (brother) / die Schwester (sister), or der Sohn (son) / die Tochter (daughter). A few words, like das Baby, don't split by gender at all.",
+          "Professions follow a very handy pattern worth learning early: the male version of a job title is the plain word (der Lehrer \u2014 male teacher), and you almost always make the female version by simply adding \u201c-in\u201d onto the end (die Lehrerin \u2014 female teacher). This same \u201c-in\u201d trick works for the vast majority of German professions, so once you spot it you can guess the female form of almost any job word you learn."
+        ],
+        tables: [
+          {
+            caption: "Family members",
+            headers: ["Category", "German"],
+            rows: [
+              ["Grandparents", "die Großeltern: der Großvater/der Opa, die Großmutter/die Oma"],
+              ["Parents", "die Eltern: der Vater, die Mutter, der Onkel, die Tante"],
+              ["Siblings & cousins", "die Geschwister: der Bruder, die Schwester, der Cousin, die Cousine"],
+              ["Spouses", "die Ehepartner: der Ehemann, die Ehefrau"],
+              ["Children", "die Kinder: der Sohn, die Tochter, der Junge, das Mädchen, das Baby"],
+              ["Grandchildren", "der Enkel, die Enkelin"]
+            ]
+          },
+          {
+            caption: "Marital status (ledig, verheiratet…)",
+            headers: ["German", "English"],
+            rows: [
+              ["ledig", "single"],
+              ["verlobt", "engaged"],
+              ["verheiratet", "married"],
+              ["geschieden", "divorced"],
+              ["verwitwet", "widowed"]
+            ]
+          },
+          {
+            caption: "Professions — male vs female form",
+            headers: ["Male (der...)", "Female (die...-in)"],
+            rows: [
+              ["der Lehrer (teacher)", "die Lehrerin"],
+              ["der Student (student)", "die Studentin"],
+              ["der Informatiker (IT specialist)", "die Informatikerin"]
+            ]
+          }
+        ],
+        tip: "\u2018Was sind Sie von Beruf?\u2019 or \u2018Was bist du von Beruf?\u2019 asks what someone's job is; answer with \u2018Ich bin Lehrer/Lehrerin\u2019 (no article needed before the job name, unlike English \u2018I am A teacher\u2019). \u2018Die Hausfrau\u2019 (housewife) is a common answer too. To ask about someone's work schedule, use \u2018Wann arbeiten Sie?\u2019 \u2192 \u2018Ich arbeite von Montag bis Freitag.\u2019, and \u2018Wann haben Sie frei?\u2019 \u2192 \u2018Ich habe am Wochenende frei.\u2019",
+        examples: [
+          { de: "Das ist mein Bruder. Er ist ledig.", en: "That's my brother. He's single." },
+          { de: "Meine Tante ist geschieden.", en: "My aunt is divorced." },
+          { de: "Was sind Sie von Beruf?", en: "What is your profession?" },
+          { de: "Ich bin Lehrerin.", en: "I am a teacher. (female)" },
+          { de: "Ich arbeite von Montag bis Freitag.", en: "I work from Monday to Friday." },
+          { de: "Ich habe am Wochenende frei.", en: "I'm off on the weekend." }
+        ]
+      },
+      {
+        number: "23",
+        id: "accusative-pronouns",
+        en: "Personal Pronouns in the Akkusativ",
+        de: "Personalpronomen im Akkusativ",
+        intro: [
+          "You already know that English pronouns change shape depending on their job in the sentence: \u201cI see him\u201d, not \u201cI see he\u201d. German pronouns do exactly the same thing, and the Akkusativ topic you already learned is precisely why: when a pronoun is the object receiving the action (or following certain prepositions like für), it switches from its normal subject form into a special object form.",
+          "The good news is you only need to learn one short list, and most of the pronouns barely change at all \u2014 es, sie, and Sie stay identical. The main ones actually worth memorizing are ich\u2192mich, du\u2192dich, er\u2192ihn, wir\u2192uns, and ihr\u2192euch. This list becomes especially useful with the preposition für (for), which always takes the Akkusativ: \u201cThe pizza is for me\u201d is \u201cDie Pizza ist für mich\u201d, never \u201cfür ich\u201d."
+        ],
+        tables: [
+          {
+            caption: "Nominative vs Akkusativ pronouns",
+            headers: ["Nominativ (subject)", "Akkusativ (object)", "Example with für"],
+            rows: [
+              ["ich", "mich", "Die Pizza ist für mich."],
+              ["du", "dich", "Das Wasser ist für dich."],
+              ["er", "ihn", "Das Handy ist für ihn."],
+              ["es", "es", "\u2014"],
+              ["sie (she)", "sie", "Der Salat ist für sie."],
+              ["wir", "uns", "Der Kuchen ist für uns."],
+              ["ihr", "euch", "Die Bücher sind für euch."],
+              ["Sie (formal)", "Sie", "Die Cola ist für Sie."],
+              ["sie (they)", "sie", "\u2014"]
+            ]
+          }
+        ],
+        tip: "Ask \u2018Für wen?\u2019 (for whom?) to find the Akkusativ pronoun you need, the same way you'd ask \u2018wen/was?\u2019 for an Akkusativ noun. Notice this is the exact same list of endings you'd use with kein/den/einen from the earlier Akkusativ topic — nothing new to learn structurally, just a different set of words wearing the same \u2018object\u2019 costume.",
+        examples: [
+          { de: "Ich bringe einen Kuchen für dich.", en: "I'm bringing a cake for you." },
+          { de: "Ich lade dich ein.", en: "I'm inviting you." },
+          { de: "Ich lade meinen Freund ein.", en: "I'm inviting my friend." },
+          { de: "Für wen ist die Pizza?", en: "Who is the pizza for?" },
+          { de: "Die Pizza ist für uns.", en: "The pizza is for us." }
+        ]
+      },
+      {
+        number: "24",
+        id: "wechselpraepositionen",
+        en: "Wohin vs. Wo — Two-Way Prepositions",
+        de: "Wechselpräpositionen: Wohin? / Wo?",
+        intro: [
+          "A small group of German prepositions \u2014 including \u201cin\u201d (in/into) \u2014 are shape-shifters: they can trigger EITHER the Akkusativ or the Dativ case, and which one applies depends entirely on the question being answered. If the sentence describes MOVEMENT toward or into a place \u2014 answering \u201cWohin?\u201d (to where?) \u2014 you use the Akkusativ. If the sentence describes something simply BEING in a location, with no movement \u2014 answering \u201cWo?\u201d (where?) \u2014 you use the Dativ instead.",
+          "A helpful way to picture it: Akkusativ is for the journey, Dativ is for the resting place. \u201cIch stelle den Computer ins Arbeitszimmer\u201d (I'm putting the computer INTO the office) describes an action moving the computer somewhere new, so it's Akkusativ (ins = in + das). But \u201cDer Computer steht im Arbeitszimmer\u201d (The computer IS in the office) just describes where it already sits, so it's Dativ (im = in + dem)."
+        ],
+        tables: [
+          {
+            caption: "Wohin? (movement → Akkusativ) vs Wo? (location → Dativ)",
+            headers: ["Question", "Case", "Example"],
+            rows: [
+              ["Wohin? (to where)", "Akkusativ", "Ich stelle den Computer ins Arbeitszimmer. (in + das = ins)"],
+              ["Wo? (where)", "Dativ", "Der Computer ist im Arbeitszimmer. (in + dem = im)"],
+              ["Wohin?", "Akkusativ", "Ich stelle das Buch auf den Tisch."],
+              ["Wo?", "Dativ", "Das Buch ist auf dem Tisch."],
+              ["Wohin?", "Akkusativ", "Ich parke das Auto vor die Wohnung."],
+              ["Wo?", "Dativ", "Das Auto steht vor der Wohnung."]
+            ]
+          }
+        ],
+        tip: "Quick test: can you picture something actually traveling from point A to point B in the sentence? If yes \u2014 an object being placed, someone walking somewhere \u2014 it's Wohin/Akkusativ. If the sentence is just a snapshot of where something already is, sitting still, it's Wo/Dativ. Watch for the contractions: in+das=ins, in+dem=im \u2014 they're easy to miss but very common in speech.",
+        examples: [
+          { de: "Wohin stelle ich den Computer?", en: "Where should I put the computer? (asking about movement)" },
+          { de: "Carla will den Fernseher ins Schlafzimmer stellen.", en: "Carla wants to put the TV in the bedroom. (movement)" },
+          { de: "Das Bett ist im Schlafzimmer.", en: "The bed is in the bedroom. (location)" },
+          { de: "Der Herd steht in der Küche.", en: "The stove is in the kitchen. (location, feminine die Küche → der)" }
+        ]
+      },
+      {
+        number: "25",
+        id: "hobbies-opinions",
+        en: "Hobbies & Saying What You Like",
+        de: "Hobbys & Vorlieben",
+        intro: [
+          "To say you enjoy doing something in German, you don't need a separate verb like English \u201cI like to swim\u201d \u2014 you just take the normal action verb and drop the little word \u201cgern\u201d (gladly/happily) right after it. \u201cIch schwimme\u201d is \u201cI swim\u201d; \u201cIch schwimme gern\u201d is \u201cI like swimming\u201d, literally \u201cI swim gladly\u201d. It's a small addition that does a lot of work.",
+          "To ask someone if they enjoy an activity, keep the exact same Yes/No question pattern you already know (verb first) and simply include gern: \u201cSchwimmst du gern?\u201d (Do you like swimming?). There's a set of three go-to answers you'll hear constantly in casual conversation: \u201cJa, sehr gern\u201d (Yes, very much), \u201cNein, nicht so gern\u201d (No, not really), and \u201cEs geht so\u201d (It's okay / so-so) \u2014 handy phrases for talking about food, hobbies, or pretty much any preference."
+        ],
+        tables: [
+          {
+            caption: "Asking and answering about likes",
+            headers: ["Question", "Possible answers"],
+            rows: [
+              ["Kochen Sie gern?", "Ja, sehr gern. / Nein, nicht so gern. / Es geht so."],
+              ["Gehst du gern ins Kino?", "Ja, sehr gern. / Nein, nicht so gern. / Es geht so."],
+              ["Reisen Sie gern?", "Ja, sehr gern. / Nein, nicht so gern."]
+            ]
+          }
+        ],
+        tip: "\u2018Mein Hobby ist lesen\u2019 (My hobby is reading) uses the plain infinitive as a noun, while \u2018Meine Hobbys sind Kochen und Schwimmen\u2019 (My hobbies are cooking and swimming) capitalizes them because, remember, any noun in German is capitalized \u2014 even a verb being used as a noun like this.",
+        examples: [
+          { de: "Ich koche gern.", en: "I like cooking." },
+          { de: "Kochen Sie gern?", en: "Do you like cooking? (formal)" },
+          { de: "Gehst du gern ins Kino?", en: "Do you like going to the cinema?" },
+          { de: "Mein Hobby ist lesen.", en: "My hobby is reading." },
+          { de: "Meine Hobbys sind Kochen und Schwimmen.", en: "My hobbies are cooking and swimming." }
+        ]
+      },
+      {
+        number: "26",
+        id: "email-writing",
+        en: "Writing an Email (Informal & Formal)",
+        de: "Eine E-Mail schreiben",
+        intro: [
+          "Just like in English, German emails open and close differently depending on how well you know the reader \u2014 and unlike English, the choice also lines up with the du/Sie distinction you learned earlier. Writing to a friend, you'd open with \u201cLiebe...\u201d (to a woman) or \u201cLieber...\u201d (to a man), both meaning roughly \u201cDear...\u201d, and sign off with \u201cViele Grüße\u201d (Lots of greetings/Best wishes). Writing to someone formally \u2014 a landlord, a company, someone you'd address as Sie \u2014 you'd instead open with \u201cSehr geehrte Frau...\u201d / \u201cSehr geehrter Herr...\u201d (or \u201cSehr geehrte Damen und Herren\u201d if you don't know the name at all) and close with \u201cMit freundlichen Grüßen\u201d.",
+          "A typical short German email, whether informal or formal, tends to follow the same simple shape: a greeting, a sentence hoping the reader is doing well, the actual reason you're writing, any necessary details, and then the closing. Keeping that structure makes emails easy to write even with a fairly small vocabulary."
+        ],
+        tables: [
+          {
+            caption: "Greetings and closings",
+            headers: ["Style", "Greeting", "Closing"],
+            rows: [
+              ["Informal (du)", "Liebe Anna, / Lieber Max,", "Viele Grüße"],
+              ["Formal, name known (Sie)", "Liebe Frau…, / Lieber Herr…,", "Mit freundlichen Grüßen"],
+              ["Formal, name unknown (Sie)", "Sehr geehrte Damen und Herren,", "Mit freundlichen Grüßen"]
+            ]
+          }
+        ],
+        tip: "A safe all-purpose opening line for either style is \u2018Ich hoffe, es geht dir/Ihnen gut\u2019 (I hope you're doing well) \u2014 dir for informal, Ihnen for formal. That one sentence alone signals which register you're using before the reader even reaches your main message.",
+        examples: [
+          { de: "Liebe Mayer, ich hoffe, es geht dir gut. Vielen Dank für die Einladung.", en: "Dear Mayer, I hope you're doing well. Thank you for the invitation. (informal thank-you)" },
+          { de: "Es tut mir leid, aber ich kann leider nicht kommen.", en: "I'm sorry, but unfortunately I can't come." },
+          { de: "Sehr geehrte Damen und Herren, ich suche eine Wohnung für sechs Monate.", en: "Dear Sir or Madam, I'm looking for an apartment for six months. (formal inquiry)" },
+          { de: "Ich komme am 5. Mai in Weimar an. Ich warte auf die Antwort.", en: "I'll arrive in Weimar on May 5th. I look forward to your reply." },
+          { de: "Mit freundlichen Grüßen", en: "Kind regards (formal sign-off)" }
+        ]
+      },
+      {
+        number: "27",
+        id: "useful-phrases",
+        en: "Useful Everyday Phrases",
+        de: "Nützliche Alltagsphrasen",
+        intro: [
+          "A handful of sentence patterns cover an enormous amount of real-life German conversation \u2014 asking politely for something, asking permission, saying something isn't allowed, and asking for directions. They're worth learning as ready-made templates you can plug different words into, rather than building each sentence from scratch every time.",
+          "The magic word tying most of these together is \u201cbitte\u201d (please), which in German does double duty: it softens a request (\u201cBitte geben Sie mir...\u201d \u2014 Please give me...) and it's also the standard reply to \u201cthank you\u201d (like English \u201cyou're welcome\u201d). Combine bitte with the imperative you already learned, and you can politely ask for almost anything."
+        ],
+        tables: [
+          {
+            caption: "Asking for something / getting help",
+            headers: ["Pattern", "Example"],
+            rows: [
+              ["Bitte geben/bringen/zeigen/leihen Sie mir…", "Bitte geben Sie mir einen Apfel. (Please give me an apple.)"],
+              ["Mein/e … ist kaputt. Bitte leihen Sie mir …", "Mein Bleistift ist kaputt. Bitte leihen Sie mir einen Bleistift."],
+              ["> Hier bitte!", "Here you go! (handing something over)"]
+            ]
+          },
+          {
+            caption: "Permission & prohibition",
+            headers: ["Pattern", "Example"],
+            rows: [
+              ["Bitte … Sie hier nicht. Es ist verboten.", "Bitte rauchen Sie hier nicht. Es ist verboten. (Please don't smoke here. It's forbidden.)"],
+              ["Es tut mir leid. Ich weiß das nicht.", "I'm sorry. I don't know that. (a safe, polite way to say you weren't aware of a rule)"],
+              ["Bitte machen Sie … an/aus/auf/zu.", "Bitte machen Sie das Fenster auf. (Please open the window.)"]
+            ]
+          },
+          {
+            caption: "Asking for directions",
+            headers: ["Pattern", "Example"],
+            rows: [
+              ["Bitte sagen Sie mir den Weg zu…", "Bitte sagen Sie mir den Weg zum Hotel. (Please tell me the way to the hotel.)"],
+              ["Antwort", "Gehen Sie links, dann geradeaus und dann rechts. (Go left, then straight, then right.)"]
+            ]
+          }
+        ],
+        tip: "\u2018anmachen\u2019 (turn on), \u2018ausmachen\u2019 (turn off), \u2018aufmachen\u2019 = öffnen (open), and \u2018zumachen\u2019 = schließen (close) are separable verbs (remember Topic 10!) \u2014 the little an/aus/auf/zu piece jumps to the end: \u2018Bitte machen Sie das Licht an.\u2019",
+        examples: [
+          { de: "Bitte zeigen Sie mir Ihren Ausweis.", en: "Please show me your ID." },
+          { de: "Bitte rauchen Sie hier nicht. Es ist verboten.", en: "Please don't smoke here. It's forbidden." },
+          { de: "Bitte machen Sie das Radio aus.", en: "Please turn the radio off." },
+          { de: "Bitte sagen Sie mir den Weg zur Bank.", en: "Please tell me the way to the bank." },
+          { de: "Da links ist das Hotel.", en: "The hotel is there on the left." }
+        ]
+      },
+      {
+        number: "28",
+        id: "preterite-haben-sein",
+        en: "Simple Past of haben & sein",
+        de: "Präteritum von haben und sein",
+        intro: [
+          "You already learned that everyday spoken German mostly uses the Perfekt tense to talk about the past. There's exactly one pair of exceptions almost everyone makes, even in casual speech: the verbs haben (to have) and sein (to be). Building their Perfekt forms would technically work (\u201cich habe gehabt\u201d), but it sounds clunky and old-fashioned, so German speakers reach instead for a short, one-word past-tense form called the Präteritum \u2014 hatte for haben, war for sein.",
+          "The good news is these two verbs are irregular but very predictable once memorized, and you'll use them constantly, since \u201cI was...\u201d and \u201cI had...\u201d come up in almost every story about the past."
+        ],
+        tables: [
+          {
+            caption: "Präteritum of haben and sein",
+            headers: ["Pronoun", "haben → hatte", "sein → war"],
+            rows: [
+              ["ich", "hatte", "war"],
+              ["du", "hattest", "warst"],
+              ["er/es/sie", "hatte", "war"],
+              ["wir", "hatten", "waren"],
+              ["ihr", "hattet", "wart"],
+              ["Sie/sie", "hatten", "waren"]
+            ]
+          }
+        ],
+        tip: "Swap habe→hatte and bin/ist→war/waren the same way you'd swap present-tense verbs, and the rest of the sentence (word order, everything else) doesn't change at all. This makes hatte/war very approachable even before you've mastered the full Perfekt system.",
+        examples: [
+          { de: "Ich habe ein Auto. > Ich hatte ein Auto.", en: "I have a car. > I had a car." },
+          { de: "Ich bin krank. > Ich war krank.", en: "I am sick. > I was sick." },
+          { de: "Wir sind Studenten. > Wir waren Studenten.", en: "We are students. > We were students." },
+          { de: "Ich war am Wochenende im Café. Das Café war sehr schön.", en: "I was at the café over the weekend. The café was very nice." },
+          { de: "Ich hatte viel Hunger. Der Tee war nicht gut.", en: "I was very hungry. The tea wasn't good." }
         ]
       }
     ]
