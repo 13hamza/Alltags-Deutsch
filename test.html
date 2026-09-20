@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vocabulary Test · Alltags-Deutsch</title>
+<meta name="description" content="A fresh, randomly generated German A1 vocabulary test every time — fill in the blanks, multiple choice, matching, translation and true/false.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Karla:wght@400;500;700&family=Caveat:wght@600&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="index.html">
+      <span class="flag-icon">&#x1f1e9;&#x1f1ea;</span>
+      Alltags-Deutsch <span>every day, auf Deutsch</span>
+    </a>
+    <nav class="site-nav">
+      <a class="nav-link" href="index.html">Home</a>
+      <a class="nav-link" href="courses.html">Courses</a>
+      <a class="nav-link" href="words.html">Words</a>
+      <a class="nav-link" href="games.html">Games</a>
+      <a class="nav-link is-active" href="test.html">Test</a>
+      <a class="nav-link" href="stories.html">Stories</a>
+      <a class="nav-link" href="topics.html">Topics</a>
+    </nav>
+  </div>
+</header>
+
+<!-- ══════════════ SETUP SCREEN ══════════════ -->
+<section class="games-section" id="test-setup-screen">
+  <div class="wrap games-wrap">
+
+    <div class="games-hero">
+      <span class="hero-flag">&#x1f4dd;</span>
+      <h1>Vocabulary Test</h1>
+      <p id="test-hero-sub">Loading vocabulary…</p>
+    </div>
+
+    <!-- LEVEL -->
+    <div class="game-setup-card">
+      <div class="setup-label">Level</div>
+      <div class="level-tabs" id="test-level-tabs"></div>
+      <p class="quiz-length-note">A1 is ready today &middot; A2 and B1 are coming soon</p>
+    </div>
+
+    <!-- LETTER FILTER -->
+    <div class="game-setup-card">
+      <div class="setup-label">Word group (by starting letter)</div>
+      <div class="cat-toolbar">
+        <span class="cat-count" id="test-cat-count">A fresh random letter range each time</span>
+        <button type="button" class="cat-clear" id="test-cat-clear">Reset</button>
+      </div>
+      <div class="cat-scroll">
+        <div class="cat-wrap" id="test-cat-wrap"></div>
+      </div>
+    </div>
+
+    <button type="button" class="start-btn" id="test-start-btn">&#x1f4dd; Generate Test</button>
+
+    <div class="game-scoreboard">
+      <div class="sb-header">
+        <h3>&#x1f3c5; Test Scores</h3>
+        <div>
+          <button type="button" class="reset-btn" id="test-reset-btn">Clear Scores</button>
+        </div>
+      </div>
+      <div class="sb-list" id="test-sb-list"></div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══════════════ EXAM SCREEN ══════════════ -->
+<section class="games-section" id="test-exam-screen" style="display:none">
+  <div class="wrap games-wrap">
+    <div class="exam-paper">
+      <div class="exam-head">
+        <h1 id="exam-title">A1 German Vocabulary Test</h1>
+        <p id="exam-meta">Total Marks: 30</p>
+      </div>
+
+      <div id="exam-body"></div>
+
+      <div class="exam-actions">
+        <button type="button" class="start-btn" id="exam-submit-btn">Submit Test</button>
+        <button type="button" class="start-btn" id="exam-regen-btn" style="display:none">&#x1f504; Take another test</button>
+        <button type="button" class="reset-btn" id="exam-back-btn">&larr; Back to setup</button>
+      </div>
+
+      <div id="exam-results" style="display:none"></div>
+    </div>
+  </div>
+</section>
+
+<script src="data.js"></script>
+<script src="words-data.js"></script>
+<script src="test.js"></script>
+<script src="common.js"></script>
+</body>
+</html>

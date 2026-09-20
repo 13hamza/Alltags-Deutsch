@@ -5,7 +5,7 @@
    if that level has no stories yet.
    ============================================================ */
 
-let activeLevel = "A1";
+let activeLevel = "ALL";
 
 function storyCard(story) {
   const count = storyWordCount(story);
@@ -50,7 +50,7 @@ function renderStoriesForLevel() {
     root.innerHTML = `
       <div class="stories-coming-soon">
         <span class="hand">Kommt bald!</span>
-        <p>${activeLevel} stories are on their way. Try the A1 stories in the meantime.</p>
+        <p>${activeLevel} stories are on their way. Try the <strong>All</strong> or <strong>A1</strong> tab in the meantime.</p>
       </div>
     `;
     return;

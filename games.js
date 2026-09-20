@@ -133,6 +133,7 @@ let setupLetters = ["all"];   // multi-select letters, or ['all']
 let setupGameMode = "mc";
 let setupLearningRate = 1.0;
 let setupLevel = "A1";
+let setupQuizLength = 30;
 const MAX_LETTERS = 6;
 
 let pool = [], lives = 3, score = 0, streak = 0, questionCount = 0;
@@ -140,6 +141,27 @@ let sessionQueue = [], sessionIndex = 0;
 let answered = false, gameOver = false;
 let currentQ = null;
 let correctIdx = -1;
+let helpUsedThisQ = false;
+
+/* ────────────────────────────────────────
+   COMPLETE QUIZ MODE
+   A single tab that strings together MC, Type ("fill the blank")
+   and Match questions into one 20–50 question test. No help, no
+   lives/lifelines, no answer feedback until the very end.
+   ──────────────────────────────────────── */
+const QUIZ_PASS_MARK = 65;
+let quizMode = false;
+let quizPlan = [], quizIndex = 0, quizResults = [];
+let quizMatchActive = false;
+let quizMatchMistakeSet = new Set();
+
+function quizStatusFor(pct) {
+  if (pct >= 90) return { label: "Excellent", emoji: "🏆", cls: "excellent" };
+  if (pct >= 75) return { label: "Above Average", emoji: "🌟", cls: "above" };
+  if (pct >= QUIZ_PASS_MARK) return { label: "Good", emoji: "✅", cls: "good" };
+  if (pct >= 50) return { label: "Average", emoji: "😐", cls: "average" };
+  return { label: "Needs Improvement", emoji: "📉", cls: "poor" };
+}
 
 const MAX_DIFFICULTY = 5;
 const DIFFICULTY_STEP = 4;
@@ -150,6 +172,7 @@ let recentCorrectWords = [];
 let matchPairs = [], matchSelected = null, matchMatchedCount = 0, matchMistakes = 0;
 let matchTimerInterval = null, matchElapsed = 0;
 const MATCH_PAIR_COUNT = 6;
+let matchHelpUsedPairs = new Set();
 
 /* ────────────────────────────────────────
    SOUND EFFECTS (Web Audio, no assets needed)
@@ -322,16 +345,49 @@ const levelTabsEl   = document.getElementById("game-level-tabs");
 const catWrap       = document.getElementById("cat-wrap");
 const catCountEl    = document.getElementById("cat-count");
 const catClearBtn   = document.getElementById("cat-clear");
+const rateSection   = document.getElementById("rate-section");
+const quizLengthSection = document.getElementById("quiz-length-section");
+const quizLengthToggle  = document.getElementById("quiz-length-toggle");
+const helpRow       = document.getElementById("help-row");
+const helpBtn       = document.getElementById("help-btn");
+const helpPanel     = document.getElementById("help-panel");
+const matchHelpBtn  = document.getElementById("match-help-btn");
+const matchHelpPanel = document.getElementById("match-help-panel");
+const matchTotalEl  = document.getElementById("match-total");
+const quizReviewOverlay = document.getElementById("quiz-review-overlay");
+const qrIcon        = document.getElementById("qr-icon");
+const qrTitle       = document.getElementById("qr-title");
+const qrStatusBadge = document.getElementById("qr-status-badge");
+const qrScoreBig    = document.getElementById("qr-score-big");
+const qrPercent     = document.getElementById("qr-percent");
+const qrPassLine    = document.getElementById("qr-pass-line");
+const qrAnswers     = document.getElementById("qr-answers");
+const qrRetry       = document.getElementById("qr-retry");
+const qrMenu        = document.getElementById("qr-menu");
 
 /* ────────────────────────────────────────
    SETUP UI — mode, direction, learning speed
    ──────────────────────────────────────── */
+function applyModeSections() {
+  dirSection.style.display = (setupGameMode === "match" || setupGameMode === "quiz") ? "none" : "";
+  rateSection.style.display = setupGameMode === "quiz" ? "none" : "";
+  quizLengthSection.style.display = setupGameMode === "quiz" ? "" : "none";
+}
+
 document.querySelectorAll(".mode-card").forEach(c => {
   c.addEventListener("click", () => {
     document.querySelectorAll(".mode-card").forEach(x => x.classList.remove("selected"));
     c.classList.add("selected");
     setupGameMode = c.dataset.gamemode;
-    dirSection.style.display = setupGameMode === "match" ? "none" : "";
+    applyModeSections();
+  });
+});
+
+quizLengthToggle.querySelectorAll(".rate-btn").forEach(b => {
+  b.addEventListener("click", () => {
+    quizLengthToggle.querySelectorAll(".rate-btn").forEach(x => x.classList.remove("selected"));
+    b.classList.add("selected");
+    setupQuizLength = parseInt(b.dataset.val, 10);
   });
 });
 
@@ -448,6 +504,52 @@ startBtn.addEventListener("click", () => { getActx(); startGame(); });
 backBtn.addEventListener("click", goToMenu);
 goMenu.addEventListener("click", goToMenu);
 goRetry.addEventListener("click", () => { goOverlay.style.display = "none"; startGame(); });
+qrMenu.addEventListener("click", goToMenu);
+qrRetry.addEventListener("click", () => {
+  quizReviewOverlay.style.display = "none";
+  gameScreen.style.display = "block";
+  startGame();
+});
+
+/* ────────────────────────────────────────
+   HELP — MC & Match only, never Type/Quiz. Shows the word's
+   real-world example sentence (German + English) so the player
+   sees how it's actually used. Using it reduces that question's
+   scoring.
+   ──────────────────────────────────────── */
+function sentenceHtmlFor(word) {
+  if (!word || !word.sentence) {
+    return `<span class="hp-de">No example sentence yet for this word.</span>`;
+  }
+  return `<span class="hp-de">${escHtml(word.sentence)}</span><span class="hp-en">${escHtml(word.sentenceEn || "")}</span>`;
+}
+
+helpBtn.addEventListener("click", () => {
+  if (!currentQ || answered || quizMode) return;
+  helpUsedThisQ = true;
+  helpBtn.disabled = true;
+  helpBtn.classList.add("used");
+  helpBtn.textContent = "💡 Help used — scoring reduced for this question";
+  helpPanel.innerHTML = sentenceHtmlFor(currentQ) + `<span class="hp-note">Used in a real sentence · reduced points this question</span>`;
+  helpPanel.style.display = "block";
+});
+
+matchHelpBtn.addEventListener("click", () => {
+  if (quizMode || !matchPairs.length) return;
+  let targetPairId = -1;
+  if (matchSelected) {
+    targetPairId = parseInt(matchSelected.dataset.pairid, 10);
+  } else {
+    const unmatched = matchGrid.querySelectorAll(".match-card:not(.matched)");
+    if (unmatched.length) targetPairId = parseInt(unmatched[0].dataset.pairid, 10);
+  }
+  if (targetPairId < 0) return;
+  const pair = matchPairs[targetPairId];
+  if (!pair) return;
+  matchHelpUsedPairs.add(targetPairId);
+  matchHelpPanel.innerHTML = sentenceHtmlFor(pair) + `<span class="hp-note">Used in a real sentence · reduced points for this pair</span>`;
+  matchHelpPanel.style.display = "block";
+});
 resetBtn.addEventListener("click", () => {
   if (confirm("Clear all scores?")) { saveScores([]); renderScoreboard(); }
 });
@@ -497,14 +599,15 @@ typeInput.addEventListener("keydown", e => {
    ──────────────────────────────────────── */
 function startGame() {
   pool = buildPool(setupLevel, setupLetters);
-  if (pool.length < 4) {
+  const minWords = setupGameMode === "quiz" ? 6 : 4;
+  if (pool.length < minWords) {
     alert('Not enough words in this selection. Try adding another letter or select "All".');
     return;
   }
 
+  quizMode = setupGameMode === "quiz";
+
   lives = 3; score = 0; streak = 0; questionCount = 0; gameOver = false;
-  sessionQueue = buildSessionQueue(pool);
-  sessionIndex = 0;
   scoreVal.textContent = "0";
   progressFill.style.width = "0%";
   setupScreen.style.display = "none";
@@ -518,6 +621,14 @@ function startGame() {
 
   learning.clearWrongWords();
 
+  if (quizMode) {
+    startQuiz();
+    return;
+  }
+
+  sessionQueue = buildSessionQueue(pool);
+  sessionIndex = 0;
+
   const stats = learning.getStats(pool);
   const progress = stats.total > 0 ? Math.round((stats.seen / stats.total) * 100) : 0;
 
@@ -526,6 +637,10 @@ function startGame() {
     matchSection.style.display = "block";
     livesWrap.style.display = "none";
     streakPill.style.display = "none";
+    diffBadge.style.display = "";
+    matchHelpBtn.style.display = "";
+    matchHelpPanel.style.display = "none";
+    matchHelpUsedPairs = new Set();
     startMatchRound();
   } else {
     quizSection.style.display = "block";
@@ -534,6 +649,8 @@ function startGame() {
     mcSection.style.display = setupGameMode === "mc" ? "block" : "none";
     typeSection.style.display = setupGameMode === "type" ? "block" : "none";
     specialChars.style.display = (setupGameMode === "type" && setupDir === "en-de") ? "flex" : "none";
+    helpRow.style.display = setupGameMode === "mc" ? "block" : "none";
+    helpPanel.style.display = "none";
     updateLives();
     renderScoreboard();
     sessionTag.textContent = `${pool.length} words · ${letterLabel(setupLetters)} · 📚 lifetime ${progress}% (${stats.seen}/${stats.total})`;
@@ -544,9 +661,14 @@ function startGame() {
 function goToMenu() {
   clearMatchTimer();
   goOverlay.style.display = "none";
+  quizReviewOverlay.style.display = "none";
   gameScreen.style.display = "none";
   setupScreen.style.display = "block";
   livesWrap.style.display = "flex";
+  diffBadge.style.display = "";
+  skipBtn.style.display = "";
+  quizMode = false;
+  renderScoreboard();
 }
 
 /* ────────────────────────────────────────
@@ -556,6 +678,267 @@ function buildPool(level, letters) {
   const words = getWordsByLevel(level);
   if (letters[0] === "all") return words;
   return words.filter(w => letters.includes(w.letter));
+}
+
+/* ────────────────────────────────────────
+   COMPLETE QUIZ — engine
+   Strings together MC, Type ("fill the blank") questions and
+   Match blocks into one linear sequence. No lives, no help, no
+   per-question reveal — everything is shown in the review screen
+   once the whole quiz is done.
+   ──────────────────────────────────────── */
+function quizPlanTotalQuestions(plan) {
+  return plan.reduce((sum, step) => sum + (step.kind === "match" ? step.pairs.length : 1), 0);
+}
+
+function sampleWordsForQuiz(sourcePool, count) {
+  const out = [];
+  let deck = shuffle(sourcePool);
+  let cursor = 0;
+  while (out.length < count) {
+    if (cursor >= deck.length) { deck = shuffle(sourcePool); cursor = 0; }
+    out.push(deck[cursor++]);
+  }
+  return out;
+}
+
+function buildQuizPlan(sourcePool, totalQuestions) {
+  const matchBlockSize = 4;
+  let matchQCount = Math.round(totalQuestions * 0.2);
+  matchQCount = Math.round(matchQCount / matchBlockSize) * matchBlockSize;
+  matchQCount = Math.max(matchBlockSize, Math.min(matchQCount, Math.floor(totalQuestions * 0.4)));
+  if (sourcePool.length < matchBlockSize) matchQCount = 0;
+
+  const remaining = totalQuestions - matchQCount;
+  const mcCount = Math.round(remaining / 2);
+  const typeCount = remaining - mcCount;
+
+  const words = sampleWordsForQuiz(sourcePool, mcCount + typeCount + matchQCount);
+  let idx = 0;
+  const steps = [];
+
+  for (let i = 0; i < mcCount; i++) {
+    steps.push({ kind: "mc", word: words[idx++], dir: Math.random() < 0.5 ? "de-en" : "en-de" });
+  }
+  for (let i = 0; i < typeCount; i++) {
+    steps.push({ kind: "type", word: words[idx++], dir: Math.random() < 0.5 ? "de-en" : "en-de" });
+  }
+  let remainingMatch = matchQCount;
+  while (remainingMatch > 0) {
+    const size = Math.min(matchBlockSize, remainingMatch);
+    const pairs = [];
+    for (let i = 0; i < size; i++) pairs.push(words[idx++]);
+    steps.push({ kind: "match", pairs });
+    remainingMatch -= size;
+  }
+
+  return shuffle(steps);
+}
+
+function startQuiz() {
+  quizPlan = buildQuizPlan(pool, setupQuizLength);
+  quizIndex = 0;
+  quizResults = [];
+  score = 0;
+  scoreVal.textContent = "0";
+
+  livesWrap.style.display = "none";
+  streakPill.style.display = "none";
+  diffBadge.style.display = "none";
+  helpRow.style.display = "none";
+  helpPanel.style.display = "none";
+  matchHelpBtn.style.display = "none";
+  matchHelpPanel.style.display = "none";
+  skipBtn.style.display = "none";
+
+  quizSection.style.display = "block";
+  matchSection.style.display = "none";
+  mcSection.style.display = "block";
+  typeSection.style.display = "none";
+  specialChars.style.display = "none";
+
+  progressFill.style.width = "0%";
+  renderScoreboard();
+  nextQuizStep();
+}
+
+function nextQuizStep() {
+  if (quizIndex >= quizPlan.length) { finishQuiz(); return; }
+  const step = quizPlan[quizIndex];
+  quizIndex++;
+
+  const totalQ = quizPlanTotalQuestions(quizPlan);
+  const doneQ = quizResults.length;
+  progressFill.style.width = Math.round((doneQ / totalQ) * 100) + "%";
+  sessionTag.textContent = `${letterLabel(setupLetters)} · Complete Quiz · Q${doneQ + 1}/${totalQ}`;
+
+  if (step.kind === "match") {
+    startQuizMatchBlock(step.pairs);
+  } else {
+    renderQuizQAStep(step);
+  }
+}
+
+function renderQuizQAStep(step) {
+  matchSection.style.display = "none";
+  quizSection.style.display = "block";
+  mcSection.style.display = step.kind === "mc" ? "block" : "none";
+  typeSection.style.display = step.kind === "type" ? "block" : "none";
+  specialChars.style.display = (step.kind === "type" && step.dir === "en-de") ? "flex" : "none";
+
+  setupDir = step.dir;
+
+  answered = false;
+  spellFeedback.innerHTML = "";
+  typeInput.value = "";
+  typeInput.className = "type-input";
+  statusMsg.textContent = step.kind === "mc" ? "Pick the right answer" : "Type your answer";
+  statusMsg.className = "status-msg";
+  nextBtn.disabled = true;
+  submitBtn.disabled = false;
+
+  const selection = step.word;
+  currentQ = {
+    prompt: step.dir === "de-en" ? selection.de : selection.en,
+    answer: step.dir === "de-en" ? selection.en : selection.de,
+    letter: selection.letter,
+    de: selection.de,
+    en: selection.en,
+    sentence: selection.sentence,
+    sentenceEn: selection.sentenceEn,
+    quizDir: step.dir,
+    quizKind: step.kind
+  };
+
+  qDir.innerHTML = step.dir === "de-en"
+    ? '<span class="flag-chip">🇩🇪</span> → <span class="flag-chip">🇬🇧</span>'
+    : '<span class="flag-chip">🇬🇧</span> → <span class="flag-chip">🇩🇪</span>';
+  qWord.textContent = currentQ.prompt;
+  qCatTag.textContent = "Letter " + currentQ.letter;
+
+  const lang = step.dir === "de-en" ? "de-DE" : "en-GB";
+  speakWord(currentQ.prompt, lang);
+
+  if (step.kind === "mc") buildMC(currentQ.answer);
+  else typeInput.focus();
+}
+
+function handleQuizAnswer(isCorrect, userAnswerText) {
+  answered = true;
+  optBtns.forEach(b => b.disabled = true);
+  submitBtn.disabled = true;
+
+  quizResults.push({
+    kind: currentQ.quizKind,
+    prompt: currentQ.prompt,
+    dir: currentQ.quizDir,
+    userAnswer: userAnswerText,
+    correctAnswer: currentQ.answer,
+    isCorrect
+  });
+
+  score += isCorrect ? 10 : 0;
+  scoreVal.textContent = score;
+
+  statusMsg.textContent = "Answer recorded";
+  statusMsg.className = "status-msg";
+  nextBtn.disabled = false;
+}
+
+function startQuizMatchBlock(words) {
+  clearMatchTimer();
+  quizMatchActive = true;
+  quizMatchMistakeSet = new Set();
+
+  matchSection.style.display = "block";
+  quizSection.style.display = "none";
+  matchHelpBtn.style.display = "none";
+  matchHelpPanel.style.display = "none";
+
+  matchMatchedCount = 0;
+  matchMistakes = 0;
+  matchSelected = null;
+  matchMatchedEl.textContent = "0";
+  matchMistakesEl.textContent = "0";
+  matchTotalEl.textContent = words.length;
+
+  matchPairs = words.map(w => ({ de: w.de, en: w.en, letter: w.letter }));
+
+  const deCards = shuffle(matchPairs.map((p, i) => ({ text: p.de, lang: "de", pairId: i })));
+  const enCards = shuffle(matchPairs.map((p, i) => ({ text: p.en, lang: "en", pairId: i })));
+  const allCards = shuffle([...deCards, ...enCards]);
+
+  matchGrid.innerHTML = "";
+  allCards.forEach(card => {
+    const el = document.createElement("div");
+    el.className = "match-card";
+    el.dataset.lang = card.lang;
+    el.dataset.pairid = card.pairId;
+    el.dataset.text = card.text;
+    el.innerHTML = `${escHtml(card.text)}<span class="lang-badge">${card.lang === "de" ? "🇩🇪" : "🇬🇧"}</span>`;
+    el.addEventListener("click", () => handleMatchClick(el));
+    matchGrid.appendChild(el);
+  });
+
+  matchElapsed = 0;
+  matchTimerInterval = setInterval(() => {
+    matchElapsed++;
+    const m = Math.floor(matchElapsed / 60);
+    const s = matchElapsed % 60;
+    matchTimer.textContent = `${m}:${s.toString().padStart(2, "0")}`;
+  }, 1000);
+}
+
+function finishQuiz() {
+  quizMatchActive = false;
+  clearMatchTimer();
+  const total = quizResults.length;
+  const correct = quizResults.filter(r => r.isCorrect).length;
+  const percent = total > 0 ? Math.round((correct / total) * 100) : 0;
+  const pass = percent >= QUIZ_PASS_MARK;
+  const status = quizStatusFor(percent);
+
+  insertQuizScore({
+    correct, total, percent, pass,
+    status: status.label,
+    statusCls: status.cls,
+    level: setupLevel,
+    cat: letterLabel(setupLetters),
+    date: Date.now()
+  });
+
+  playWinSound();
+  showQuizReview({ correct, total, percent, pass, status });
+}
+
+function showQuizReview(result) {
+  gameScreen.style.display = "none";
+  qrIcon.textContent = result.status.emoji;
+  qrTitle.textContent = "Quiz complete!";
+  qrStatusBadge.textContent = result.status.label;
+  qrStatusBadge.className = "qr-status-badge " + result.status.cls;
+  qrScoreBig.innerHTML = `${result.correct}<small>/${result.total} correct</small>`;
+  qrPercent.textContent = result.percent + "%";
+  qrPassLine.textContent = result.pass
+    ? `✅ Passed — ${QUIZ_PASS_MARK}% needed to pass`
+    : `❌ Not passed — ${QUIZ_PASS_MARK}% needed to pass`;
+  qrPassLine.className = "qr-pass-line " + (result.pass ? "pass" : "fail");
+
+  qrAnswers.innerHTML = quizResults.map(r => `
+    <div class="qr-item ${r.isCorrect ? "correct" : "wrong"}">
+      <div class="qr-item-top">
+        <span>${escHtml(r.prompt)}</span>
+        <span class="qr-item-mark">${r.isCorrect ? "✓" : "✗"}</span>
+      </div>
+      <div class="qr-item-answer">
+        ${r.isCorrect
+          ? `<span class="ans-correct">${escHtml(r.correctAnswer)}</span>`
+          : `<span class="ans-wrong">${escHtml(r.userAnswer || "—")}</span><span class="ans-correct">${escHtml(r.correctAnswer)}</span>`}
+      </div>
+    </div>
+  `).join("");
+
+  quizReviewOverlay.style.display = "flex";
 }
 
 /** Build this session's question order: every word in the pool exactly
@@ -580,7 +963,6 @@ function showCompletion() {
   submitBtn.disabled = true;
   nextBtn.disabled = true;
 
-  insertScore(score);
   playWinSound();
 
   const wrongWords = learning.getWrongWords();
@@ -604,6 +986,13 @@ function nextQuestion() {
   statusMsg.className = "status-msg";
   nextBtn.disabled = true;
   submitBtn.disabled = false;
+
+  helpUsedThisQ = false;
+  helpBtn.disabled = false;
+  helpBtn.classList.remove("used");
+  helpBtn.textContent = "💡 Help — see it used in a sentence";
+  helpPanel.style.display = "none";
+  helpPanel.innerHTML = "";
 
   const selection = sessionQueue[sessionIndex];
   sessionIndex++;
@@ -670,9 +1059,15 @@ optBtns.forEach(btn => btn.addEventListener("click", handleMCClick));
 function handleMCClick(e) {
   if (answered || gameOver) return;
   const btn = e.currentTarget;
+  const isCorrect = btn.dataset.opt === currentQ.answer;
+
+  if (quizMode) {
+    handleQuizAnswer(isCorrect, btn.dataset.opt);
+    return;
+  }
+
   answered = true;
   optBtns.forEach(b => b.disabled = true);
-  const isCorrect = btn.dataset.opt === currentQ.answer;
   const answerLang = setupDir === "de-en" ? "en-GB" : "de-DE";
   if (isCorrect) {
     btn.classList.add("correct");
@@ -695,10 +1090,16 @@ function handleTypeSubmit() {
   if (answered || gameOver) return;
   const raw = typeInput.value.trim();
   if (!raw) { typeInput.focus(); return; }
-  answered = true;
-  submitBtn.disabled = true;
   const isGermanAnswer = setupDir === "en-de";
   const result = checkTypedAnswer(raw, currentQ.answer, isGermanAnswer);
+
+  if (quizMode) {
+    handleQuizAnswer(result.exact || result.close, raw);
+    return;
+  }
+
+  answered = true;
+  submitBtn.disabled = true;
   const answerLang = setupDir === "de-en" ? "en-GB" : "de-DE";
 
   if (result.exact) {
@@ -723,12 +1124,34 @@ function handleTypeSubmit() {
 }
 
 function normalise(s) { return s.toLowerCase().replace(/\s+/g, " ").trim(); }
+
+/* Strips grading "noise" that shouldn't be required from a typed answer:
+   parenthetical hints ("(a person/thing)", "(pl.)"), German grammar
+   shorthand after a comma ("das Restaurant, -s" → "das Restaurant"),
+   and natural English filler words ("to visit" ~ "visit", "the hall" ~ "hall"). */
+function answerCore(s, isGerman) {
+  let x = s.replace(/\([^)]*\)/g, " ");
+  if (isGerman) {
+    x = x.replace(/,.*$/, "");
+  } else {
+    x = x.replace(/^\s*to\s+/i, "").replace(/^\s*(the|a|an)\s+/i, "");
+  }
+  return x.replace(/\s+/g, " ").trim();
+}
+
 function checkTypedAnswer(input, answer, isGerman) {
   const ni = normalise(input), na = normalise(answer);
   if (ni === na) return { exact: true };
   if (isGerman && foldUmlauts(ni) === foldUmlauts(na)) return { exact: true };
-  const dist = levenshtein(ni, na);
-  const baseThreshold = Math.max(2, Math.floor(na.replace(/\s/g, "").length / 5));
+
+  const niCore = normalise(answerCore(input, isGerman));
+  const naCore = normalise(answerCore(answer, isGerman));
+  if (niCore === naCore) return { exact: true };
+  if (isGerman && foldUmlauts(niCore) === foldUmlauts(naCore)) return { exact: true };
+
+  const cmpA = niCore || ni, cmpB = naCore || na;
+  const dist = levenshtein(cmpA, cmpB);
+  const baseThreshold = Math.max(2, Math.floor(cmpB.replace(/\s/g, "").length / 5));
   const threshold = Math.max(1, baseThreshold - Math.floor((difficultyLevel - 1) / 2));
   if (dist <= threshold) return { close: true, dist };
   return { exact: false, close: false };
@@ -765,7 +1188,8 @@ function handleCorrect() {
 
   streak++;
   questionCount++;
-  const bonus = (streak >= 5 ? 20 : streak >= 3 ? 15 : 10) + (difficultyLevel - 1) * 3;
+  let bonus = (streak >= 5 ? 20 : streak >= 3 ? 15 : 10) + (difficultyLevel - 1) * 3;
+  if (helpUsedThisQ) bonus = Math.max(2, Math.floor(bonus * 0.4));
   score += bonus;
   scoreVal.textContent = score;
   qCard.classList.add("bounce");
@@ -774,7 +1198,8 @@ function handleCorrect() {
 
   const stats = learning.getStats(pool);
   const progress = stats.total > 0 ? Math.round((stats.seen / stats.total) * 100) : 0;
-  setStatus(`✓ Correct! +${bonus}${streak >= 3 ? " 🔥" : ""} · 📊 ${progress}% covered`, "ok");
+  const helpNote = helpUsedThisQ ? " · 💡 help used" : "";
+  setStatus(`✓ Correct! +${bonus}${streak >= 3 ? " 🔥" : ""}${helpNote} · 📊 ${progress}% covered`, "ok");
   updateStreak();
   nextBtn.disabled = false;
 }
@@ -801,7 +1226,7 @@ function handleWrong() {
 }
 
 skipBtn.addEventListener("click", () => {
-  if (gameOver) return;
+  if (gameOver || quizMode) return;
   learning.recordSkipped(currentQ.de, currentQ.en);
   streak = 0;
   updateStreak();
@@ -815,7 +1240,11 @@ skipBtn.addEventListener("click", () => {
   if (setupGameMode === "mc") optBtns.forEach(b => b.disabled = true);
 });
 
-nextBtn.addEventListener("click", () => { if (!gameOver) nextQuestion(); });
+nextBtn.addEventListener("click", () => {
+  if (gameOver) return;
+  if (quizMode) { nextQuizStep(); return; }
+  nextQuestion();
+});
 
 /* ────────────────────────────────────────
    MATCH IT
@@ -827,6 +1256,8 @@ function startMatchRound() {
   matchSelected = null;
   matchMatchedEl.textContent = "0";
   matchMistakesEl.textContent = "0";
+  matchTotalEl.textContent = MATCH_PAIR_COUNT;
+  quizMatchActive = false;
 
   const allWords = [...pool];
   const unseenWords = allWords.filter(w => {
@@ -911,7 +1342,25 @@ function handleMatchClick(el) {
     matchSelected.classList.add("matched");
     el.classList.add("matched");
 
-    const pair = matchPairs[parseInt(el.dataset.pairid, 10)];
+    const pairIdNum = parseInt(el.dataset.pairid, 10);
+    const pair = matchPairs[pairIdNum];
+
+    if (quizMode) {
+      const hadMistake = quizMatchMistakeSet.has(pairIdNum);
+      if (pair) quizResults.push({ kind: "match", prompt: pair.de, dir: "de-en", userAnswer: pair.en, correctAnswer: pair.en, isCorrect: !hadMistake });
+      celebrateCorrect(el);
+      matchMatchedCount++;
+      matchMatchedEl.textContent = matchMatchedCount;
+      score += hadMistake ? 3 : 10;
+      scoreVal.textContent = score;
+      matchSelected = null;
+      if (matchMatchedCount === matchPairs.length) {
+        clearMatchTimer();
+        setTimeout(() => nextQuizStep(), 500);
+      }
+      return;
+    }
+
     if (pair) {
       learning.recordCorrect(pair.de, pair.en);
       registerCorrectForDifficulty(pair.de, pair.en);
@@ -920,7 +1369,8 @@ function handleMatchClick(el) {
     celebrateCorrect(el);
     matchMatchedCount++;
     matchMatchedEl.textContent = matchMatchedCount;
-    score += 15;
+    const helpUsed = matchHelpUsedPairs.has(pairIdNum);
+    score += helpUsed ? 6 : 15;
     scoreVal.textContent = score;
     matchSelected = null;
 
@@ -933,7 +1383,6 @@ function handleMatchClick(el) {
       const stats = learning.getStats(pool);
       const progress = stats.total > 0 ? Math.round((stats.seen / stats.total) * 100) : 0;
       setTimeout(() => {
-        insertScore(score);
         goIcon.textContent = "🎉";
         goTitle.textContent = "Matched!";
         goSub.textContent = `All ${MATCH_PAIR_COUNT} pairs in ${matchTimer.textContent}${timeBonus > 0 ? ` · +${timeBonus} speed bonus` : ""} · 📚 lifetime ${progress}% (${stats.seen}/${stats.total})`;
@@ -943,7 +1392,28 @@ function handleMatchClick(el) {
       }, 400);
     }
   } else {
-    const pair = matchPairs[parseInt(el.dataset.pairid, 10)];
+    const pairA = parseInt(matchSelected.dataset.pairid, 10);
+    const pairB = parseInt(el.dataset.pairid, 10);
+
+    if (quizMode) {
+      quizMatchMistakeSet.add(pairA);
+      quizMatchMistakeSet.add(pairB);
+      matchMistakes++;
+      matchMistakesEl.textContent = matchMistakes;
+      const prev = matchSelected;
+      prev.classList.remove("selected");
+      prev.classList.add("wrong-flash");
+      el.classList.add("wrong-flash");
+      shakeWrong(null);
+      setTimeout(() => {
+        prev.classList.remove("wrong-flash");
+        el.classList.remove("wrong-flash");
+      }, 600);
+      matchSelected = null;
+      return;
+    }
+
+    const pair = matchPairs[pairB];
     if (pair) {
       learning.recordWrong(pair.de, pair.en);
       registerWrongForDifficulty();
@@ -1080,7 +1550,6 @@ function endGame() {
   optBtns.forEach(b => b.disabled = true);
   submitBtn.disabled = true;
   nextBtn.disabled = true;
-  insertScore(score);
 
   const stats = learning.getStats(pool);
   const progress = stats.total > 0 ? Math.round((stats.seen / stats.total) * 100) : 0;
@@ -1095,20 +1564,19 @@ function endGame() {
 }
 
 /* ────────────────────────────────────────
-   SCORES
+   SCOREBOARD — Complete Quiz results only. The MC / Type It /
+   Match It games keep their own end-of-round score locally but
+   no longer feed the persistent scoreboard; only quiz attempts do.
    ──────────────────────────────────────── */
 function loadScores() {
-  try { const r = localStorage.getItem("ad_game_scores_v1"); if (r) return JSON.parse(r); } catch (_) {}
+  try { const r = localStorage.getItem("ad_quiz_scores_v1"); if (r) return JSON.parse(r); } catch (_) {}
   return [];
 }
-function saveScores(s) { try { localStorage.setItem("ad_game_scores_v1", JSON.stringify(s)); } catch (_) {} }
-function insertScore(s) {
-  if (s <= 0) return;
+function saveScores(s) { try { localStorage.setItem("ad_quiz_scores_v1", JSON.stringify(s)); } catch (_) {} }
+function insertQuizScore(entry) {
   const scores = loadScores();
-  const modeLabel = setupGameMode === "mc" ? "MC" : setupGameMode === "type" ? "Type" : "Match";
-  const dirLabel = setupGameMode === "match" ? "DE↔EN" : setupDir === "de-en" ? "DE→EN" : "EN→DE";
-  scores.push({ score: s, cat: letterLabel(setupLetters), dir: dirLabel, mode: modeLabel, level: setupLevel });
-  scores.sort((a, b) => b.score - a.score);
+  scores.push(entry);
+  scores.sort((a, b) => b.percent - a.percent || b.correct - a.correct);
   saveScores(scores.slice(0, 10));
   renderScoreboard();
 }
@@ -1116,15 +1584,17 @@ function renderScoreboard() {
   const scores = loadScores();
   sbList.innerHTML = "";
   if (!scores.length) {
-    sbList.innerHTML = '<div class="sb-empty">No scores yet — play to set one!</div>';
+    sbList.innerHTML = '<div class="sb-empty">No quiz attempts yet — take the Complete Quiz to set one!</div>';
     return;
   }
   scores.slice(0, 5).forEach((s, i) => {
     const row = document.createElement("div");
     row.className = "sb-row" + (i === 0 ? " gold" : i === 1 ? " silver" : i === 2 ? " bronze" : "");
     row.innerHTML = `<span class="rank">${["🥇", "🥈", "🥉", "4.", "5."][i]}</span>
-      <span>${s.level || "A1"} · ${escHtml(s.cat)} · ${s.dir} · ${s.mode}</span>
-      <span class="sb-score">${s.score}</span>`;
+      <span>${s.level || "A1"} · ${escHtml(s.cat)} · ${s.correct}/${s.total}
+        <span class="sb-status ${s.statusCls || ""}">${escHtml(s.status || "")}${s.pass === false ? " · fail" : ""}</span>
+      </span>
+      <span class="sb-score">${s.percent}%</span>`;
     sbList.appendChild(row);
   });
 }
@@ -1137,6 +1607,7 @@ document.addEventListener("DOMContentLoaded", () => {
   renderLetterPills();
   updateHeroSub();
   renderScoreboard();
+  applyModeSections();
   applyModeFromQuery();
 });
 
@@ -1151,7 +1622,7 @@ function applyModeFromQuery() {
   document.querySelectorAll(".mode-card").forEach(x => x.classList.remove("selected"));
   card.classList.add("selected");
   setupGameMode = mode;
-  dirSection.style.display = setupGameMode === "match" ? "none" : "";
+  applyModeSections();
 }
 
 })();
