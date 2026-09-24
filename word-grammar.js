@@ -456,7 +456,14 @@ function gBuildVerbHintIndex() {
     if (index[inf]) continue; // first hit wins
     const hint = {};
     if (gLooksLikeFormFragment(parts[1])) hint.pres3 = parts[1].replace(/^sich\s+/, "").trim();
-    if (parts[2] && gLooksLikeFormFragment(parts[2])) {
+    const part2IsPerfekt = parts[2] && /^(hat|ist)\b/.test(parts[2]);
+    if (parts[2] && !part2IsPerfekt && gLooksLikeFormFragment(parts[2]) && parts[3]) {
+      hint.preteriteHint = parts[2].replace(/^sich\s+/, "").trim();
+      if (gLooksLikeFormFragment(parts[3])) {
+        const pm = parts[3].match(/^(hat|ist)\s+(?:sich\s+)?(.+)$/);
+        if (pm) { hint.aux = pm[1] === "hat" ? "haben" : "sein"; hint.participle = pm[2].trim(); }
+      }
+    } else if (parts[2] && gLooksLikeFormFragment(parts[2])) {
       const pm = parts[2].match(/^(hat|ist)\s+(?:sich\s+)?(.+)$/);
       if (pm) { hint.aux = pm[1] === "hat" ? "haben" : "sein"; hint.participle = pm[2].trim(); }
     }
@@ -471,12 +478,28 @@ function analyzeVerb(de) {
   const reflexive = /\(sich\)/.test(infRaw) || /^sich\s/.test(infRaw);
   const infinitive = infRaw.replace(/\(sich\)/, "").replace(/^sich\s+/, "").trim();
 
-  let pres3 = null, aux = null, participle = null;
+  let pres3 = null, aux = null, participle = null, preteriteHint = null;
 
   if (parts[1] && gLooksLikeFormFragment(parts[1])) {
     pres3 = parts[1].replace(/^sich\s+/, "").trim();
   }
-  if (parts[2] && gLooksLikeFormFragment(parts[2])) {
+
+  // Some sources (e.g. the Goethe B1 Wortliste) give a fuller set of
+  // principal parts: infinitive, 3rd-sg present, 3rd-sg preterite,
+  // then the hat/ist + participle clause (4 comma-separated parts
+  // instead of A1/A2's 3). Detect that shape so the preterite is
+  // read from part[2] rather than mistaken for the Perfekt clause.
+  const part2IsPerfekt = parts[2] && /^(hat|ist)\b/.test(parts[2]);
+  if (parts[2] && !part2IsPerfekt && gLooksLikeFormFragment(parts[2]) && parts[3]) {
+    preteriteHint = parts[2].replace(/^sich\s+/, "").trim();
+    if (parts[3] && gLooksLikeFormFragment(parts[3])) {
+      const pm = parts[3].match(/^(hat|ist)\s+(?:sich\s+)?(.+)$/);
+      if (pm) {
+        aux = pm[1] === "hat" ? "haben" : "sein";
+        participle = pm[2].trim();
+      }
+    }
+  } else if (parts[2] && gLooksLikeFormFragment(parts[2])) {
     const pm = parts[2].match(/^(hat|ist)\s+(?:sich\s+)?(.+)$/);
     if (pm) {
       aux = pm[1] === "hat" ? "haben" : "sein";
@@ -494,6 +517,7 @@ function analyzeVerb(de) {
       if (hint.pres3) pres3 = hint.pres3;
       if (hint.aux) aux = hint.aux;
       if (hint.participle) participle = hint.participle;
+      if (hint.preteriteHint) preteriteHint = hint.preteriteHint;
     }
   }
 
@@ -513,10 +537,16 @@ function analyzeVerb(de) {
     if (guessed) { separable = true; prefix = guessed; }
   }
 
+  // Strip a trailing separable prefix off the preterite hint too, the
+  // same way it's stripped off the present-tense hint below.
+  if (preteriteHint && separable && prefix && preteriteHint.endsWith(" " + prefix)) {
+    preteriteHint = preteriteHint.slice(0, -(prefix.length + 1));
+  }
+
   const base = separable && prefix ? infinitive.slice(prefix.length) : infinitive;
   const modal = GRAMMAR_MODAL_VERBS.has(infinitive);
 
-  return { infinitive, base, reflexive, pres3, aux, participle, separable, prefix, modal };
+  return { infinitive, base, reflexive, pres3, aux, participle, separable, prefix, modal, preteriteHint };
 }
 
 /* ---------- Conjugation engine (operates on the *base* verb, i.e.
@@ -633,7 +663,16 @@ function conjugatePast(v) {
   const strong = GRAMMAR_STRONG_PAST[v.base];
   const modalPast = v.modal ? GRAMMAR_MODAL_PAST[v.infinitive] : null;
 
-  if (modalPast) {
+  if (v.preteriteHint) {
+    // Best case: the source itself gives the 3rd-person preterite, so
+    // build the whole paradigm from real data instead of a guess or
+    // lookup table. In German, ich and er/sie/es always share the
+    // same Präteritum stem, weak or strong verbs alike.
+    const stem = v.preteriteHint;
+    const e = gPastEndings(stem);
+    table = { ich: stem, du: e.du, er: stem, wir: e.wir, ihr: e.ihr, sie: e.sie };
+    aux = v.aux || (strong ? strong.aux : (GRAMMAR_SEIN_VERBS.has(v.infinitive) || GRAMMAR_SEIN_VERBS.has(v.base) ? "sein" : "haben"));
+  } else if (modalPast) {
     const stem = modalPast.ich;
     const e = gPastEndings(stem);
     table = { ich: stem, du: e.du, er: stem, wir: e.wir, ihr: e.ihr, sie: e.sie };

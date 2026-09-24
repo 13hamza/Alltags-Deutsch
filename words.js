@@ -1,6 +1,6 @@
 /* ============================================================
    Alltags-Deutsch — words.js (words.html)
-   Renders the level tabs (A1 / A2 / B1 / B2) and, for the active
+   Renders the level tabs (A1 / A2 / B1) and, for the active
    level, either an alphabet-grouped grid of vocabulary tickets
    (alphabetized within each letter) or a "coming soon" note if
    that level has no words yet. Clicking a ticket's speaker icon

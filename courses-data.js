@@ -1,6 +1,6 @@
 /* ============================================================
    Alltags-Deutsch — courses-data.js
-   Grammar courses, one per CEFR level (A1, A2, B1, B2). Each
+   Grammar courses, one per CEFR level (A1, A2, B1). Each
    course has a "status" of "available" or "soon". Available
    courses have a `topics` array; each topic is a numbered
    grammar point with an English explanation, optional
@@ -10,7 +10,7 @@
 
    Source: A1 content adapted from the uploaded "German A1
    Guide" reference document, reorganized into the site's
-   topic-card format. A2/B1/B2 are placeholders until written.
+   topic-card format. A2/B1 are placeholders until written.
 
    To add a new course level: push a { level, id, status: "soon" }
    object into COURSES, then flip status to "available" and add
@@ -35,7 +35,8 @@ const COURSES = [
         intro: [
           "Think of every German noun as wearing a little name tag that says whether it's a \u2018boy word\u2019, a \u2018girl word\u2019, or a \u2018neither word\u2019. Grammar books call these genders masculine, feminine, and neuter — but it has nothing to do with real-life boys and girls. \u201cDas Mädchen\u201d (the girl) is actually neuter! It's just a label the word carries around, and German speakers learned which label goes with which word the same way you learned that a stove is hot: by hearing it over and over as a kid.",
           "The name tag itself is the article — a tiny word that comes right before the noun. \u201cDer\u201d marks a boy word, \u201cdie\u201d marks a girl word, and \u201cdas\u201d marks a neither word. So \u201cder Mann\u201d, \u201cdie Frau\u201d, and \u201cdas Kind\u201d are really just \u201clabel + word\u201d pairs. There's a second kind of label too: \u201cein/eine\u201d, which works like English \u201ca/an\u201d — it means you're talking about any one example of something (\u201ca dog\u201d), not one specific thing (\u201cthe dog\u201d).",
-          "One more thing that surprises beginners: in German, every single noun starts with a capital letter, always — not just names of people and places like in English, but ordinary words too, like \u201cHund\u201d (dog) or \u201cTisch\u201d (table). So if you see a capital letter in the middle of a German sentence, that's your clue: \u201cthis word is a thing\u201d."
+          "One more thing that surprises beginners: in German, every single noun starts with a capital letter, always — not just names of people and places like in English, but ordinary words too, like \u201cHund\u201d (dog) or \u201cTisch\u201d (table). So if you see a capital letter in the middle of a German sentence, that's your clue: \u201cthis word is a thing\u201d.",
+          "German also loves gluing two (or more) nouns together into one long compound word instead of using separate words like English does — \u201cdas Wasser\u201d (the water) + \u201cdie Flasche\u201d (the bottle) becomes \u201cdie Wasserflasche\u201d (the water bottle). The handy rule: a compound noun always takes the gender and article of its LAST word, no matter what the earlier pieces were. So even though \u201cWasser\u201d is neuter (das), \u201cWasserflasche\u201d ends in \u201cFlasche\u201d, which is feminine — so the whole compound is \u201cdie Wasserflasche\u201d."
         ],
         tables: [
           {
@@ -78,7 +79,8 @@ const COURSES = [
           { de: "ein Auto", en: "a car (neuter, indefinite)" },
           { de: "die Bücher", en: "the books (plural)" },
           { de: "Der Tisch ist groß.", en: "The table is big." },
-          { de: "Das ist eine Kirche. Die Kirche heißt Michaeliskirche.", en: "That is a church. The church is called Michaeliskirche." }
+          { de: "Das ist eine Kirche. Die Kirche heißt Michaeliskirche.", en: "That is a church. The church is called Michaeliskirche." },
+          { de: "das Wasser + die Flasche = die Wasserflasche", en: "water + bottle = the water bottle (compound takes the last word's gender)" }
         ]
       },
       {
@@ -1221,12 +1223,86 @@ const COURSES = [
           { de: "Mein Hobby ist lesen.", en: "My hobby is reading." },
           { de: "Ich bin Luca. Ich wohne in Berlin. Ich komme aus Deutschland.", en: "I'm Luca. I live in Berlin. I come from Germany." }
         ]
+      },
+      {
+        number: "30",
+        id: "adjectives-colors",
+        en: "Adjectives & Colors",
+        de: "Adjektive & Farben",
+        intro: [
+          "Describing words behave differently in German depending on WHERE they sit in the sentence — and that surprises a lot of beginners coming from English, where an adjective always looks the same no matter what. If the adjective comes AFTER the verb \u201csein\u201d (to be), describing the subject from a distance, it needs no ending at all — just use the plain dictionary form: \u201cDas Auto ist rot\u201d (The car is red). Grammar books call this a predicate adjective, but you can just think of it as \u201cadjective after sein \u2014 no changes needed\u201d.",
+          "It's a different story when the adjective sits directly in front of the noun it describes, right between the article and the noun \u2014 that's called an attributive adjective, and now it needs an ending. At the A1 level, the pattern to know is: after der/die/das (or dieser/diese/dieses), the adjective adds \u201c-e\u201d in the singular, whichever gender the noun is \u2014 der alte Mann, die alte Frau, das alte Auto. You'll meet more ending patterns (after ein/eine, in the plural, in other cases) as you go further, but \u201c-e\u201d after a definite article is the safe starting point.",
+          "Colors are just a special case of adjectives, so the exact same rules apply to them: \u201cDas Auto ist rot\u201d needs no ending, but \u201cdas rote Auto\u201d does. German also builds extra shades the same tidy way every time, by gluing \u201chell-\u201d (light) or \u201cdunkel-\u201d (dark) straight onto the front of a color word \u2014 hellblau (light blue), dunkelgrün (dark green) \u2014 no separate words needed, unlike English."
+        ],
+        tables: [
+          {
+            caption: "Predicate vs. attributive adjectives",
+            headers: ["Position", "Ending needed?", "Example"],
+            rows: [
+              ["After sein (predicate)", "No ending — plain form", "Das Auto ist rot."],
+              ["Before the noun, after der/die/das (attributive)", "Add \u2013e", "das rote Auto"],
+              ["Before the noun, masculine", "Add \u2013e", "der alte Mann"],
+              ["Before the noun, feminine", "Add \u2013e", "die kleine Katze"],
+              ["Before the noun, neuter", "Add \u2013e", "das kleine Kind"]
+            ]
+          },
+          {
+            caption: "Primary colors & shade modifiers",
+            headers: ["German", "English", "With a shade"],
+            rows: [
+              ["rot", "red", "hellrot (light red)"],
+              ["grün", "green", "dunkelgrün (dark green)"],
+              ["blau", "blue", "hellblau (light blue)"],
+              ["gelb", "yellow", "dunkelgelb (dark yellow)"],
+              ["schwarz / weiß", "black / white", "\u2014"]
+            ]
+          }
+        ],
+        tip: "Quick test for which pattern to use: can you swap the adjective and \u201csein\u201d without it sounding broken (\u201cDas Auto ist rot\u201d)? Then it needs no ending. Is the adjective squeezed directly between an article and its noun instead (\u201cdas rote Auto\u201d)? Then add \u201c-e\u201d, at least for singular nouns after der/die/das. Colors follow this exact same rule \u2014 they're not a separate system to memorize.",
+        examples: [
+          { de: "Das Auto ist rot.", en: "The car is red. (predicate, no ending)" },
+          { de: "Das rote Auto gefällt mir.", en: "I like the red car. (attributive, -e ending)" },
+          { de: "der alte Mann, die alte Frau, das alte Kind", en: "the old man, the old woman, the old child" },
+          { de: "Meine Lieblingsfarbe ist Blau.", en: "My favorite color is blue." },
+          { de: "Sie trägt ein hellblaues Kleid.", en: "She's wearing a light blue dress." },
+          { de: "Der Himmel ist heute dunkelgrau.", en: "The sky is dark gray today." }
+        ]
+      },
+      {
+        number: "31",
+        id: "comparatives-superlatives",
+        en: "Comparatives & Superlatives",
+        de: "Komparativ & Superlativ",
+        intro: [
+          "Just like English has \u201cgood, better, best\u201d, German adjectives and adverbs have three grades: the plain form (Positiv), the comparative for \u201cmore/-er\u201d (Komparativ), and the superlative for \u201cmost/-est\u201d (Superlativ). Regular German adjectives build the comparative by simply adding \u201c-er\u201d, and the superlative with \u201cam ___-sten\u201d \u2014 schnell (fast) becomes schneller (faster) and am schnellsten (fastest). To say \u201cthan\u201d when comparing two things, German uses the little word \u201cals\u201d: \u201cMein Auto ist schneller als deins\u201d (My car is faster than yours).",
+          "Two extremely common words break the regular pattern completely and just have to be memorized, the same way English doesn't say \u201cgooder\u201d or \u201cgoodest\u201d: gut (good) becomes besser (better) and am besten (best), and gern (gladly \u2014 used to say you like doing something) becomes lieber (prefer) and am liebsten (like most of all). Because \u201cgern\u201d is how German expresses liking an activity in the first place (\u201cIch spiele gern Fußball\u201d \u2014 I like playing football), its comparative \u201clieber\u201d is one of the most useful words you'll learn for talking about preferences."
+        ],
+        tables: [
+          {
+            caption: "Regular pattern vs. the two irregulars",
+            headers: ["Positive", "Comparative", "Superlative"],
+            rows: [
+              ["schnell (fast)", "schneller", "am schnellsten"],
+              ["klein (small)", "kleiner", "am kleinsten"],
+              ["gut (good)", "besser", "am besten"],
+              ["gern (gladly)", "lieber", "am liebsten"]
+            ]
+          }
+        ],
+        tip: "\u201cAls\u201d is the German word for \u201cthan\u201d in any comparison \u2014 \u201cbesser als\u201d (better than), \u201cschneller als\u201d (faster than) \u2014 don't reach for \u201cwie\u201d here, that's reserved for saying two things are equally alike (\u201cso schnell wie\u201d \u2014 as fast as). And remember gut/besser/am besten and gern/lieber/am liebsten by rote, the same way you memorized \u201cgood, better, best\u201d in English \u2014 no rule will get you there.",
+        examples: [
+          { de: "Mein Auto ist schneller als deins.", en: "My car is faster than yours." },
+          { de: "Berlin ist groß, aber München ist kleiner.", en: "Berlin is big, but Munich is smaller." },
+          { de: "Dieser Kuchen ist gut, aber der andere ist besser.", en: "This cake is good, but the other one is better." },
+          { de: "Von allen Städten mag ich Hamburg am besten.", en: "Of all the cities, I like Hamburg the best." },
+          { de: "Ich spiele gern Fußball, aber ich schwimme lieber.", en: "I like playing football, but I prefer swimming." },
+          { de: "Am liebsten trinke ich Kaffee am Morgen.", en: "What I like most is drinking coffee in the morning." }
+        ]
       }
     ]
   },
   { id: "a2", level: "A2", title: "German A2", subtitle: "Elementary German", status: "soon" },
-  { id: "b1", level: "B1", title: "German B1", subtitle: "Intermediate German", status: "soon" },
-  { id: "b2", level: "B2", title: "German B2", subtitle: "Upper-Intermediate German", status: "soon" }
+  { id: "b1", level: "B1", title: "German B1", subtitle: "Intermediate German", status: "soon" }
 ];
 
 function getCourseById(id) {
