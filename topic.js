@@ -33,7 +33,7 @@ function renderTopic(topic) {
       <div class="wrap">
         <span class="topic-icon" aria-hidden="true">${topic.icon}</span>
         <div class="topic-heading-group">
-          <p class="topic-eyebrow">Thema ${topic.number}</p>
+          <p class="topic-eyebrow">Thema ${topic.number}${topic.level ? ` &middot; <span class="level-pill" data-level="${topic.level}">${topic.level}</span>` : ""}${topic.theme ? ` &middot; ${topic.theme}` : ""}</p>
           <div class="topic-h1-row">
             <h1 id="topic-h1" tabindex="0" title="Click to hear it pronounced">${topic.de}</h1>
             <button class="speaker-btn" id="topic-h1-btn" aria-label="Pronounce ${topic.de}">${speakerIconSVG()}</button>

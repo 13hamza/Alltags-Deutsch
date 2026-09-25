@@ -8068,6 +8068,655 @@ const TOPICS = [
   }
 ];
 
+/* ---------- Topics added with the A1 / A2 / B1 reorganisation ---------- */
+/* Compact helpers: v("de", "en") → vocab entry, l("Speaker", "de", "en") → dialogue line */
+(function () {
+  const v = (de, en) => ({ de, en });
+  const l = (speaker, de, en) => ({ speaker, de, en });
+
+  TOPICS.push(
+    /* ===================== A1 ===================== */
+    {
+      id: "greetings-introductions",
+      category: "daily",
+      icon: "👋",
+      en: "Greetings / Introductions",
+      de: "Begrüßung / Sich vorstellen",
+      tagline: "Hello, goodbye & who are you?",
+      vocab: [
+        v("Hallo!", "Hello!"), v("Guten Morgen!", "Good morning!"), v("Guten Tag!", "Good day! / Hello!"),
+        v("Guten Abend!", "Good evening!"), v("Gute Nacht!", "Good night!"), v("Tschüss!", "Bye!"),
+        v("Auf Wiedersehen!", "Goodbye!"), v("Bis später!", "See you later!"), v("Wie geht's?", "How are you?"),
+        v("Mir geht's gut, danke.", "I'm fine, thanks."), v("Ich heiße …", "My name is …"),
+        v("Wie heißen Sie?", "What's your name? (formal)"), v("Wie heißt du?", "What's your name? (informal)"),
+        v("Woher kommen Sie?", "Where are you from?"), v("Ich komme aus …", "I come from …"),
+        v("Ich wohne in …", "I live in …"), v("Freut mich!", "Nice to meet you!"),
+        v("Das ist …", "This is …"), v("Herr / Frau", "Mr / Mrs"), v("der Name", "the name"),
+        v("der Vorname", "the first name"), v("der Nachname", "the surname")
+      ],
+      dialogues: [
+        {
+          title: "Meeting someone new",
+          lines: [
+            l("Anna", "Hallo! Ich bin Anna. Wie heißt du?", "Hi! I'm Anna. What's your name?"),
+            l("Omar", "Hallo Anna, ich heiße Omar.", "Hi Anna, my name is Omar."),
+            l("Anna", "Freut mich! Woher kommst du?", "Nice to meet you! Where are you from?"),
+            l("Omar", "Ich komme aus Ägypten, aber ich wohne jetzt in Berlin.", "I'm from Egypt, but I live in Berlin now."),
+            l("Anna", "Cool! Ich wohne auch in Berlin.", "Cool! I live in Berlin too.")
+          ]
+        },
+        {
+          title: "A formal introduction",
+          lines: [
+            l("Frau Klein", "Guten Tag! Mein Name ist Klein.", "Good afternoon! My name is Klein."),
+            l("Herr Novak", "Guten Tag, Frau Klein. Ich bin Peter Novak.", "Good afternoon, Mrs Klein. I'm Peter Novak."),
+            l("Frau Klein", "Wie geht es Ihnen, Herr Novak?", "How are you, Mr Novak?"),
+            l("Herr Novak", "Danke, gut. Und Ihnen?", "Fine, thank you. And you?"),
+            l("Frau Klein", "Auch gut, danke. Auf Wiedersehen!", "Fine too, thanks. Goodbye!")
+          ]
+        }
+      ]
+    },
+    {
+      id: "clothes-shopping",
+      category: "daily",
+      icon: "👕",
+      en: "Clothes / Clothes Shopping",
+      de: "Kleidung / Kleidung kaufen",
+      tagline: "Sizes, colours & fitting rooms",
+      vocab: [
+        v("die Kleidung", "the clothes"), v("die Hose", "the trousers"), v("das T-Shirt", "the T-shirt"),
+        v("das Hemd", "the shirt"), v("der Pullover", "the jumper / sweater"), v("die Jacke", "the jacket"),
+        v("der Mantel", "the coat"), v("das Kleid", "the dress"), v("der Rock", "the skirt"),
+        v("die Schuhe", "the shoes"), v("die Socken", "the socks"), v("die Größe", "the size"),
+        v("die Umkleidekabine", "the fitting room"), v("anprobieren", "to try on"),
+        v("passen", "to fit"), v("zu groß / zu klein", "too big / too small"), v("die Farbe", "the colour"),
+        v("günstig", "cheap / good value"), v("teuer", "expensive"), v("im Angebot", "on sale"),
+        v("Steht mir das?", "Does this suit me?")
+      ],
+      dialogues: [
+        {
+          title: "Asking for a size",
+          lines: [
+            l("Verkäuferin", "Kann ich Ihnen helfen?", "Can I help you?"),
+            l("Kunde", "Ja, haben Sie diese Jacke in Größe M?", "Yes, do you have this jacket in size M?"),
+            l("Verkäuferin", "Moment … ja, hier bitte. Die Umkleidekabine ist dort hinten.", "One moment … yes, here you are. The fitting room is back there."),
+            l("Kunde", "Danke, ich probiere sie mal an.", "Thanks, I'll try it on.")
+          ]
+        },
+        {
+          title: "At the till",
+          lines: [
+            l("Kunde", "Die Jacke passt super. Was kostet sie?", "The jacket fits great. How much is it?"),
+            l("Verkäuferin", "Sie ist im Angebot: 49 Euro statt 79.", "It's on sale: 49 euros instead of 79."),
+            l("Kunde", "Super, die nehme ich. Kann ich mit Karte zahlen?", "Great, I'll take it. Can I pay by card?"),
+            l("Verkäuferin", "Natürlich. Brauchen Sie eine Tüte?", "Of course. Do you need a bag?"),
+            l("Kunde", "Nein danke, ich habe eine dabei.", "No thanks, I've got one with me.")
+          ]
+        }
+      ]
+    },
+
+    /* ===================== A2 ===================== */
+    {
+      id: "hotel",
+      category: "weekly-monthly",
+      icon: "🏨",
+      en: "Hotel",
+      de: "Im Hotel",
+      tagline: "Checking in, rooms & breakfast times",
+      vocab: [
+        v("das Hotel", "the hotel"), v("die Rezeption", "the reception"), v("das Einzelzimmer", "the single room"),
+        v("das Doppelzimmer", "the double room"), v("die Reservierung", "the reservation"),
+        v("einchecken", "to check in"), v("auschecken", "to check out"), v("der Schlüssel / die Schlüsselkarte", "the key / key card"),
+        v("die Übernachtung", "the overnight stay"), v("mit Frühstück", "with breakfast"),
+        v("die Halbpension", "half board"), v("der Aufzug", "the lift / elevator"), v("das WLAN-Passwort", "the Wi-Fi password"),
+        v("das Handtuch", "the towel"), v("die Klimaanlage", "the air conditioning"), v("ruhig", "quiet"),
+        v("die Aussicht", "the view"), v("der Zimmerservice", "room service"), v("frei", "available")
+      ],
+      dialogues: [
+        {
+          title: "Checking in",
+          lines: [
+            l("Gast", "Guten Abend, ich habe ein Zimmer auf den Namen Sandhu reserviert.", "Good evening, I've reserved a room under the name Sandhu."),
+            l("Rezeption", "Willkommen! Ein Doppelzimmer für drei Nächte, richtig?", "Welcome! A double room for three nights, right?"),
+            l("Gast", "Genau. Ist das Frühstück inklusive?", "Exactly. Is breakfast included?"),
+            l("Rezeption", "Ja, von sieben bis zehn Uhr im Erdgeschoss. Hier ist Ihre Schlüsselkarte.", "Yes, from seven to ten on the ground floor. Here is your key card."),
+            l("Gast", "Vielen Dank. Und wie ist das WLAN-Passwort?", "Thank you. And what's the Wi-Fi password?")
+          ]
+        },
+        {
+          title: "A problem with the room",
+          lines: [
+            l("Gast", "Entschuldigung, die Klimaanlage in Zimmer 214 funktioniert nicht.", "Excuse me, the air conditioning in room 214 isn't working."),
+            l("Rezeption", "Oh, das tut mir leid. Ich schicke sofort jemanden.", "Oh, I'm sorry. I'll send someone right away."),
+            l("Gast", "Könnte ich vielleicht ein anderes Zimmer bekommen?", "Could I perhaps get a different room?"),
+            l("Rezeption", "Natürlich. Zimmer 305 ist frei und ruhiger.", "Of course. Room 305 is free and quieter.")
+          ]
+        }
+      ]
+    },
+    {
+      id: "airport-travel",
+      category: "weekly-monthly",
+      icon: "✈️",
+      en: "Airport / Travel",
+      de: "Flughafen / Reisen",
+      tagline: "Check-in, luggage & gates",
+      vocab: [
+        v("der Flughafen", "the airport"), v("der Flug", "the flight"), v("das Flugzeug", "the plane"),
+        v("der Reisepass", "the passport"), v("die Bordkarte", "the boarding pass"), v("der Koffer", "the suitcase"),
+        v("das Handgepäck", "the hand luggage"), v("das Gepäck aufgeben", "to check in luggage"),
+        v("der Schalter", "the counter / desk"), v("das Gate / der Flugsteig", "the gate"),
+        v("die Sicherheitskontrolle", "the security check"), v("der Abflug", "the departure"),
+        v("die Ankunft", "the arrival"), v("verspätet", "delayed"), v("gestrichen", "cancelled"),
+        v("umsteigen", "to change (planes)"), v("der Fensterplatz", "the window seat"),
+        v("der Gangplatz", "the aisle seat"), v("landen", "to land"), v("abfliegen", "to take off / depart")
+      ],
+      dialogues: [
+        {
+          title: "At the check-in desk",
+          lines: [
+            l("Mitarbeiterin", "Ihren Reisepass, bitte. Wohin fliegen Sie heute?", "Your passport, please. Where are you flying today?"),
+            l("Reisender", "Nach Wien. Ich habe einen Koffer zum Aufgeben.", "To Vienna. I have one suitcase to check in."),
+            l("Mitarbeiterin", "Möchten Sie einen Fenster- oder Gangplatz?", "Would you like a window or aisle seat?"),
+            l("Reisender", "Einen Fensterplatz, bitte.", "A window seat, please."),
+            l("Mitarbeiterin", "Hier ist Ihre Bordkarte. Boarding ist um 14:20 Uhr an Gate B12.", "Here's your boarding pass. Boarding is at 2:20 pm at gate B12.")
+          ]
+        },
+        {
+          title: "A delayed flight",
+          lines: [
+            l("Reisende", "Entschuldigung, ist der Flug nach Zürich verspätet?", "Excuse me, is the flight to Zurich delayed?"),
+            l("Mitarbeiter", "Ja, leider um ungefähr eine Stunde.", "Yes, unfortunately by about an hour."),
+            l("Reisende", "Oh nein, dann verpasse ich vielleicht meinen Anschluss.", "Oh no, then I might miss my connection."),
+            l("Mitarbeiter", "Keine Sorge, wir buchen Sie notfalls auf den nächsten Flug um.", "Don't worry, if necessary we'll rebook you onto the next flight.")
+          ]
+        }
+      ]
+    },
+    {
+      id: "hobbies-free-time",
+      category: "weekly-monthly",
+      icon: "🎨",
+      en: "Hobbies / Free Time",
+      de: "Hobbys / Freizeit",
+      tagline: "Sport, clubs & weekend plans",
+      vocab: [
+        v("die Freizeit", "the free time"), v("das Hobby", "the hobby"), v("Sport machen", "to do sport"),
+        v("schwimmen", "to swim"), v("joggen", "to jog"), v("Fahrrad fahren", "to ride a bike"),
+        v("wandern", "to hike"), v("lesen", "to read"), v("kochen", "to cook"), v("Musik hören", "to listen to music"),
+        v("ein Instrument spielen", "to play an instrument"), v("das Fitnessstudio", "the gym"),
+        v("der Verein", "the club"), v("das Kino", "the cinema"), v("ins Konzert gehen", "to go to a concert"),
+        v("sich treffen", "to meet up"), v("am Wochenende", "at the weekend"), v("Lust haben", "to feel like"),
+        v("Was machst du gern?", "What do you like doing?")
+      ],
+      dialogues: [
+        {
+          title: "Talking about hobbies",
+          lines: [
+            l("Lea", "Was machst du gern in deiner Freizeit?", "What do you like doing in your free time?"),
+            l("Jonas", "Ich spiele Fußball in einem Verein und lese viel. Und du?", "I play football in a club and read a lot. And you?"),
+            l("Lea", "Ich gehe zweimal pro Woche schwimmen und spiele Gitarre.", "I go swimming twice a week and play guitar."),
+            l("Jonas", "Wie lange spielst du schon Gitarre?", "How long have you been playing guitar?"),
+            l("Lea", "Seit drei Jahren. Es macht mir viel Spaß.", "For three years. I really enjoy it.")
+          ]
+        },
+        {
+          title: "Making weekend plans",
+          lines: [
+            l("Jonas", "Hast du am Samstag Lust, wandern zu gehen?", "Do you feel like going hiking on Saturday?"),
+            l("Lea", "Gern! Wann sollen wir uns treffen?", "Sure! When shall we meet?"),
+            l("Jonas", "Um neun Uhr am Bahnhof?", "At nine o'clock at the station?"),
+            l("Lea", "Perfekt. Ich bringe Brötchen mit.", "Perfect. I'll bring some rolls.")
+          ]
+        }
+      ]
+    },
+    {
+      id: "hairdresser",
+      category: "weekly-monthly",
+      icon: "💇",
+      en: "Hairdresser",
+      de: "Beim Friseur",
+      tagline: "Haircuts, appointments & styles",
+      vocab: [
+        v("der Friseur / die Friseurin", "the hairdresser"), v("der Friseursalon", "the hair salon"),
+        v("die Haare", "the hair"), v("schneiden", "to cut"), v("waschen", "to wash"), v("föhnen", "to blow-dry"),
+        v("färben", "to dye"), v("kurz", "short"), v("lang", "long"), v("die Spitzen", "the ends / tips"),
+        v("der Pony", "the fringe / bangs"), v("der Scheitel", "the parting"), v("der Bart", "the beard"),
+        v("die Frisur", "the hairstyle"), v("einen Termin machen", "to make an appointment"),
+        v("Nur ein bisschen kürzer, bitte.", "Just a little shorter, please.")
+      ],
+      dialogues: [
+        {
+          title: "Booking a haircut",
+          lines: [
+            l("Kundin", "Guten Tag, haben Sie heute noch einen Termin frei?", "Hello, do you have an appointment free today?"),
+            l("Friseur", "Um 16 Uhr ist noch etwas frei. Waschen, schneiden, föhnen?", "There's something at 4 pm. Wash, cut and blow-dry?"),
+            l("Kundin", "Nur schneiden, bitte.", "Just a cut, please."),
+            l("Friseur", "Gut, dann bis um vier!", "Fine, see you at four!")
+          ]
+        },
+        {
+          title: "In the chair",
+          lines: [
+            l("Friseur", "Wie möchten Sie es haben?", "How would you like it?"),
+            l("Kundin", "Nur die Spitzen, ungefähr zwei Zentimeter.", "Just the ends, about two centimetres."),
+            l("Friseur", "Und den Pony auch ein bisschen kürzer?", "And the fringe a little shorter too?"),
+            l("Kundin", "Ja, aber nicht zu kurz, bitte.", "Yes, but not too short, please.")
+          ]
+        }
+      ]
+    },
+    {
+      id: "emergency-police",
+      category: "weekly-monthly",
+      icon: "🚨",
+      en: "Emergencies / Police",
+      de: "Notfall / Polizei",
+      tagline: "112, 110 & asking for help",
+      vocab: [
+        v("der Notfall", "the emergency"), v("Hilfe!", "Help!"), v("die Polizei (110)", "the police (110)"),
+        v("der Notruf (112)", "the emergency call (112)"), v("der Krankenwagen", "the ambulance"),
+        v("die Feuerwehr", "the fire brigade"), v("der Unfall", "the accident"), v("verletzt", "injured"),
+        v("bewusstlos", "unconscious"), v("das Feuer / es brennt", "the fire / it's burning"),
+        v("stehlen / gestohlen", "to steal / stolen"), v("der Dieb", "the thief"),
+        v("die Anzeige erstatten", "to report (a crime)"), v("die Adresse", "the address"),
+        v("Rufen Sie bitte einen Krankenwagen!", "Please call an ambulance!"),
+        v("Mein Handy wurde gestohlen.", "My phone was stolen."), v("die Fundsache / das Fundbüro", "the lost item / lost-property office")
+      ],
+      dialogues: [
+        {
+          title: "Calling 112",
+          lines: [
+            l("Leitstelle", "Notruf 112, wo genau ist der Notfall?", "Emergency 112, where exactly is the emergency?"),
+            l("Anrufer", "Hauptstraße 15 in Mainz. Ein Mann ist auf der Straße gestürzt.", "Hauptstraße 15 in Mainz. A man has fallen in the street."),
+            l("Leitstelle", "Ist er ansprechbar?", "Is he responsive?"),
+            l("Anrufer", "Ja, aber er blutet am Kopf.", "Yes, but he's bleeding from the head."),
+            l("Leitstelle", "Der Krankenwagen ist unterwegs. Bleiben Sie bitte bei ihm.", "The ambulance is on its way. Please stay with him.")
+          ]
+        },
+        {
+          title: "Reporting a theft",
+          lines: [
+            l("Frau", "Guten Tag, ich möchte einen Diebstahl anzeigen.", "Hello, I'd like to report a theft."),
+            l("Polizist", "Was wurde gestohlen?", "What was stolen?"),
+            l("Frau", "Mein Fahrrad. Es stand vor dem Supermarkt und war abgeschlossen.", "My bike. It was outside the supermarket and was locked."),
+            l("Polizist", "Wann haben Sie es zuletzt gesehen?", "When did you last see it?"),
+            l("Frau", "Heute Morgen gegen neun Uhr.", "This morning at around nine.")
+          ]
+        }
+      ]
+    },
+
+    /* ===================== B1 ===================== */
+    {
+      id: "apartment-hunting",
+      category: "b1",
+      icon: "🔑",
+      en: "Flat Hunting / Renting",
+      de: "Wohnungssuche / Mieten",
+      tagline: "Listings, viewings, deposits & contracts",
+      vocab: [
+        v("die Wohnungssuche", "the flat hunt"), v("die Anzeige", "the advert / listing"),
+        v("die Besichtigung", "the viewing"), v("der Vermieter / die Vermieterin", "the landlord / landlady"),
+        v("der Mieter / die Mieterin", "the tenant"), v("die Kaltmiete", "rent excluding utilities"),
+        v("die Warmmiete", "rent including utilities"), v("die Nebenkosten", "the utility costs"),
+        v("die Kaution", "the deposit"), v("der Mietvertrag", "the rental contract"),
+        v("die Wohngemeinschaft (WG)", "the shared flat"), v("möbliert", "furnished"),
+        v("die Schufa-Auskunft", "the credit report"), v("der Einzug / der Auszug", "moving in / moving out"),
+        v("kündigen", "to give notice"), v("die Kündigungsfrist", "the notice period"),
+        v("renovieren", "to renovate / decorate"), v("die Hausordnung", "the house rules"),
+        v("provisionsfrei", "without agent's fee")
+      ],
+      dialogues: [
+        {
+          title: "Calling about a listing",
+          lines: [
+            l("Interessent", "Guten Tag, ich rufe wegen der Zweizimmerwohnung in der Lindenstraße an. Ist sie noch frei?", "Hello, I'm calling about the two-room flat on Lindenstraße. Is it still available?"),
+            l("Vermieterin", "Ja, noch. Die Kaltmiete beträgt 720 Euro, dazu kommen etwa 180 Euro Nebenkosten.", "Yes, for now. The basic rent is 720 euros, plus about 180 euros of utilities."),
+            l("Interessent", "Wie hoch ist die Kaution, und ab wann könnte ich einziehen?", "How much is the deposit, and from when could I move in?"),
+            l("Vermieterin", "Drei Kaltmieten. Einziehen können Sie ab dem ersten März.", "Three months' basic rent. You can move in from the first of March."),
+            l("Interessent", "Könnte ich die Wohnung diese Woche besichtigen?", "Could I view the flat this week?"),
+            l("Vermieterin", "Donnerstag um 18 Uhr wäre möglich.", "Thursday at 6 pm would be possible.")
+          ]
+        },
+        {
+          title: "At the viewing",
+          lines: [
+            l("Interessentin", "Die Wohnung gefällt mir sehr. Sind die Nebenkosten mit Heizung?", "I really like the flat. Do the utilities include heating?"),
+            l("Vermieter", "Ja, Heizung und Wasser sind dabei, Strom zahlen Sie selbst.", "Yes, heating and water are included; you pay electricity yourself."),
+            l("Interessentin", "Welche Unterlagen brauchen Sie von mir?", "Which documents do you need from me?"),
+            l("Vermieter", "Eine Gehaltsbescheinigung, eine Schufa-Auskunft und eine Kopie Ihres Ausweises.", "Proof of income, a credit report and a copy of your ID."),
+            l("Interessentin", "Kein Problem, ich schicke Ihnen alles bis morgen per E-Mail.", "No problem, I'll email you everything by tomorrow.")
+          ]
+        }
+      ]
+    },
+    {
+      id: "job-interview",
+      category: "b1",
+      icon: "🧑‍💼",
+      en: "Job Applications / Interview",
+      de: "Bewerbung / Vorstellungsgespräch",
+      tagline: "CV, strengths & salary talk",
+      vocab: [
+        v("die Bewerbung", "the application"), v("sich bewerben (um)", "to apply (for)"),
+        v("der Lebenslauf", "the CV / résumé"), v("das Anschreiben", "the cover letter"),
+        v("das Vorstellungsgespräch", "the job interview"), v("die Stelle / die Stellenanzeige", "the position / job ad"),
+        v("die Berufserfahrung", "the work experience"), v("die Ausbildung", "the vocational training"),
+        v("das Zeugnis", "the certificate / reference"), v("die Stärken / Schwächen", "the strengths / weaknesses"),
+        v("das Gehalt", "the salary"), v("die Gehaltsvorstellung", "the salary expectation"),
+        v("die Probezeit", "the probationary period"), v("Vollzeit / Teilzeit", "full-time / part-time"),
+        v("befristet / unbefristet", "fixed-term / permanent"), v("teamfähig", "able to work in a team"),
+        v("zuverlässig", "reliable"), v("die Zusage / die Absage", "the job offer / rejection")
+      ],
+      dialogues: [
+        {
+          title: "The interview",
+          lines: [
+            l("Personalerin", "Erzählen Sie uns bitte etwas über sich und Ihre Berufserfahrung.", "Please tell us a little about yourself and your work experience."),
+            l("Bewerber", "Gern. Ich habe eine Ausbildung als Kaufmann gemacht und arbeite seit vier Jahren im Einkauf.", "Sure. I trained as a commercial clerk and have worked in purchasing for four years."),
+            l("Personalerin", "Warum möchten Sie die Stelle wechseln?", "Why would you like to change jobs?"),
+            l("Bewerber", "Ich suche neue Herausforderungen und möchte mehr Verantwortung übernehmen.", "I'm looking for new challenges and would like to take on more responsibility."),
+            l("Personalerin", "Was sind Ihre Stärken?", "What are your strengths?"),
+            l("Bewerber", "Ich bin zuverlässig, arbeite gern im Team und bleibe auch unter Zeitdruck ruhig.", "I'm reliable, I like working in a team and I stay calm under time pressure.")
+          ]
+        },
+        {
+          title: "Talking about salary",
+          lines: [
+            l("Personalerin", "Was ist Ihre Gehaltsvorstellung?", "What are your salary expectations?"),
+            l("Bewerber", "Ich stelle mir ein Bruttojahresgehalt von etwa 48.000 Euro vor.", "I'm thinking of a gross annual salary of around 48,000 euros."),
+            l("Personalerin", "Das liegt in unserem Rahmen. Die Probezeit beträgt sechs Monate.", "That's within our range. The probationary period is six months."),
+            l("Bewerber", "Das ist in Ordnung. Wann kann ich mit einer Rückmeldung rechnen?", "That's fine. When can I expect to hear back?"),
+            l("Personalerin", "Spätestens Ende nächster Woche.", "By the end of next week at the latest.")
+          ]
+        }
+      ]
+    },
+    {
+      id: "authorities-registration",
+      category: "b1",
+      icon: "🏛️",
+      en: "Authorities / Registration",
+      de: "Behörden / Anmeldung",
+      tagline: "Bürgeramt, forms & residence permits",
+      vocab: [
+        v("die Behörde", "the authority / public office"), v("das Bürgeramt", "the citizens' office"),
+        v("die Ausländerbehörde", "the immigration office"), v("sich anmelden / ummelden", "to register / re-register an address"),
+        v("die Meldebescheinigung", "the registration certificate"), v("der Antrag", "the application"),
+        v("einen Antrag stellen", "to submit an application"), v("das Formular ausfüllen", "to fill in the form"),
+        v("die Unterlagen", "the documents"), v("die Aufenthaltserlaubnis", "the residence permit"),
+        v("verlängern", "to extend / renew"), v("die Gebühr", "the fee"), v("die Frist", "the deadline"),
+        v("der Termin", "the appointment"), v("die Wartenummer", "the queue number"),
+        v("die Steuer-ID", "the tax ID"), v("der Sachbearbeiter", "the case officer"),
+        v("beglaubigt", "certified"), v("gültig / abgelaufen", "valid / expired")
+      ],
+      dialogues: [
+        {
+          title: "Registering an address",
+          lines: [
+            l("Sachbearbeiter", "Guten Tag. Was kann ich für Sie tun?", "Good morning. What can I do for you?"),
+            l("Bürgerin", "Ich bin umgezogen und möchte meine neue Adresse anmelden.", "I've moved and would like to register my new address."),
+            l("Sachbearbeiter", "Haben Sie die Wohnungsgeberbestätigung und Ihren Ausweis dabei?", "Do you have the landlord's confirmation and your ID with you?"),
+            l("Bürgerin", "Ja, hier bitte. Muss ich eine Gebühr bezahlen?", "Yes, here you are. Do I have to pay a fee?"),
+            l("Sachbearbeiter", "Nein, die Anmeldung ist kostenlos. Hier ist Ihre Meldebescheinigung.", "No, registration is free. Here is your registration certificate.")
+          ]
+        },
+        {
+          title: "Renewing a residence permit",
+          lines: [
+            l("Antragsteller", "Meine Aufenthaltserlaubnis läuft nächsten Monat ab. Wie kann ich sie verlängern?", "My residence permit expires next month. How can I renew it?"),
+            l("Mitarbeiterin", "Sie müssen einen Antrag stellen und einen Termin online buchen.", "You need to submit an application and book an appointment online."),
+            l("Antragsteller", "Welche Unterlagen brauche ich?", "Which documents do I need?"),
+            l("Mitarbeiterin", "Ihren Pass, ein biometrisches Foto, den Arbeitsvertrag und die letzten drei Gehaltsabrechnungen.", "Your passport, a biometric photo, your employment contract and your last three payslips."),
+            l("Antragsteller", "Und was passiert, wenn der Termin nach dem Ablaufdatum ist?", "And what happens if the appointment is after the expiry date?"),
+            l("Mitarbeiterin", "Dann bekommen Sie eine Fiktionsbescheinigung, damit Sie weiter legal hier sind.", "Then you'll get a provisional certificate so that you're still here legally.")
+          ]
+        }
+      ]
+    },
+    {
+      id: "complaints-returns",
+      category: "b1",
+      icon: "📦",
+      en: "Complaints / Returns",
+      de: "Reklamation / Umtausch",
+      tagline: "Faulty goods, refunds & warranty",
+      vocab: [
+        v("die Reklamation", "the complaint (about goods)"), v("reklamieren", "to complain about / return (faulty goods)"),
+        v("sich beschweren (über)", "to complain (about)"), v("die Beschwerde", "the complaint"),
+        v("der Umtausch", "the exchange"), v("umtauschen", "to exchange"), v("zurückgeben", "to return"),
+        v("das Geld zurück", "the refund"), v("der Kassenbon / der Beleg", "the receipt"),
+        v("die Garantie", "the guarantee / warranty"), v("defekt / beschädigt", "faulty / damaged"),
+        v("der Kundenservice", "the customer service"), v("die Bestellnummer", "the order number"),
+        v("die Rücksendung", "the return shipment"), v("die Frist", "the deadline"),
+        v("der Gutschein", "the voucher"), v("die Entschädigung", "the compensation"),
+        v("Ich bin damit nicht zufrieden.", "I'm not satisfied with it.")
+      ],
+      dialogues: [
+        {
+          title: "Returning a faulty item",
+          lines: [
+            l("Kunde", "Guten Tag, ich habe diesen Wasserkocher letzte Woche gekauft, aber er funktioniert nicht mehr.", "Hello, I bought this kettle last week but it no longer works."),
+            l("Verkäuferin", "Das tut mir leid. Haben Sie den Kassenbon dabei?", "I'm sorry about that. Do you have the receipt with you?"),
+            l("Kunde", "Ja, hier. Ich hätte gern mein Geld zurück.", "Yes, here. I'd like my money back."),
+            l("Verkäuferin", "Wir können ihn umtauschen oder Ihnen einen Gutschein geben.", "We can exchange it or give you a voucher."),
+            l("Kunde", "Laut Gesetz habe ich zwei Jahre Gewährleistung. Ich möchte lieber das Geld.", "By law I have a two-year warranty. I'd rather have the money."),
+            l("Verkäuferin", "Einen Moment, ich frage meine Chefin.", "One moment, I'll ask my manager.")
+          ]
+        },
+        {
+          title: "Complaining on the phone",
+          lines: [
+            l("Kundin", "Ich rufe an, weil meine Bestellung beschädigt angekommen ist.", "I'm calling because my order arrived damaged."),
+            l("Kundenservice", "Das bedauern wir sehr. Wie lautet Ihre Bestellnummer?", "We're very sorry about that. What is your order number?"),
+            l("Kundin", "4-7-1-1-9-3. Außerdem kam die Lieferung drei Tage zu spät.", "4-7-1-1-9-3. On top of that, the delivery was three days late."),
+            l("Kundenservice", "Wir schicken Ihnen kostenlos Ersatz und ein Rücksendeetikett.", "We'll send you a free replacement and a return label."),
+            l("Kundin", "Gut, aber ich erwarte, dass das diesmal schneller geht.", "Fine, but I expect it to be quicker this time.")
+          ]
+        }
+      ]
+    },
+    {
+      id: "contracts-insurance",
+      category: "b1",
+      icon: "📄",
+      en: "Contracts / Insurance",
+      de: "Verträge / Versicherungen",
+      tagline: "Phone plans, cancelling & health insurance",
+      vocab: [
+        v("der Vertrag", "the contract"), v("abschließen", "to take out / sign (a contract)"),
+        v("kündigen", "to cancel / terminate"), v("die Kündigung", "the cancellation / notice"),
+        v("die Laufzeit", "the contract term"), v("die Kündigungsfrist", "the notice period"),
+        v("sich automatisch verlängern", "to renew automatically"), v("die Versicherung", "the insurance"),
+        v("die Krankenversicherung", "the health insurance"), v("die Krankenkasse", "the health insurance fund"),
+        v("die Haftpflichtversicherung", "the personal liability insurance"), v("der Beitrag", "the premium / contribution"),
+        v("monatlich / jährlich", "monthly / yearly"), v("der Schaden", "the damage"),
+        v("einen Schaden melden", "to report a claim"), v("die Bedingungen", "the terms and conditions"),
+        v("unterschreiben", "to sign"), v("schriftlich", "in writing")
+      ],
+      dialogues: [
+        {
+          title: "Cancelling a phone contract",
+          lines: [
+            l("Kunde", "Ich möchte meinen Handyvertrag kündigen. Wie lange ist die Kündigungsfrist?", "I'd like to cancel my phone contract. How long is the notice period?"),
+            l("Mitarbeiterin", "Ihre Mindestlaufzeit ist vorbei, also können Sie mit einem Monat Frist kündigen.", "Your minimum term is over, so you can cancel with one month's notice."),
+            l("Kunde", "Muss ich die Kündigung schriftlich schicken?", "Do I have to send the cancellation in writing?"),
+            l("Mitarbeiterin", "Sie können sie auch online über den Kündigungsbutton machen.", "You can also do it online using the cancellation button."),
+            l("Kunde", "Gut. Bekomme ich eine Bestätigung?", "Good. Will I get a confirmation?"),
+            l("Mitarbeiterin", "Ja, per E-Mail innerhalb von 24 Stunden.", "Yes, by email within 24 hours.")
+          ]
+        },
+        {
+          title: "Reporting damage to the insurance",
+          lines: [
+            l("Versicherte", "Ich möchte einen Schaden melden. Ich habe aus Versehen das Handy meiner Freundin fallen lassen.", "I'd like to report a claim. I accidentally dropped my friend's phone."),
+            l("Versicherung", "Haben Sie eine private Haftpflichtversicherung bei uns?", "Do you have personal liability insurance with us?"),
+            l("Versicherte", "Ja, seit drei Jahren.", "Yes, for three years."),
+            l("Versicherung", "Dann schicken Sie uns bitte Fotos, die Reparaturrechnung und eine kurze Beschreibung.", "Then please send us photos, the repair bill and a short description."),
+            l("Versicherte", "Wie lange dauert die Bearbeitung ungefähr?", "Roughly how long does processing take?")
+          ]
+        }
+      ]
+    },
+    {
+      id: "recycling-environment",
+      category: "b1",
+      icon: "♻️",
+      en: "Recycling / Environment",
+      de: "Mülltrennung / Umwelt",
+      tagline: "Which bin? Deposit bottles & saving energy",
+      vocab: [
+        v("die Umwelt", "the environment"), v("der Umweltschutz", "environmental protection"),
+        v("der Müll", "the rubbish / trash"), v("den Müll trennen", "to separate the rubbish"),
+        v("die Mülltonne", "the bin"), v("der Biomüll", "organic waste"), v("der Restmüll", "general waste"),
+        v("das Altpapier", "waste paper"), v("der Gelbe Sack / die Gelbe Tonne", "the yellow bag / bin (packaging)"),
+        v("der Glascontainer", "the bottle bank"), v("das Pfand", "the deposit (on bottles)"),
+        v("die Pfandflasche", "the deposit bottle"), v("der Sperrmüll", "bulky waste"),
+        v("Energie sparen", "to save energy"), v("nachhaltig", "sustainable"), v("der Klimawandel", "climate change"),
+        v("umweltfreundlich", "environmentally friendly"), v("vermeiden", "to avoid")
+      ],
+      dialogues: [
+        {
+          title: "Which bin does it go in?",
+          lines: [
+            l("Neue Nachbarin", "Entschuldigung, in welche Tonne kommt der Joghurtbecher?", "Excuse me, which bin does the yoghurt pot go in?"),
+            l("Nachbar", "Verpackungen aus Plastik kommen in die Gelbe Tonne.", "Plastic packaging goes in the yellow bin."),
+            l("Neue Nachbarin", "Und die Kartoffelschalen?", "And the potato peelings?"),
+            l("Nachbar", "Die gehören in den Biomüll, die braune Tonne.", "They belong in the organic waste, the brown bin."),
+            l("Neue Nachbarin", "Das ist ja kompliziert! Und das Glas?", "That's complicated! And the glass?"),
+            l("Nachbar", "Das bringst du zum Glascontainer an der Ecke, nach Farben getrennt.", "You take that to the bottle bank on the corner, separated by colour.")
+          ]
+        },
+        {
+          title: "Discussing the environment",
+          lines: [
+            l("Mara", "Ich versuche seit einem Jahr, weniger Plastik zu benutzen.", "I've been trying to use less plastic for a year."),
+            l("Ben", "Und, klappt das? Im Supermarkt ist doch fast alles verpackt.", "And is it working? Almost everything in the supermarket is packaged."),
+            l("Mara", "Ich kaufe viel auf dem Markt und nehme eigene Beutel mit.", "I buy a lot at the market and take my own bags."),
+            l("Ben", "Ich finde, die Politik müsste mehr tun, nicht nur die Verbraucher.", "I think politicians should do more, not just consumers."),
+            l("Mara", "Da hast du recht, aber jeder kleine Schritt hilft trotzdem.", "You're right there, but every little step still helps.")
+          ]
+        }
+      ]
+    },
+    {
+      id: "opinions-discussion",
+      category: "b1",
+      icon: "💬",
+      en: "Giving Opinions / Discussing",
+      de: "Meinung sagen / Diskutieren",
+      tagline: "Agreeing, disagreeing & arguing politely",
+      vocab: [
+        v("die Meinung", "the opinion"), v("Meiner Meinung nach …", "In my opinion …"),
+        v("Ich finde, dass …", "I think that …"), v("Ich bin der Meinung, dass …", "I'm of the opinion that …"),
+        v("Da stimme ich dir zu.", "I agree with you there."), v("Das sehe ich anders.", "I see that differently."),
+        v("Da bin ich nicht sicher.", "I'm not sure about that."), v("Einerseits … andererseits …", "On the one hand … on the other hand …"),
+        v("der Vorteil", "the advantage"), v("der Nachteil", "the disadvantage"), v("das Argument", "the argument"),
+        v("überzeugen", "to convince"), v("der Kompromiss", "the compromise"), v("Das kommt darauf an.", "It depends."),
+        v("Du hast recht.", "You're right."), v("Ich verstehe deinen Punkt, aber …", "I see your point, but …"),
+        v("die Diskussion", "the discussion")
+      ],
+      dialogues: [
+        {
+          title: "Home office — yes or no?",
+          lines: [
+            l("Sven", "Meiner Meinung nach sollte jeder zwei Tage pro Woche im Homeoffice arbeiten dürfen.", "In my opinion, everyone should be allowed to work from home two days a week."),
+            l("Clara", "Einerseits spart man Zeit, andererseits fehlt mir der Kontakt zu den Kollegen.", "On the one hand you save time; on the other, I miss contact with colleagues."),
+            l("Sven", "Das verstehe ich, aber man kann sich ja an den Bürotagen treffen.", "I understand, but you can meet on the office days."),
+            l("Clara", "Da hast du recht. Vielleicht ist das ein guter Kompromiss.", "You're right there. Maybe that's a good compromise."),
+            l("Sven", "Genau. Es kommt eben darauf an, was für eine Arbeit man macht.", "Exactly. It just depends on what kind of work you do.")
+          ]
+        },
+        {
+          title: "Disagreeing politely",
+          lines: [
+            l("Tom", "Ich finde, Autos sollten in der Innenstadt komplett verboten werden.", "I think cars should be completely banned from the city centre."),
+            l("Nina", "Das sehe ich anders. Was ist mit älteren Menschen, die nicht gut laufen können?", "I see that differently. What about older people who can't walk well?"),
+            l("Tom", "Für sie könnte es Ausnahmen oder bessere Busse geben.", "There could be exceptions or better buses for them."),
+            l("Nina", "Ich verstehe deinen Punkt, aber die Geschäfte würden Kunden verlieren.", "I see your point, but the shops would lose customers."),
+            l("Tom", "Studien zeigen eher das Gegenteil. Lass uns später mal nachlesen.", "Studies tend to show the opposite. Let's look it up later.")
+          ]
+        }
+      ]
+    }
+  );
+})();
+
+/* ---------- Level & theme organisation (A1 → A2 → B1) ----------
+   A1 = most common, everyday essentials.
+   A2 = less common — weekly / monthly situations.
+   B1 = bigger life-admin situations and longer conversations.
+   Topics are sorted into this order and renumbered, so "Thema 07"
+   on a topic page matches its card on topics.html. */
+const TOPIC_LEVELS = [
+  { id: "A1", label: "Most common", desc: "Everyday essentials you'll use daily" },
+  { id: "A2", label: "Less common", desc: "Weekly / monthly situations" },
+  { id: "B1", label: "Intermediate", desc: "Life admin, work & longer conversations" }
+];
+
+const TOPIC_ORGANISATION = {
+  A1: [
+    { theme: "Basics", ids: ["greetings-introductions", "numbers-prices", "days-months-dates", "time-appointments", "weather", "family-members"] },
+    { theme: "Food & Drink", ids: ["restaurant", "bakery", "breakfast", "lunch-dinner-talk", "drinks", "coffee-tea", "fruits", "vegetables", "bread-grains", "milk-dairy", "meat-fish", "snacks-sweets", "eating-utensils"] },
+    { theme: "Shopping & Paying", ids: ["supermarket", "grocery-list", "shopping-bags", "clothes-shopping", "payments-cash-card"] },
+    { theme: "At Home", ids: ["kitchen", "living-room", "bedroom", "bathroom", "toilet-restroom", "sleeping-wakeup", "keys-locks"] },
+    { theme: "Getting Around", ids: ["directions", "bus-tram", "subway"] },
+    { theme: "Phone & Health", ids: ["texting", "mobile-phone-charger", "health-feeling-sick"] }
+  ],
+  A2: [
+    { theme: "Travel", ids: ["train-station", "hotel", "airport-travel"] },
+    { theme: "Health & Services", ids: ["doctor", "pharmacy", "hairdresser", "emergency-police"] },
+    { theme: "Money & Post", ids: ["bank-atm", "post-office", "receipt-invoice"] },
+    { theme: "Work", ids: ["office", "work-schedule", "meetings", "phone-calls"] },
+    { theme: "Home & Neighbours", ids: ["housework", "neighbors", "elevator-stairs", "internet-wifi"] },
+    { theme: "Free Time", ids: ["hobbies-free-time"] }
+  ],
+  B1: [
+    { theme: "Housing", ids: ["apartment-hunting"] },
+    { theme: "Work & Career", ids: ["job-interview", "formal-emails"] },
+    { theme: "Official Matters", ids: ["authorities-registration", "contracts-insurance"] },
+    { theme: "Consumer Rights", ids: ["complaints-returns"] },
+    { theme: "Society & Opinions", ids: ["recycling-environment", "opinions-discussion"] }
+  ]
+};
+
+(function organiseTopics() {
+  const byId = {};
+  TOPICS.forEach(t => { byId[t.id] = t; });
+  const ordered = [];
+  TOPIC_LEVELS.forEach(lvl => {
+    TOPIC_ORGANISATION[lvl.id].forEach(group => {
+      group.ids.forEach(id => {
+        const t = byId[id];
+        if (!t || t._placed) return;
+        t.level = lvl.id;
+        t.theme = group.theme;
+        t.category = lvl.id === "A1" ? "daily" : lvl.id === "A2" ? "weekly-monthly" : "b1";
+        t._placed = true;
+        ordered.push(t);
+      });
+    });
+  });
+  // Anything not listed above still shows up (as A2 / "More topics").
+  TOPICS.forEach(t => {
+    if (t._placed) return;
+    t.level = t.level || "A2";
+    t.theme = t.theme || "More topics";
+    ordered.push(t);
+  });
+  ordered.forEach((t, i) => { delete t._placed; t.number = String(i + 1).padStart(2, "0"); });
+  TOPICS.length = 0;
+  ordered.forEach(t => TOPICS.push(t));
+})();
+
+function getTopicsByLevel(level) {
+  return TOPICS.filter(t => t.level === level);
+}
+
 /* ---------- Shared speaker icon (used by course.js; other pages keep
    their own local copy for now — see README cleanup note) ---------- */
 function speakerIconSVG() {

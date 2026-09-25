@@ -2625,3 +2625,29 @@ body.word-popup-lock { overflow: hidden; }
   .exam-q-num { min-width: auto; }
   .exam-match-body { flex-direction: column; align-items: flex-start; gap: 8px; }
 }
+
+/* ---------- Vocabulary Test: extra parts (der/die/das, breakdown) ---------- */
+.exam-q-hint { font-size: 0.8rem; color: #8A9285; font-weight: 400; }
+.exam-match-block { margin-bottom: 22px; }
+.exam-match-block + .exam-match-block { padding-top: 16px; border-top: 1px dashed #E4DCC6; }
+.exam-part[data-kind="art"] .exam-tf-btn { min-width: 64px; }
+.erb-breakdown { max-width: 420px; margin: 14px auto 8px; text-align: left; font-size: 0.82rem; }
+.erb-breakdown-row { display: flex; justify-content: space-between; gap: 12px; padding: 5px 0; border-bottom: 1px dotted #E4DCC6; color: #5C6355; }
+.erb-breakdown-row strong { color: var(--pine-deep); }
+
+/* ---------- Topics: A1 / A2 / B1 organisation ---------- */
+.signboard-card { position: relative; }
+.signboard-level { position: absolute; top: 12px; right: 12px; font-size: 0.62rem; padding: 2px 8px; }
+.topic-level-group + .topic-level-group { margin-top: 48px; }
+.topic-level-count { font-family: var(--font-body); font-size: 0.8rem; font-weight: 500; color: #8A9285; }
+.topic-level-desc { margin-top: -10px; }
+.topic-theme-title {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.05rem;
+  color: var(--pine-deep);
+  margin: 26px 0 6px;
+  padding-bottom: 6px;
+  border-bottom: 1px dashed rgba(31, 58, 46, 0.2);
+}
+.topic-level-legend { font-size: 0.85rem; opacity: 0.85; margin: 6px 0 0; }

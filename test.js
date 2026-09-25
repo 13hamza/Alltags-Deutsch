@@ -1,35 +1,75 @@
 /* ============================================================
    Alltags-Deutsch — test.js (test.html)
-   A "Vocabulary Test" tab: procedurally generates a fresh, 30-mark
-   exam every time it's opened — Fill in the Blanks, Multiple Choice
-   (meaning), Choose the Correct Sentence, Match German ↔ English,
-   Translation and True/False — all pulled live from WORDS in
-   words-data.js, so it's never the same test twice.
+   "Vocabulary Test": procedurally generates a fresh exam every
+   time — for A1, A2 and B1 — in three lengths (30, 50 or 100
+   marks). All questions are pulled live from WORDS in
+   words-data.js.
 
-   Levels: only A1 has a full, sentence-checked word list today, so
-   only A1 is enabled here. A2 and B1 are wired into the level tabs
-   already (see buildTestPlan / LEVELS_READY below) and will switch
-   on automatically once their data is ready — see that constant.
+   Question types (the order of the parts is shuffled per test):
+     • Fill in the Blanks (with word bank)
+     • Multiple Choice — German → English
+     • Reverse Choice  — English → German
+     • der / die / das — the right article
+     • Choose the Correct Sentence
+     • Sentence Meaning — German sentence → English
+     • Match the Words
+     • Translation (typed)
+     • True or False
+
+   Anti-pattern rules (so no two papers "feel" the same):
+     • True/False answers are balanced (≈ half true), never run
+       more than 2 the same in a row, and never repeat the exact
+       Richtig/Falsch sequence of the previous test.
+     • In every multiple-choice part the correct option is spread
+       evenly over A/B/C/D and never sits in the same slot three
+       times in a row.
+     • der/die/das items are balanced across the three genders.
+
+   A2 and B1 word lists came from PDF extraction and contain some
+   noisy rows. buildBank() cleans every entry (articles, plural
+   shorthand, verb-form lists, regional notes, numbered example
+   sentences) and silently drops rows that can't be trusted, so
+   only clean words ever reach a test.
    ============================================================ */
 
 (function () {
-  const LEVELS_READY = ["A1"]; // add "A2", "B1" here once their sentences are verified for this test
-
-  const MARKS_PER_SECTION = 5;
+  const LEVELS_READY = ["A1", "A2", "B1"];
+  const MARK_OPTIONS = [30, 50, 100];
   const MAX_LETTERS = 6;
   const PASS_MARK = 65;
+
+  /* How many questions each part gets, per paper size. Every plan sums
+     exactly to its mark total. */
+  const PLANS = {
+    30:  { fill: 5,  mc: 5,  rev: 0,  art: 4,  sent: 4,  mean: 0, match: 4,  trans: 4,  tf: 4 },
+    50:  { fill: 8,  mc: 7,  rev: 6,  art: 5,  sent: 5,  mean: 4, match: 5,  trans: 5,  tf: 5 },
+    100: { fill: 14, mc: 12, rev: 11, art: 10, sent: 10, mean: 8, match: 10, trans: 12, tf: 13 }
+  };
+
+  const PART_META = {
+    fill:  { title: "Fill in the Blanks",          instr: "Complete each sentence with the correct German word from the word bank." },
+    mc:    { title: "Multiple Choice",             instr: "Choose the correct English meaning of the German word." },
+    rev:   { title: "Reverse Choice",              instr: "Choose the correct German word for the English meaning." },
+    art:   { title: "der, die oder das?",          instr: "Choose the correct article for each noun." },
+    sent:  { title: "Choose the Correct Sentence", instr: "Which sentence correctly uses this word?" },
+    mean:  { title: "Sentence Meaning",            instr: "Choose the correct English translation of the German sentence." },
+    match: { title: "Match the Words",             instr: "Match each German word with its English meaning." },
+    trans: { title: "Translation",                 instr: "Translate the English word into German (for nouns the article is optional)." },
+    tf:    { title: "True or False",               instr: "Read each statement and mark it Richtig (True) or Falsch (False)." }
+  };
 
   /* ────────────────────────────────────────
      DOM
      ──────────────────────────────────────── */
-  const setupScreen   = document.getElementById("test-setup-screen");
-  const examScreen    = document.getElementById("test-exam-screen");
-  const heroSub       = document.getElementById("test-hero-sub");
-  const levelTabsEl   = document.getElementById("test-level-tabs");
-  const catWrap       = document.getElementById("test-cat-wrap");
-  const catCountEl    = document.getElementById("test-cat-count");
-  const catClearBtn   = document.getElementById("test-cat-clear");
-  const startBtn      = document.getElementById("test-start-btn");
+  const setupScreen    = document.getElementById("test-setup-screen");
+  const examScreen     = document.getElementById("test-exam-screen");
+  const heroSub        = document.getElementById("test-hero-sub");
+  const levelTabsEl    = document.getElementById("test-level-tabs");
+  const marksToggleEl  = document.getElementById("test-marks-toggle");
+  const catWrap        = document.getElementById("test-cat-wrap");
+  const catCountEl     = document.getElementById("test-cat-count");
+  const catClearBtn    = document.getElementById("test-cat-clear");
+  const startBtn       = document.getElementById("test-start-btn");
   const sbList         = document.getElementById("test-sb-list");
   const resetScoresBtn = document.getElementById("test-reset-btn");
 
@@ -45,9 +85,11 @@
      STATE
      ──────────────────────────────────────── */
   let testLevel = "A1";
+  let testMarks = 30;
   let testLetters = ["random"]; // ['random'] | ['all'] | ['B','C',...]
   let currentTest = null;
   let graded = false;
+  const bankCache = {};
 
   /* ────────────────────────────────────────
      SMALL UTILITIES
@@ -65,7 +107,6 @@
       "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
     }[c]));
   }
-  function pick(arr, n) { return shuffle(arr).slice(0, n); }
   function normalise(s) { return String(s || "").toLowerCase().replace(/\s+/g, " ").trim(); }
   function foldUmlauts(s) {
     return s.replace(/ä/g, "ae").replace(/ö/g, "oe").replace(/ü/g, "ue")
@@ -79,61 +120,280 @@
     }
     return dp[m][n];
   }
+  function storageGet(key, fallback) {
+    try { const r = localStorage.getItem(key); if (r) return JSON.parse(r); } catch (_) {}
+    return fallback;
+  }
+  function storageSet(key, val) { try { localStorage.setItem(key, JSON.stringify(val)); } catch (_) {} }
 
-  /* The "de" field carries gender articles + plural shorthand for the
-     Words page ("die Adresse, -n"). Strip that down to the word a
-     learner would actually write/find in a sentence. */
-  function germanCore(de) {
-    let x = String(de || "").replace(/,.*$/, "").trim();
-    x = x.replace(/^(der|die|das)\s+/i, "");
-    x = x.replace(/-$/, "");
-    return x.trim();
+  /* ────────────────────────────────────────
+     ANTI-PATTERN HELPERS
+     ──────────────────────────────────────── */
+  function maxRun(seq) {
+    let best = 0, run = 0;
+    for (let i = 0; i < seq.length; i++) {
+      run = i > 0 && seq[i] === seq[i - 1] ? run + 1 : 1;
+      if (run > best) best = run;
+    }
+    return best;
   }
-  function answerCore(s, isGerman) {
-    let x = String(s || "").replace(/\([^)]*\)/g, " ");
-    if (isGerman) x = x.replace(/,.*$/, "");
-    else x = x.replace(/^\s*to\s+/i, "").replace(/^\s*(the|a|an)\s+/i, "");
-    return x.replace(/\s+/g, " ").trim();
+
+  /* Shuffle until no value repeats 3+ times in a row (best effort). */
+  function shuffleNoRuns(arr, keyFn, maxAllowed) {
+    const limit = maxAllowed || 2;
+    let best = shuffle(arr);
+    for (let t = 0; t < 120 && maxRun(best.map(keyFn)) > limit; t++) best = shuffle(arr);
+    return best;
   }
-  /* Lenient grading for typed answers — accepts the same word with or
-     without its gender article/plural shorthand, minor typos, and
-     natural English filler ("to ", "the "). */
-  function isAnswerCorrect(typed, correct, isGerman) {
+
+  /* n correct-answer slots spread evenly over k options (0..k-1),
+     shuffled, with no slot used 3+ times in a row. */
+  function balancedPositions(n, k) {
+    const offset = Math.floor(Math.random() * k);
+    const base = Array.from({ length: n }, (_, i) => (i + offset) % k);
+    return shuffleNoRuns(base, x => x, 2);
+  }
+
+  /* Balanced true/false sequence: ≈ half true, no run of 3+ identical
+     answers, and different from the previous paper's sequence. */
+  function balancedTrueFalse(n) {
+    const lastKey = "ad_vocab_test_last_tf_v2";
+    const last = storageGet(lastKey, "");
+    const trueCount = n % 2 === 0 ? n / 2 : (Math.random() < 0.5 ? Math.floor(n / 2) : Math.ceil(n / 2));
+    const base = Array.from({ length: n }, (_, i) => i < trueCount);
+    const sig = seq => seq.map(b => (b ? "T" : "F")).join("");
+    let seq = shuffle(base);
+    for (let t = 0; t < 300 && (maxRun(seq) > 2 || sig(seq) === last); t++) seq = shuffle(base);
+    storageSet(lastKey, sig(seq));
+    return seq;
+  }
+
+  /* Put `correct` into slot `pos` and fill the other slots with distractors. */
+  function placeOptions(correct, distractors, pos) {
+    const opts = shuffle(distractors);
+    opts.splice(Math.min(pos, opts.length), 0, correct);
+    return opts;
+  }
+
+  /* ────────────────────────────────────────
+     WORD BANK — CLEANING A LEVEL'S WORD LIST
+     ──────────────────────────────────────── */
+  const LETTER_RE = "A-Za-zÀ-ÖØ-öø-ÿß";
+  const GERMAN_ONLY = /[äöüßÄÖÜ]/;
+
+  function umlautLast(word) {
+    const m = word.match(/^(.*?)(au|Au|a|o|u|A|O|U)([^aeiouäöüAEIOUÄÖÜ]*)$/);
+    if (!m) return null;
+    const map = { a: "ä", o: "ö", u: "ü", au: "äu", A: "Ä", O: "Ö", U: "Ü", Au: "Äu" };
+    return map[m[2]] ? m[1] + map[m[2]] + m[3] : null;
+  }
+
+  function splitSentences(text) {
+    const parts = String(text || "").match(/[^.!?]+[.!?]+["“”„']*/g);
+    return parts ? parts.map(s => s.trim()).filter(Boolean) : [];
+  }
+
+  /* Strip "1. … 2. …" numbering and return the sentences of the first
+     numbered item (or of the whole text if it isn't numbered). */
+  function sentenceList(text) {
+    let s = String(text || "").trim();
+    if (!s) return [];
+    if (/^\d+\.\s/.test(s)) {
+      const items = s.split(/(?:^|\s)\d+\.\s+/).map(x => x.trim()).filter(Boolean);
+      s = items[0] || "";
+    }
+    return splitSentences(s);
+  }
+
+  function goodSentence(s) {
+    if (!s) return false;
+    if (!/[.!?]["“”„']*$/.test(s)) return false;
+    const words = s.split(/\s+/);
+    return words.length >= 3 && words.length <= 22 && s.length <= 160;
+  }
+
+  function parseDe(rawDe) {
+    let s = String(rawDe || "").trim();
+    s = s.split("→")[0];
+    const plural = /\(Pl\.?\)/i.test(s);
+    s = s.replace(/\((?:D|A|CH|D, A|D, CH|A, CH|Sg\.?|Pl\.?)\)/gi, " ")
+         .replace(/;.*$/, "")
+         .replace(/\s+/g, " ").trim();
+    s = s.replace(/^\(sich\)\s*/i, "").replace(/^sich\s+/i, "");
+
+    let article = null;
+    const dual = s.match(/^(der|die|das)\/(der|die|das)\s+/i);
+    if (dual) {
+      s = s.slice(dual[0].length);
+      article = "mixed";
+    } else {
+      const am = s.match(/^(der|die|das)\s+/i);
+      if (am) { article = am[1].toLowerCase(); s = s.slice(am[0].length); }
+    }
+    // "der Sportler, -/die Sportlerin, -nen" → keep the first form
+    s = s.split(/\s*\/\s*(?:der|die|das)\s+/i)[0];
+    const parts = s.split(",").map(x => x.trim()).filter(Boolean);
+    let head = (parts[0] || "").replace(/\s*\(sich\)\s*/i, " ").trim();
+    head = head.split("/")[0].trim();
+    const extras = parts.slice(1);
+
+    const hasPerfect = extras.some(x => /^(hat|ist|ist\/hat|hat\/ist)\s/i.test(x));
+    const isNoun = !!article;
+    const isVerb = !isNoun && /^[a-zäöü]/.test(head) && head.split(" ").length === 1 &&
+      (hasPerfect || (/(en|ern|eln)$/.test(head) && head.length > 3 && extras.length >= 1));
+
+    const forms = [];
+    if (isVerb) {
+      extras.forEach(x => {
+        x.replace(/^(hat|ist|ist\/hat|hat\/ist)\s+/i, "").replace(/\bsich\b/g, " ")
+          .split(/\s+/).forEach(t => { if (t && /^[a-zäöüß]+$/i.test(t) && t.length > 2) forms.push(t); });
+      });
+    }
+    return { head, article, isNoun, isVerb, plural, extras, hasPerfect, forms };
+  }
+
+  function validHead(info) {
+    const h = info.head;
+    if (!h || h.length < 2 || h.length > 30) return false;
+    if (!new RegExp(`^[${LETTER_RE}][${LETTER_RE} \\-]*[${LETTER_RE}]$`).test(h)) return false;
+    if (h.split(" ").length > 3) return false;
+    if (info.isNoun && !/^[A-ZÄÖÜ]/.test(h)) return false;
+    // a verb-form list whose head isn't an infinitive ("träumt, hat geträumt")
+    if (info.hasPerfect && (!/n$/.test(h) || h.includes(" "))) return false;
+    // hyphenation fragments from the PDF source ("setzung", "tung")
+    if (!info.isNoun && /^[a-zäöü]+(ung|heit|keit|schaft|tät|ion)$/.test(h)) return false;
+    return true;
+  }
+
+  function cleanEn(rawEn, info) {
+    const e = String(rawEn || "").replace(/\([^)]*\)/g, " ").replace(/¨.*$/, "").replace(/\s+/g, " ").trim();
+    const segs = e.split(/[,;]/).map(x => x.trim()).filter(x => x && !/^[-¨]/.test(x));
+    if (!segs.length) return "";
+    if (info.isVerb || info.hasPerfect) {
+      const first = segs[0].replace(/^to\s+/i, "");
+      return first ? "to " + first : "";
+    }
+    return segs.slice(0, 2).join(", ");
+  }
+
+  function wordKind(info) {
+    if (info.isNoun) return "noun";
+    if (info.isVerb) return "verb";
+    if (/^[a-zäöü]+(en|ern|eln)$/.test(info.head) && info.head.length > 4) return "verb";
+    return "other";
+  }
+
+  /* All plausible surface forms of the word, longest first — used to find
+     (and blank out) the word inside its example sentence. */
+  function surfaceForms(entry) {
+    const set = new Set([entry.core]);
+    const core = entry.core;
+    if (entry.kind === "noun") {
+      const um = umlautLast(core);
+      ["", "e", "en", "n", "s", "er", "es", "ern", "nen", "se"].forEach(suf => {
+        set.add(core + suf);
+        if (um) set.add(um + suf);
+      });
+    } else if (entry.kind === "verb" && core.split(" ").length === 1) {
+      const stem = core.replace(/(en|n)$/, "");
+      if (stem.length >= 2) {
+        ["e", "st", "t", "en", "et", "est", "te", "test", "ten", "tet"].forEach(suf => set.add(stem + suf));
+        if (stem.length >= 3) set.add("ge" + stem + "t");
+      }
+      entry.forms.forEach(f => set.add(f));
+    } else if (entry.kind === "other" && /^[a-zäöü]+$/.test(core)) {
+      ["e", "en", "er", "es", "em"].forEach(suf => set.add(core + suf));
+    }
+    return [...set].filter(f => f.length >= 2).sort((a, b) => b.length - a.length);
+  }
+
+  function findFormIn(sentence, entry) {
+    for (const form of entry.surface) {
+      const esc = form.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+      const re = new RegExp(`(^|[^${LETTER_RE}])(${esc})(?=[^${LETTER_RE}]|$)`, "i");
+      const m = sentence.match(re);
+      if (m) return { re, matched: m[2] };
+    }
+    return null;
+  }
+
+  function buildBank(level) {
+    if (bankCache[level]) return bankCache[level];
+    const raw = typeof getWordsByLevel === "function" ? getWordsByLevel(level) : [];
+
+    // Verified A1 meanings are used to correct noisy A2/B1 translations.
+    const a1Meaning = {};
+    if (level !== "A1" && typeof getWordsByLevel === "function") {
+      getWordsByLevel("A1").forEach(w => {
+        const info = parseDe(w.de);
+        if (validHead(info)) a1Meaning[info.head.toLowerCase()] = cleanEn(w.en, info);
+      });
+    }
+
+    const seen = new Set();
+    const bank = [];
+    raw.forEach(w => {
+      const info = parseDe(w.de);
+      if (!validHead(info)) return;
+      const key = info.head.toLowerCase();
+      if (seen.has(key)) return;
+
+      const en = a1Meaning[key] || cleanEn(w.en, info);
+      if (!en || en.length < 2 || en.length > 42) return;
+      if (en.split(/\s+/).length > 6) return;
+      if (GERMAN_ONLY.test(en)) return;
+      if (normalise(en) === normalise(info.head)) return;
+      if (/[\/-]\s*$|\/-|\bwas jogging\b/.test(en)) return;
+      if (["der", "die", "das", "ist", "hat", "sind", "war"].includes(key)) return;
+      if (level !== "A1" && !a1Meaning[key] && en.replace(/^to /, "").length < 3) return;
+
+      const deSents = sentenceList(w.sentence);
+      const enSents = sentenceList(w.sentenceEn);
+      const sentence = deSents.find(goodSentence) || "";
+      let pairDe = "", pairEn = "";
+      if (deSents.length && deSents.length === enSents.length &&
+          goodSentence(deSents[0]) && goodSentence(enSents[0]) &&
+          normalise(deSents[0]) !== normalise(enSents[0]) && !GERMAN_ONLY.test(enSents[0])) {
+        pairDe = deSents[0]; pairEn = enSents[0];
+      }
+
+      const hasArticle = info.isNoun && info.article !== "mixed";
+      const entry = {
+        id: `${level}_${bank.length}`,
+        level,
+        letter: w.letter,
+        core: info.head,
+        article: hasArticle && !info.plural ? info.article : null,
+        display: hasArticle ? `${info.article} ${info.head}` : info.head,
+        kind: wordKind(info),
+        forms: info.forms,
+        en, sentence, pairDe, pairEn
+      };
+      entry.surface = surfaceForms(entry);
+      seen.add(key);
+      bank.push(entry);
+    });
+
+    bankCache[level] = bank;
+    return bank;
+  }
+
+  /* ────────────────────────────────────────
+     ANSWER CHECKING (typed answers)
+     ──────────────────────────────────────── */
+  function answerCore(s) {
+    return String(s || "").replace(/\([^)]*\)/g, " ").replace(/,.*$/, "")
+      .replace(/^\s*(der|die|das|den|dem)\s+/i, "").replace(/\s+/g, " ").trim();
+  }
+  function isAnswerCorrect(typed, correct) {
     const ni = normalise(typed), na = normalise(correct);
     if (!ni) return false;
-    if (ni === na) return true;
-    if (isGerman && foldUmlauts(ni) === foldUmlauts(na)) return true;
-    const niCore = normalise(answerCore(typed, isGerman));
-    const naCore = normalise(answerCore(correct, isGerman));
-    if (niCore === naCore) return true;
-    if (isGerman && foldUmlauts(niCore) === foldUmlauts(naCore)) return true;
-    const cmpA = niCore || ni, cmpB = naCore || na;
-    const dist = levenshtein(cmpA, cmpB);
-    const threshold = Math.max(1, Math.floor(cmpB.replace(/\s/g, "").length / 5));
-    return dist <= threshold;
-  }
-  function firstSentence(s) {
-    if (!s) return "";
-    const m = s.match(/^[^.!?]*[.!?]/);
-    return (m ? m[0] : s).trim();
-  }
-  /* Finds the word inside its own example sentence and blanks it out.
-     Returns null if the word can't be reliably located (so the caller
-     can skip it and pick a different word instead). */
-  const WORD_BOUNDARY = "A-Za-zÀ-ÖØ-öø-ÿ";
-  function findBlankSentence(word) {
-    const sentence = firstSentence(word.sentence);
-    if (!sentence) return null;
-    const core = germanCore(word.de);
-    if (!core || core.length < 2) return null;
-    const escaped = core.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-    const re = new RegExp(`(^|[^${WORD_BOUNDARY}])(${escaped})([^${WORD_BOUNDARY}]|$)`, "i");
-    const m = sentence.match(re);
-    if (!m) return null;
-    return {
-      blanked: sentence.replace(re, (full, pre, matched, post) => `${pre}______________${post}`),
-      answer: core
-    };
+    if (ni === na || foldUmlauts(ni) === foldUmlauts(na)) return true;
+    const a = normalise(answerCore(typed)), b = normalise(answerCore(correct));
+    if (!a) return false;
+    if (a === b || foldUmlauts(a) === foldUmlauts(b)) return true;
+    const threshold = Math.max(1, Math.floor(b.replace(/\s/g, "").length / 6));
+    return levenshtein(foldUmlauts(a), foldUmlauts(b)) <= threshold;
   }
 
   function quizStatusFor(pct) {
@@ -145,120 +405,240 @@
   }
 
   /* ────────────────────────────────────────
-     TEST GENERATION ALGORITHM
-     Builds six 5-mark sections from a word pool, never reusing the
-     same word twice within one test, and reshuffling every option
-     order and every word selection on each call — so pressing
-     "Generate Test" (or "New random test") never gives the same
-     paper twice.
+     TEST GENERATION
      ──────────────────────────────────────── */
-  function buildPool(level, letters) {
-    const words = typeof getWordsByLevel === "function" ? getWordsByLevel(level) : [];
-    if (letters[0] === "all" || letters[0] === "random") return words;
-    return words.filter(w => letters.includes(w.letter));
-  }
-
-  function resolveLetters(level, letters) {
+  function resolveLetters(bank, letters, needed) {
+    if (letters[0] === "all") return ["all"];
     if (letters[0] !== "random") return letters;
-    const allWords = getWordsByLevel(level);
-    const available = [...new Set(allWords.map(w => w.letter))].sort();
+    const available = [...new Set(bank.map(w => w.letter))].sort();
     if (available.length <= 3) return ["all"];
-    const span = 3 + Math.floor(Math.random() * 2); // 3 or 4 consecutive letters
-    const startMax = Math.max(1, available.length - span);
-    const start = Math.floor(Math.random() * startMax);
-    return available.slice(start, start + span);
+    // Grow a random run of consecutive letters until it holds enough words.
+    const start = Math.floor(Math.random() * available.length);
+    const chosen = [];
+    let count = 0;
+    for (let i = 0; i < available.length && (chosen.length < 3 || count < needed); i++) {
+      const L = available[(start + i) % available.length];
+      chosen.push(L);
+      count += bank.filter(w => w.letter === L).length;
+    }
+    return chosen.length >= available.length ? ["all"] : chosen.sort();
   }
 
-  function buildFillBlanks(pool, used) {
-    const candidates = shuffle(pool.filter(w => !used.has(w.de)))
-      .map(w => ({ w, fb: findBlankSentence(w) }))
-      .filter(x => x.fb);
-    const chosen = candidates.slice(0, MARKS_PER_SECTION);
-    chosen.forEach(c => used.add(c.w.de));
-    return chosen.map((c, i) => ({
-      id: `fill_${i}`, kind: "fill",
-      prompt: c.fb.blanked, answer: c.fb.answer, word: c.w
-    }));
+  function takeWords(pool, used, n, filter) {
+    const out = [];
+    for (const w of shuffle(pool)) {
+      if (out.length >= n) break;
+      if (used.has(w.id) || (filter && !filter(w))) continue;
+      out.push(w);
+    }
+    out.forEach(w => used.add(w.id));
+    return out;
   }
 
-  function buildMeaningMC(pool, used) {
-    const candidates = shuffle(pool.filter(w => !used.has(w.de)));
-    const chosen = candidates.slice(0, MARKS_PER_SECTION);
-    chosen.forEach(w => used.add(w.de));
-    return chosen.map((w, i) => {
-      const distractorPool = shuffle(pool.filter(x => x.de !== w.de && normalise(x.en) !== normalise(w.en)));
-      const distractors = distractorPool.slice(0, 2).map(x => x.en);
-      const options = shuffle([w.en, ...distractors]);
-      return { id: `mc_${i}`, kind: "mc", prompt: w.de, options, answer: w.en, word: w };
-    });
+  /* Wrong options, preferring words of the same kind (noun/verb/other)
+     so the right answer can't be spotted by its shape alone. */
+  function distractorsFor(word, bank, n, field) {
+    const same = shuffle(bank.filter(x => x.id !== word.id && x.kind === word.kind));
+    const other = shuffle(bank.filter(x => x.id !== word.id && x.kind !== word.kind));
+    const out = [];
+    const seenVals = new Set([normalise(word[field]), normalise(word.en)]);
+    for (const x of same.concat(other)) {
+      if (out.length >= n) break;
+      const v = normalise(x[field]);
+      if (!v || seenVals.has(v) || normalise(x.en) === normalise(word.en)) continue;
+      seenVals.add(v);
+      out.push(x[field]);
+    }
+    return out;
   }
 
-  function buildSentenceChoice(pool, used) {
-    const candidates = shuffle(pool.filter(w => !used.has(w.de) && firstSentence(w.sentence)));
-    const chosen = candidates.slice(0, MARKS_PER_SECTION);
-    chosen.forEach(w => used.add(w.de));
-    return chosen.map((w, i) => {
-      const correct = firstSentence(w.sentence);
-      const distractorPool = shuffle(pool.filter(x => x.de !== w.de && firstSentence(x.sentence) && firstSentence(x.sentence) !== correct));
-      const distractors = distractorPool.slice(0, 2).map(x => firstSentence(x.sentence));
-      const options = shuffle([correct, ...distractors]);
-      return { id: `sent_${i}`, kind: "sent", prompt: w.de, options, answer: correct, word: w };
-    });
-  }
-
-  function buildMatch(pool, used) {
-    const candidates = shuffle(pool.filter(w => !used.has(w.de)));
-    const chosen = candidates.slice(0, MARKS_PER_SECTION);
-    chosen.forEach(w => used.add(w.de));
-    const letters = ["A", "B", "C", "D", "E", "F", "G", "H"].slice(0, chosen.length);
-    const englishShuffled = shuffle(chosen.map(w => w.en));
-    const optionMap = letters.map((L, i) => ({ letter: L, text: englishShuffled[i] }));
-    return {
-      id: "match", kind: "match",
-      items: chosen.map((w, i) => ({ id: `match_${i}`, prompt: w.de, answer: w.en, word: w })),
-      options: optionMap
-    };
-  }
-
-  function buildTranslation(pool, used) {
-    const candidates = shuffle(pool.filter(w => !used.has(w.de)));
-    const chosen = candidates.slice(0, MARKS_PER_SECTION);
-    chosen.forEach(w => used.add(w.de));
-    return chosen.map((w, i) => ({ id: `trans_${i}`, kind: "trans", prompt: w.en, answer: germanCore(w.de), word: w }));
-  }
-
-  function buildTrueFalse(pool, used) {
-    const candidates = shuffle(pool.filter(w => !used.has(w.de)));
-    const chosen = candidates.slice(0, MARKS_PER_SECTION);
-    chosen.forEach(w => used.add(w.de));
-    return chosen.map((w, i) => {
-      const isTrue = Math.random() < 0.5;
-      let shownMeaning = w.en;
-      if (!isTrue) {
-        const others = pool.filter(x => x.de !== w.de && normalise(x.en) !== normalise(w.en));
-        if (others.length) shownMeaning = others[Math.floor(Math.random() * others.length)].en;
-        else return { id: `tf_${i}`, kind: "tf", prompt: `"${germanCore(w.de)}" means "${w.en}".`, answer: true, word: w };
+  const builders = {
+    fill(pool, bank, used, n) {
+      const picked = [];
+      for (const w of shuffle(pool)) {
+        if (picked.length >= n) break;
+        if (used.has(w.id) || !w.sentence) continue;
+        const hit = findFormIn(w.sentence, w);
+        if (!hit) continue;
+        used.add(w.id);
+        picked.push({
+          kind: "fill", word: w, answer: hit.matched,
+          prompt: w.sentence.replace(hit.re, (full, pre) => `${pre}______________`)
+        });
       }
-      return { id: `tf_${i}`, kind: "tf", prompt: `"${germanCore(w.de)}" means "${shownMeaning}".`, answer: isTrue, word: w };
-    });
+      return picked;
+    },
+
+    mc(pool, bank, used, n) {
+      const words = takeWords(pool, used, n);
+      const pos = balancedPositions(words.length, 4);
+      return words.map((w, i) => ({
+        kind: "mc", word: w, answer: w.en,
+        prompt: `What does <strong>&ldquo;${escHtml(w.display)}&rdquo;</strong> mean?`,
+        options: placeOptions(w.en, distractorsFor(w, bank, 3, "en"), pos[i])
+      }));
+    },
+
+    rev(pool, bank, used, n) {
+      const words = takeWords(pool, used, n);
+      const pos = balancedPositions(words.length, 4);
+      return words.map((w, i) => ({
+        kind: "rev", word: w, answer: w.display,
+        prompt: `Which German word means <strong>&ldquo;${escHtml(w.en)}&rdquo;</strong>?`,
+        options: placeOptions(w.display, distractorsFor(w, bank, 3, "display"), pos[i])
+      }));
+    },
+
+    art(pool, bank, used, n) {
+      const byGender = { der: [], die: [], das: [] };
+      const add = w => { if (!used.has(w.id) && w.article && byGender[w.article] && !byGender[w.article].includes(w)) byGender[w.article].push(w); };
+      shuffle(pool).forEach(add);
+      if (byGender.der.length + byGender.die.length + byGender.das.length < n) shuffle(bank).forEach(add);
+      // round-robin over the three genders so they stay balanced
+      const genders = shuffle(["der", "die", "das"]);
+      const picked = [];
+      for (let i = 0; picked.length < n && genders.some(g => byGender[g].length); i++) {
+        const w = byGender[genders[i % 3]].shift();
+        if (w) { used.add(w.id); picked.push(w); }
+      }
+      return shuffleNoRuns(picked, w => w.article, 2).map(w => ({
+        kind: "art", word: w, answer: w.article,
+        prompt: `___ <strong>${escHtml(w.core)}</strong> <span class="exam-q-hint">(${escHtml(w.en)})</span>`,
+        options: ["der", "die", "das"]
+      }));
+    },
+
+    sent(pool, bank, used, n) {
+      const words = takeWords(pool, used, n, w => !!w.sentence);
+      const pos = balancedPositions(words.length, 3);
+      return words.map((w, i) => {
+        const distract = [];
+        for (const x of shuffle(bank)) {
+          if (distract.length >= 2) break;
+          if (x.id === w.id || !x.sentence || x.sentence === w.sentence) continue;
+          if (findFormIn(x.sentence, w)) continue; // must not also contain the word
+          distract.push(x.sentence);
+        }
+        return {
+          kind: "sent", word: w, answer: w.sentence,
+          prompt: `Choose the sentence that correctly uses <strong>&ldquo;${escHtml(w.display)}&rdquo;</strong>:`,
+          options: placeOptions(w.sentence, distract, pos[i])
+        };
+      });
+    },
+
+    mean(pool, bank, used, n) {
+      let words = takeWords(pool, used, n, w => !!w.pairDe);
+      if (words.length < n) words = words.concat(takeWords(bank, used, n - words.length, w => !!w.pairDe));
+      const pos = balancedPositions(words.length, 4);
+      return words.map((w, i) => {
+        const distract = shuffle(bank.filter(x => x.id !== w.id && x.pairEn && x.pairEn !== w.pairEn))
+          .slice(0, 3).map(x => x.pairEn);
+        return {
+          kind: "mean", word: w, answer: w.pairEn,
+          prompt: `What does this sentence mean?<br><strong>&ldquo;${escHtml(w.pairDe)}&rdquo;</strong>`,
+          options: placeOptions(w.pairEn, distract, pos[i])
+        };
+      });
+    },
+
+    match(pool, bank, used, n) {
+      // Matching is split into blocks of 5 so each key stays readable.
+      const words = takeWords(pool, used, n);
+      const blocks = [];
+      for (let b = 0; b < words.length; b += 5) {
+        const chunk = words.slice(b, b + 5);
+        const letters = ["A", "B", "C", "D", "E"].slice(0, chunk.length);
+        let enOrder = shuffle(chunk.map(w => w.en));
+        // don't let the key line up 1:1 with the question order
+        for (let t = 0; t < 20 && chunk.length > 1 && enOrder.some((e, i) => e === chunk[i].en); t++) enOrder = shuffle(enOrder);
+        blocks.push({
+          key: letters.map((L, i) => ({ letter: L, text: enOrder[i] })),
+          items: chunk.map(w => ({ kind: "match", word: w, answer: w.en, prompt: w.display }))
+        });
+      }
+      return blocks;
+    },
+
+    trans(pool, bank, used, n) {
+      return takeWords(pool, used, n).map(w => ({
+        kind: "trans", word: w, answer: w.core,
+        prompt: `${escHtml(w.en)}${w.kind === "noun" ? ' <span class="exam-q-hint">(noun)</span>' : w.kind === "verb" ? ' <span class="exam-q-hint">(verb)</span>' : ""}`,
+        // any other bank word with exactly the same meaning also counts
+        alts: bank.filter(x => x.id !== w.id && normalise(x.en) === normalise(w.en)).map(x => x.core)
+      }));
+    },
+
+    tf(pool, bank, used, n) {
+      const words = takeWords(pool, used, n);
+      const truth = balancedTrueFalse(words.length);
+      return words.map((w, i) => {
+        let shown = w.en, isTrue = truth[i];
+        if (!isTrue) {
+          const d = distractorsFor(w, bank, 1, "en")[0];
+          if (d) shown = d; else isTrue = true;
+        }
+        return {
+          kind: "tf", word: w, answer: isTrue,
+          prompt: `&ldquo;${escHtml(w.display)}&rdquo; means &ldquo;${escHtml(shown)}&rdquo;.`
+        };
+      });
+    }
+  };
+
+  function countQuestions(part) {
+    return part.kind === "match" ? part.blocks.reduce((a, b) => a + b.items.length, 0) : part.questions.length;
   }
 
-  function buildTestPlan(level, letters) {
-    const resolved = resolveLetters(level, letters);
-    let pool = buildPool(level, resolved);
-    // Guarantee enough material; widen to the whole level if the chosen
-    // letter range is too thin to fill every section without repeats.
-    if (pool.length < 34) pool = getWordsByLevel(level);
+  function buildTestPlan(level, letters, marks) {
+    const bank = buildBank(level);
+    const plan = PLANS[marks] || PLANS[30];
+    const needed = Math.round(marks * 1.6);
+    const resolved = resolveLetters(bank, letters, needed);
+    let pool = resolved[0] === "all" ? bank : bank.filter(w => resolved.includes(w.letter));
+    let widened = false;
+    if (pool.length < needed) { pool = bank; widened = resolved[0] !== "all"; }
 
     const used = new Set();
-    const fill = buildFillBlanks(pool, used);
-    const mc = buildMeaningMC(pool, used);
-    const sent = buildSentenceChoice(pool, used);
-    const match = buildMatch(pool, used);
-    const trans = buildTranslation(pool, used);
-    const tf = buildTrueFalse(pool, used);
+    const parts = [];
+    // Build the most constrained parts first.
+    ["fill", "art", "mean", "sent", "match", "rev", "trans", "mc", "tf"].forEach(kind => {
+      const n = plan[kind];
+      if (!n) return;
+      const out = builders[kind](pool, bank, used, n);
+      if (!out.length) return;
+      parts.push(kind === "match" ? { kind, blocks: out } : { kind, questions: out });
+    });
 
-    return { level, letters: resolved, fill, mc, sent, match, trans, tf, generatedAt: Date.now() };
+    // Top up to the exact mark total if any part came up short.
+    let total = parts.reduce((a, p) => a + countQuestions(p), 0);
+    const topUpOrder = ["mc", "rev", "trans"];
+    for (let t = 0; total < marks && t < 30; t++) {
+      const kind = topUpOrder[t % topUpOrder.length];
+      const extra = builders[kind](bank, bank, used, Math.min(marks - total, 5));
+      if (!extra.length) continue;
+      let part = parts.find(p => p.kind === kind);
+      if (!part) { part = { kind, questions: [] }; parts.push(part); }
+      part.questions = part.questions.concat(extra);
+      if (kind !== "trans") {
+        // re-balance the correct-answer slots across the merged list
+        const pos = balancedPositions(part.questions.length, 4);
+        part.questions.forEach((q, i) => {
+          q.options = placeOptions(q.answer, q.options.filter(o => o !== q.answer), pos[i]);
+        });
+      }
+      total = parts.reduce((a, p) => a + countQuestions(p), 0);
+    }
+
+    // Shuffle the order of the parts so every paper is laid out differently.
+    const ordered = shuffle(parts);
+    let num = 0;
+    ordered.forEach((p, pi) => {
+      const qs = p.kind === "match" ? p.blocks.flatMap(b => b.items) : p.questions;
+      qs.forEach((q, qi) => { q.id = `${p.kind}_${pi}_${qi}`; q.num = ++num; });
+    });
+
+    return { level, marks, letters: resolved, widened, parts: ordered, total: num, generatedAt: Date.now() };
   }
 
   function letterLabel(letters) {
@@ -269,116 +649,74 @@
   /* ────────────────────────────────────────
      RENDERING
      ──────────────────────────────────────── */
-  function renderOptionsGroup(name, options, correctIrrelevantHere) {
-    return `<div class="exam-opts" data-name="${escHtml(name)}">${options.map((opt, i) => `
+  function renderOptionsGroup(q) {
+    return `<div class="exam-opts" data-name="${escHtml(q.id)}">${q.options.map((opt, i) => `
       <div class="exam-opt" data-value="${escHtml(opt)}" role="button" tabindex="0">
         <span class="exam-opt-letter">${String.fromCharCode(65 + i)}</span>
         <span class="exam-opt-text">${escHtml(opt)}</span>
       </div>`).join("")}</div>`;
   }
 
-  function renderTest(test) {
-    const parts = [];
+  function qWrap(q, inner, extraCls) {
+    return `
+      <div class="exam-q${extraCls ? " " + extraCls : ""}" data-qid="${q.id}">
+        <div class="exam-q-num">${q.num}.</div>
+        <div class="exam-q-body">${inner}</div>
+      </div>`;
+  }
 
-    // Part 1 — Fill in the Blanks
-    parts.push(`
-      <div class="exam-part">
-        <h2 class="exam-part-title">Part 1 &middot; Fill in the Blanks <span class="exam-part-marks">${test.fill.length} marks</span></h2>
-        <p class="exam-instruction">Complete each sentence with the correct German word.</p>
-        <div class="word-bank">${shuffle(test.fill.map(q => q.answer)).map(w => `<span class="word-bank-chip">${escHtml(w)}</span>`).join("")}</div>
-        ${test.fill.map((q, i) => `
-          <div class="exam-q" data-qid="${q.id}">
-            <div class="exam-q-num">${i + 1}.</div>
-            <div class="exam-q-body">
+  const TEXT_INPUT = id => `<input type="text" class="exam-text-input" data-qid="${id}" placeholder="Type the German word…" autocomplete="off" autocapitalize="off" spellcheck="false">`;
+
+  function renderPart(part, index) {
+    const meta = PART_META[part.kind];
+    const count = countQuestions(part);
+    let body = "";
+
+    if (part.kind === "fill") {
+      body += `<div class="word-bank">${shuffle(part.questions.map(q => q.answer)).map(w => `<span class="word-bank-chip">${escHtml(w)}</span>`).join("")}</div>`;
+      body += part.questions.map(q => qWrap(q, `<p class="exam-q-text">${escHtml(q.prompt)}</p>${TEXT_INPUT(q.id)}`)).join("");
+    } else if (part.kind === "trans") {
+      body += part.questions.map(q => qWrap(q, `<p class="exam-q-text">${q.prompt}</p>${TEXT_INPUT(q.id)}`)).join("");
+    } else if (["mc", "rev", "sent", "mean"].includes(part.kind)) {
+      body += part.questions.map(q => qWrap(q, `<p class="exam-q-text">${q.prompt}</p>${renderOptionsGroup(q)}`)).join("");
+    } else if (part.kind === "art") {
+      body += part.questions.map(q => qWrap(q, `
+        <p class="exam-q-text">${q.prompt}</p>
+        <div class="exam-tf exam-choice" data-qid="${q.id}">
+          ${q.options.map(o => `<button type="button" class="exam-tf-btn" data-value="${o}">${o}</button>`).join("")}
+        </div>`)).join("");
+    } else if (part.kind === "tf") {
+      body += part.questions.map(q => qWrap(q, `
+        <p class="exam-q-text">${q.prompt}</p>
+        <div class="exam-tf exam-choice" data-qid="${q.id}">
+          <button type="button" class="exam-tf-btn" data-value="true">Richtig (True)</button>
+          <button type="button" class="exam-tf-btn" data-value="false">Falsch (False)</button>
+        </div>`)).join("");
+    } else if (part.kind === "match") {
+      body += part.blocks.map(block => `
+        <div class="exam-match-block">
+          <div class="exam-match-key">${block.key.map(o => `<span><strong>${o.letter}.</strong> ${escHtml(o.text)}</span>`).join("")}</div>
+          ${block.items.map(q => qWrap(q, `
+            <div class="exam-match-body">
               <p class="exam-q-text">${escHtml(q.prompt)}</p>
-              <input type="text" class="exam-text-input" data-qid="${q.id}" placeholder="Type the German word…" autocomplete="off" autocapitalize="off" spellcheck="false">
-            </div>
-          </div>`).join("")}
-      </div>`);
-
-    // Part 2 — Multiple Choice (meaning)
-    parts.push(`
-      <div class="exam-part">
-        <h2 class="exam-part-title">Part 2 &middot; Multiple Choice <span class="exam-part-marks">${test.mc.length} marks</span></h2>
-        <p class="exam-instruction">Choose the correct English meaning of the German word.</p>
-        ${test.mc.map((q, i) => `
-          <div class="exam-q" data-qid="${q.id}">
-            <div class="exam-q-num">${i + 6}.</div>
-            <div class="exam-q-body">
-              <p class="exam-q-text">What does <strong>&ldquo;${escHtml(q.word.de)}&rdquo;</strong> mean?</p>
-              ${renderOptionsGroup(q.id, q.options)}
-            </div>
-          </div>`).join("")}
-      </div>`);
-
-    // Part 3 — Choose the Correct Sentence
-    parts.push(`
-      <div class="exam-part">
-        <h2 class="exam-part-title">Part 3 &middot; Choose the Correct Sentence <span class="exam-part-marks">${test.sent.length} marks</span></h2>
-        <p class="exam-instruction">Which sentence correctly uses this word?</p>
-        ${test.sent.map((q, i) => `
-          <div class="exam-q" data-qid="${q.id}">
-            <div class="exam-q-num">${i + 11}.</div>
-            <div class="exam-q-body">
-              <p class="exam-q-text">Choose the correct sentence for <strong>&ldquo;${escHtml(q.word.de)}&rdquo;</strong>:</p>
-              ${renderOptionsGroup(q.id, q.options)}
-            </div>
-          </div>`).join("")}
-      </div>`);
-
-    // Part 4 — Match German ↔ English
-    parts.push(`
-      <div class="exam-part">
-        <h2 class="exam-part-title">Part 4 &middot; Match the Words <span class="exam-part-marks">${test.match.items.length} marks</span></h2>
-        <p class="exam-instruction">Match each German word with its English meaning.</p>
-        <div class="exam-match-key">${test.match.options.map(o => `<span><strong>${o.letter}.</strong> ${escHtml(o.text)}</span>`).join("")}</div>
-        ${test.match.items.map((q, i) => `
-          <div class="exam-q exam-match-row" data-qid="${q.id}">
-            <div class="exam-q-num">${i + 16}.</div>
-            <div class="exam-q-body exam-match-body">
-              <p class="exam-q-text">${escHtml(q.word.de)}</p>
               <select class="exam-select" data-qid="${q.id}">
                 <option value="">— choose —</option>
-                ${test.match.options.map(o => `<option value="${escHtml(o.letter)}">${o.letter}</option>`).join("")}
+                ${block.key.map(o => `<option value="${escHtml(o.letter)}">${o.letter}</option>`).join("")}
               </select>
-            </div>
-          </div>`).join("")}
-      </div>`);
+            </div>`, "exam-match-row")).join("")}
+        </div>`).join("");
+    }
 
-    // Part 5 — Translation
-    parts.push(`
-      <div class="exam-part">
-        <h2 class="exam-part-title">Part 5 &middot; Translation <span class="exam-part-marks">${test.trans.length} marks</span></h2>
-        <p class="exam-instruction">Translate the following English words into German.</p>
-        ${test.trans.map((q, i) => `
-          <div class="exam-q" data-qid="${q.id}">
-            <div class="exam-q-num">${i + 21}.</div>
-            <div class="exam-q-body">
-              <p class="exam-q-text">${escHtml(q.prompt)}</p>
-              <input type="text" class="exam-text-input" data-qid="${q.id}" placeholder="Type the German word…" autocomplete="off" autocapitalize="off" spellcheck="false">
-            </div>
-          </div>`).join("")}
-      </div>`);
+    return `
+      <div class="exam-part" data-kind="${part.kind}">
+        <h2 class="exam-part-title">Part ${index + 1} &middot; ${meta.title} <span class="exam-part-marks">${count} mark${count === 1 ? "" : "s"}</span></h2>
+        <p class="exam-instruction">${meta.instr}</p>
+        ${body}
+      </div>`;
+  }
 
-    // Part 6 — True or False
-    parts.push(`
-      <div class="exam-part">
-        <h2 class="exam-part-title">Part 6 &middot; True or False <span class="exam-part-marks">${test.tf.length} marks</span></h2>
-        <p class="exam-instruction">Read each statement and mark it Richtig (True) or Falsch (False).</p>
-        ${test.tf.map((q, i) => `
-          <div class="exam-q" data-qid="${q.id}">
-            <div class="exam-q-num">${i + 26}.</div>
-            <div class="exam-q-body">
-              <p class="exam-q-text">${escHtml(q.prompt)}</p>
-              <div class="exam-tf" data-qid="${q.id}">
-                <button type="button" class="exam-tf-btn" data-value="true">Richtig (True)</button>
-                <button type="button" class="exam-tf-btn" data-value="false">Falsch (False)</button>
-              </div>
-            </div>
-          </div>`).join("")}
-      </div>`);
-
-    examBody.innerHTML = parts.join("");
+  function renderTest(test) {
+    examBody.innerHTML = test.parts.map(renderPart).join("");
     examResults.innerHTML = "";
     examResults.style.display = "none";
     wireExamControls();
@@ -387,17 +725,19 @@
   function wireExamControls() {
     examBody.querySelectorAll(".exam-opts").forEach(group => {
       group.querySelectorAll(".exam-opt").forEach(opt => {
-        opt.addEventListener("click", () => {
+        const choose = () => {
           if (graded) return;
           group.querySelectorAll(".exam-opt").forEach(o => o.classList.remove("selected"));
           opt.classList.add("selected");
-        });
+        };
+        opt.addEventListener("click", choose);
+        opt.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); choose(); } });
       });
     });
-    examBody.querySelectorAll(".exam-tf-btn").forEach(btn => {
+    examBody.querySelectorAll(".exam-choice .exam-tf-btn").forEach(btn => {
       btn.addEventListener("click", () => {
         if (graded) return;
-        const wrap = btn.closest(".exam-tf");
+        const wrap = btn.closest(".exam-choice");
         wrap.querySelectorAll(".exam-tf-btn").forEach(b => b.classList.remove("selected"));
         btn.classList.add("selected");
       });
@@ -407,71 +747,82 @@
   /* ────────────────────────────────────────
      GRADING
      ──────────────────────────────────────── */
-  function collectAllQuestions(test) {
-    return [...test.fill, ...test.mc, ...test.sent, ...test.match.items, ...test.trans, ...test.tf];
+  function showInlineAnswer(qEl, answer) {
+    if (!qEl) return;
+    const note = document.createElement("div");
+    note.className = "exam-correct-note";
+    note.innerHTML = `Correct answer: <strong>${escHtml(answer)}</strong>`;
+    qEl.appendChild(note);
+  }
+
+  function gradeQuestion(part, q, block) {
+    const qEl = examBody.querySelector(`.exam-q[data-qid="${q.id}"]`);
+    if (part.kind === "fill" || part.kind === "trans") {
+      const input = examBody.querySelector(`.exam-text-input[data-qid="${q.id}"]`);
+      const typed = input ? input.value.trim() : "";
+      const ok = isAnswerCorrect(typed, q.answer) || (q.alts || []).some(a => isAnswerCorrect(typed, a));
+      input.classList.add(ok ? "is-correct" : "is-wrong");
+      input.disabled = true;
+      if (!ok) showInlineAnswer(qEl, part.kind === "trans" ? q.word.display : q.answer);
+      return ok;
+    }
+    if (["mc", "rev", "sent", "mean"].includes(part.kind)) {
+      const group = examBody.querySelector(`.exam-opts[data-name="${q.id}"]`);
+      const selected = group.querySelector(".exam-opt.selected");
+      const val = selected ? selected.dataset.value : "";
+      const ok = normalise(val) === normalise(q.answer);
+      group.querySelectorAll(".exam-opt").forEach(o => {
+        if (normalise(o.dataset.value) === normalise(q.answer)) o.classList.add("is-correct");
+        else if (o === selected) o.classList.add("is-wrong");
+        o.setAttribute("tabindex", "-1");
+      });
+      return ok;
+    }
+    if (part.kind === "art" || part.kind === "tf") {
+      const wrap = examBody.querySelector(`.exam-choice[data-qid="${q.id}"]`);
+      const selected = wrap.querySelector(".exam-tf-btn.selected");
+      const toVal = v => (part.kind === "tf" ? v === "true" : v);
+      const val = selected ? toVal(selected.dataset.value) : null;
+      const ok = val === q.answer;
+      wrap.querySelectorAll(".exam-tf-btn").forEach(b => {
+        if (toVal(b.dataset.value) === q.answer) b.classList.add("is-correct");
+        else if (b === selected) b.classList.add("is-wrong");
+        b.disabled = true;
+      });
+      return ok;
+    }
+    if (part.kind === "match") {
+      const select = examBody.querySelector(`.exam-select[data-qid="${q.id}"]`);
+      const chosen = (block.key.find(o => o.letter === select.value) || {}).text || "";
+      const ok = normalise(chosen) === normalise(q.answer);
+      select.disabled = true;
+      select.classList.add(ok ? "is-correct" : "is-wrong");
+      if (!ok) {
+        const letter = (block.key.find(o => normalise(o.text) === normalise(q.answer)) || {}).letter;
+        showInlineAnswer(qEl, `${letter ? letter + ". " : ""}${q.answer}`);
+      }
+      return ok;
+    }
+    return false;
   }
 
   function gradeTest() {
     if (!currentTest || graded) return;
     graded = true;
 
-    const results = [];
-
-    // Fill + Translation (typed, lenient German match)
-    [...currentTest.fill, ...currentTest.trans].forEach(q => {
-      const input = examBody.querySelector(`.exam-text-input[data-qid="${q.id}"]`);
-      const typed = input ? input.value.trim() : "";
-      const ok = isAnswerCorrect(typed, q.answer, true);
-      input.classList.add(ok ? "is-correct" : "is-wrong");
-      if (!ok) showInlineAnswer(input.closest(".exam-q"), q.answer);
-      results.push({ ...q, userAnswer: typed, isCorrect: ok });
+    const breakdown = [];
+    let correct = 0, total = 0;
+    currentTest.parts.forEach((part, i) => {
+      let pc = 0, pt = 0;
+      if (part.kind === "match") {
+        part.blocks.forEach(block => block.items.forEach(q => { pt++; if (gradeQuestion(part, q, block)) pc++; }));
+      } else {
+        part.questions.forEach(q => { pt++; if (gradeQuestion(part, q)) pc++; });
+      }
+      correct += pc; total += pt;
+      breakdown.push({ label: `Part ${i + 1} · ${PART_META[part.kind].title}`, correct: pc, total: pt });
     });
 
-    // MC + Sentence choice
-    [...currentTest.mc, ...currentTest.sent].forEach(q => {
-      const group = examBody.querySelector(`.exam-opts[data-name="${q.id}"]`);
-      const selected = group ? group.querySelector(".exam-opt.selected") : null;
-      const userAnswer = selected ? selected.dataset.value : "";
-      const ok = normalise(userAnswer) === normalise(q.answer);
-      group.querySelectorAll(".exam-opt").forEach(o => {
-        if (normalise(o.dataset.value) === normalise(q.answer)) o.classList.add("is-correct");
-        else if (o === selected) o.classList.add("is-wrong");
-        o.setAttribute("tabindex", "-1");
-      });
-      results.push({ ...q, userAnswer, isCorrect: ok });
-    });
-
-    // Match
-    currentTest.match.items.forEach(q => {
-      const select = examBody.querySelector(`.exam-select[data-qid="${q.id}"]`);
-      const chosenLetter = select ? select.value : "";
-      const chosenText = (currentTest.match.options.find(o => o.letter === chosenLetter) || {}).text || "";
-      const ok = normalise(chosenText) === normalise(q.answer);
-      select.disabled = true;
-      select.classList.add(ok ? "is-correct" : "is-wrong");
-      if (!ok) showInlineAnswer(select.closest(".exam-q"), `${q.answer}`);
-      results.push({ ...q, userAnswer: chosenText, isCorrect: ok });
-    });
-
-    // True/False
-    currentTest.tf.forEach(q => {
-      const wrap = examBody.querySelector(`.exam-tf[data-qid="${q.id}"]`);
-      const selected = wrap ? wrap.querySelector(".exam-tf-btn.selected") : null;
-      const userVal = selected ? selected.dataset.value === "true" : null;
-      const ok = userVal === q.answer;
-      wrap.querySelectorAll(".exam-tf-btn").forEach(b => {
-        const bVal = b.dataset.value === "true";
-        if (bVal === q.answer) b.classList.add("is-correct");
-        else if (b === selected) b.classList.add("is-wrong");
-        b.disabled = true;
-      });
-      results.push({ ...q, userAnswer: userVal, isCorrect: ok });
-    });
-
-    examBody.querySelectorAll(".exam-text-input").forEach(i => i.disabled = true);
-
-    const total = results.length;
-    const correct = results.filter(r => r.isCorrect).length;
     const percent = total ? Math.round((correct / total) * 100) : 0;
     const pass = percent >= PASS_MARK;
     const status = quizStatusFor(percent);
@@ -479,22 +830,14 @@
     insertTestScore({
       correct, total, percent, pass,
       status: status.label, statusCls: status.cls,
-      level: currentTest.level, cat: letterLabel(currentTest.letters),
+      level: currentTest.level, marks: currentTest.total, cat: letterLabel(currentTest.letters),
       date: Date.now()
     });
 
-    renderResultsBanner({ correct, total, percent, pass, status });
+    renderResultsBanner({ correct, total, percent, pass, status, breakdown });
     submitBtn.style.display = "none";
     regenBtn.style.display = "";
     try { examResults.scrollIntoView({ behavior: "smooth", block: "start" }); } catch (_) {}
-  }
-
-  function showInlineAnswer(qEl, answer) {
-    if (!qEl) return;
-    const note = document.createElement("div");
-    note.className = "exam-correct-note";
-    note.innerHTML = `Correct answer: <strong>${escHtml(answer)}</strong>`;
-    qEl.appendChild(note);
   }
 
   function renderResultsBanner(r) {
@@ -509,6 +852,9 @@
           <div class="erb-percent">${r.percent}%</div>
         </div>
         <p class="erb-pass ${r.pass ? "pass" : "fail"}">${r.pass ? "✅ Passed" : "❌ Not passed"} &mdash; ${PASS_MARK}% needed to pass</p>
+        <div class="erb-breakdown">
+          ${r.breakdown.map(b => `<div class="erb-breakdown-row"><span>${escHtml(b.label)}</span><strong>${b.correct}/${b.total}</strong></div>`).join("")}
+        </div>
         <p class="erb-hint">Scroll up to see every correct answer marked in green, and the right answer shown wherever you missed one.</p>
       </div>`;
   }
@@ -516,11 +862,9 @@
   /* ────────────────────────────────────────
      SCOREBOARD
      ──────────────────────────────────────── */
-  function loadTestScores() {
-    try { const r = localStorage.getItem("ad_vocab_test_scores_v1"); if (r) return JSON.parse(r); } catch (_) {}
-    return [];
-  }
-  function saveTestScores(s) { try { localStorage.setItem("ad_vocab_test_scores_v1", JSON.stringify(s)); } catch (_) {} }
+  const SCORE_KEY = "ad_vocab_test_scores_v1";
+  function loadTestScores() { return storageGet(SCORE_KEY, []); }
+  function saveTestScores(s) { storageSet(SCORE_KEY, s); }
   function insertTestScore(entry) {
     const scores = loadTestScores();
     scores.push(entry);
@@ -539,7 +883,7 @@
       const row = document.createElement("div");
       row.className = "sb-row" + (i === 0 ? " gold" : i === 1 ? " silver" : i === 2 ? " bronze" : "");
       row.innerHTML = `<span class="rank">${["🥇", "🥈", "🥉", "4.", "5."][i]}</span>
-        <span>${escHtml(s.level || "A1")} · ${escHtml(s.cat)} · ${s.correct}/${s.total}
+        <span>${escHtml(s.level || "A1")} · ${escHtml(String(s.marks || s.total))} marks · ${escHtml(s.cat)} · ${s.correct}/${s.total}
           <span class="sb-status ${s.statusCls || ""}">${escHtml(s.status || "")}${s.pass === false ? " · fail" : ""}</span>
         </span>
         <span class="sb-score">${s.percent}%</span>`;
@@ -571,9 +915,23 @@
     });
   }
 
+  function renderMarksToggle() {
+    if (!marksToggleEl) return;
+    const desc = { 30: "Quick test", 50: "Standard test", 100: "Full exam" };
+    marksToggleEl.innerHTML = MARK_OPTIONS.map(m => `
+      <div class="rate-btn${m === testMarks ? " selected" : ""}" data-val="${m}" role="button" tabindex="0">
+        <div class="rt-name">${m} marks</div>
+        <div class="rt-desc">${desc[m]}</div>
+      </div>`).join("");
+    marksToggleEl.querySelectorAll(".rate-btn").forEach(btn => {
+      const choose = () => { testMarks = Number(btn.dataset.val); renderMarksToggle(); updateHeroSub(); };
+      btn.addEventListener("click", choose);
+      btn.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); choose(); } });
+    });
+  }
+
   function availableLetters() {
-    const words = getWordsByLevel(testLevel);
-    return [...new Set(words.map(w => w.letter))].sort();
+    return [...new Set(buildBank(testLevel).map(w => w.letter))].sort();
   }
 
   function renderLetterPills() {
@@ -607,8 +965,7 @@
 
   function renderLetterSelection() {
     catWrap.querySelectorAll(".cat-pill").forEach(p => {
-      const on = testLetters.includes(p.dataset.val);
-      p.classList.toggle("selected", on);
+      p.classList.toggle("selected", testLetters.includes(p.dataset.val));
     });
     catCountEl.textContent = testLetters[0] === "random"
       ? "A fresh random letter range each time"
@@ -623,9 +980,9 @@
   });
 
   function updateHeroSub() {
-    const words = getWordsByLevel(testLevel);
-    heroSub.textContent = words.length
-      ? `${words.length} ${testLevel} words in the bank · a different 30-mark test every time`
+    const n = buildBank(testLevel).length;
+    heroSub.textContent = n
+      ? `${n} ${testLevel} words in the bank · a different ${testMarks}-mark test every time`
       : `${testLevel} isn't ready yet — try A1 in the meantime`;
   }
 
@@ -633,11 +990,10 @@
      SCREEN FLOW
      ──────────────────────────────────────── */
   function startTest() {
-    currentTest = buildTestPlan(testLevel, testLetters);
+    currentTest = buildTestPlan(testLevel, testLetters, testMarks);
     graded = false;
     examTitle.textContent = `${currentTest.level} German Vocabulary Test`;
-    const totalMarks = collectAllQuestions(currentTest).length;
-    examMeta.textContent = `Total Marks: ${totalMarks} · ${letterLabel(currentTest.letters)} · a new test every time`;
+    examMeta.textContent = `Total Marks: ${currentTest.total} · ${currentTest.widened ? "all letters (your letter choice had too few words)" : letterLabel(currentTest.letters)} · a new test every time`;
     submitBtn.style.display = "";
     submitBtn.disabled = false;
     regenBtn.style.display = "none";
@@ -659,8 +1015,12 @@
   regenBtn.addEventListener("click", startTest);
   resetScoresBtn.addEventListener("click", () => { saveTestScores([]); renderTestScoreboard(); });
 
+  // Exposed for debugging / automated checks.
+  window.__vocabTest = { buildBank, buildTestPlan, balancedPositions, balancedTrueFalse, get current() { return currentTest; } };
+
   document.addEventListener("DOMContentLoaded", () => {
     renderLevelTabs();
+    renderMarksToggle();
     renderLetterPills();
     updateHeroSub();
     renderTestScoreboard();

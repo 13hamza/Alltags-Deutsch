@@ -10,13 +10,14 @@
      A1 — Goethe-Institut "Start Deutsch 1" Wortliste
      A2 — Goethe-Zertifikat A2 Wortliste (2016 edition)
 
-   The "ALL" pseudo-level returns all A1 + A2 words combined.
-   To add B1 later: push { level, letter, de, en } objects
-   into WORDS and add the level to WORD_LEVELS.
+     B1 — Goethe-Zertifikat B1 Wortliste
+
+   The "ALL" pseudo-level returns all A1 + A2 + B1 words combined
+   (a word listed at several levels appears once, at its lowest level).
    ============================================================ */
 
 const WORD_LEVELS = [
-  { id: "ALL", label: "A1 & A2", sublabel: "All" },
+  { id: "ALL", label: "A1, A2 & B1", sublabel: "All" },
   { id: "A1", label: "Beginner", sublabel: "A1" },
   { id: "A2", label: "Beginner", sublabel: "A2" },
   { id: "B1", label: "Intermediate", sublabel: "B1" }
@@ -4992,7 +4993,16 @@ const WORDS = [
 
 function getWordsByLevel(level) {
   if (level === "ALL" || level === "All") {
-    return WORDS.filter(w => w.level === "A1" || w.level === "A2");
+    // A1 + A2 + B1 combined. Words listed at more than one level are
+    // shown once, at the lowest level where they first appear.
+    const seen = new Set();
+    return WORDS.filter(w => {
+      if (w.level !== "A1" && w.level !== "A2" && w.level !== "B1") return false;
+      const key = w.de.trim().toLowerCase();
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
   }
   return WORDS.filter(w => w.level === level);
 }
